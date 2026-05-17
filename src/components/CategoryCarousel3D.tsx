@@ -102,6 +102,14 @@ function makeCosmicBody(
     case 3: {
       const diffuse = loadTex(`${BASE}/mars-texture.png`);
       const bump    = loadTex(`${BASE}/mars-texture.png`, false);
+      // The source image has dark letterbox borders (~34px top & bottom of 768px).
+      // Crop them by shifting the UV origin up and scaling to use only the
+      // actual content band, so the polar regions show Mars surface, not black.
+      for (const t of [diffuse, bump]) {
+        t.wrapS = THREE.RepeatWrapping; // clean horizontal seam wrap
+        t.repeat.set(1, 0.91);
+        t.offset.set(0, 0.045);
+      }
       const mat = new THREE.MeshStandardMaterial({
         map:       diffuse,
         bumpMap:   bump,
