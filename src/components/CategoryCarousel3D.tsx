@@ -7,13 +7,24 @@ export const CAROUSEL_ITEMS = [
   { id: "quick-wins",     label: "Quick Wins",        cosmicName: "The Moon",       essence: "Closest. Brightest. Easiest to reach.",             color: 0xD4C9A0, hex: "#D4C9A0" },
   { id: "productivity",   label: "Productivity",      cosmicName: "Ringed Planet",  essence: "Orbits aligned. Momentum self-sustaining.",         color: 0x8FE3D2, hex: "#8FE3D2" },
   { id: "writing",        label: "Writing & Copy",    cosmicName: "The Star",       essence: "Every word — a photon that travels forever.",        color: 0xF4C56A, hex: "#F4C56A" },
-  { id: "research",       label: "Research",          cosmicName: "The Nebula",     essence: "Vast. Formless. Until you look closely.",            color: 0xB6A6FF, hex: "#B6A6FF" },
+  { id: "research",       label: "Research",          cosmicName: "Mars",           essence: "Unexplored terrain. Answers buried in red dust.",    color: 0xD4845A, hex: "#D4845A" },
   { id: "finance",        label: "Finance & FP&A",    cosmicName: "The Pulsar",     essence: "Precise rhythm. Relentless accuracy.",               color: 0x6EE7A0, hex: "#6EE7A0" },
   { id: "data-analytics", label: "Data & Analytics",  cosmicName: "The Galaxy",     essence: "Billions of points. One story.",                    color: 0xE8C089, hex: "#E8C089" },
   { id: "coding",         label: "Code & Automation", cosmicName: "The Supernova",  essence: "One burst of energy. Everything changes.",          color: 0x9F8CFF, hex: "#9F8CFF" },
   { id: "creative-ai",    label: "Creative & Design", cosmicName: "The Quasar",     essence: "Brightest object in the observable universe.",       color: 0x5EEAD4, hex: "#5EEAD4" },
   { id: "game-advanced",  label: "Game & Advanced",   cosmicName: "Black Hole",     essence: "Where the rules of physics collapse.",              color: 0xC4A8F0, hex: "#C4A8F0" },
 ] as const;
+
+const BASE = "/sintra-ai";
+
+function loadTex(path: string, srgb = true): THREE.Texture {
+  const tex = new THREE.TextureLoader().load(path);
+  if (srgb) tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.needsUpdate = true;
+  return tex;
+}
 
 // ── Cosmic body factory ────────────────────────────────────────────────────
 function makeCosmicBody(
@@ -30,45 +41,29 @@ function makeCosmicBody(
     });
 
   switch (idx) {
-    // 0 — Moon (texture-mapped) ───────────────────────────────────────────
+    // 0 — Moon (NASA texture + bump) ─────────────────────────────────────
     case 0: {
-      const loader   = new THREE.TextureLoader();
-      const basePath = "/sintra-ai";
-      const diffuse  = loader.load(`${basePath}/moon-texture.png`);
-      diffuse.colorSpace = THREE.SRGBColorSpace;
-      // Reuse the same texture as a bump map for crater depth
-      const bump    = loader.load(`${basePath}/moon-texture.png`);
-      const mat = new THREE.MeshPhysicalMaterial({
-        map:            diffuse,
-        bumpMap:        bump,
-        bumpScale:      0.06,
-        metalness:      0.0,
-        roughness:      0.92,
-        clearcoat:      0.0,
+      const diffuse = loadTex(`${BASE}/moon-texture.png`);
+      const bump    = loadTex(`${BASE}/moon-texture.png`, false);
+      const mat = new THREE.MeshStandardMaterial({
+        map:       diffuse,
+        bumpMap:   bump,
+        bumpScale: 0.055,
+        roughness: 0.95,
+        metalness: 0.0,
       });
       body.add(new THREE.Mesh(new THREE.SphereGeometry(0.68, 64, 64), mat));
-      return { body, mainMat: mat };
+      // Cast as MeshPhysicalMaterial for the animation controller (compatible interface)
+      return { body, mainMat: mat as unknown as THREE.MeshPhysicalMaterial };
     }
 
-    // 1 — Ringed Planet (Mars-like) ──────────────────────────────────────
+    // 1 — Ringed Planet (Saturn-like, teal) ──────────────────────────────
     case 1: {
-      const loader   = new THREE.TextureLoader();
-      const basePath = "/sintra-ai";
-      const marsDiff = loader.load(`${basePath}/mars-texture.png`);
-      marsDiff.colorSpace = THREE.SRGBColorSpace;
-      const marsBump = loader.load(`${basePath}/mars-texture.png`);
-      const mat = new THREE.MeshPhysicalMaterial({
-        map:       marsDiff,
-        bumpMap:   marsBump,
-        bumpScale: 0.04,
-        metalness: 0.0,
-        roughness: 0.88,
-        clearcoat: 0.0,
-      });
-      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.54, 64, 64), mat));
-      const ringGeo = new THREE.RingGeometry(0.76, 1.14, 80);
+      const mat = pbr({ metalness: 0.08, roughness: 0.42 });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.52, 40, 40), mat));
+      const ringGeo = new THREE.RingGeometry(0.74, 1.12, 80);
       const ringMat = new THREE.MeshBasicMaterial({
-        color: 0xC4956A, side: THREE.DoubleSide, transparent: true, opacity: 0.45,
+        color, side: THREE.DoubleSide, transparent: true, opacity: 0.44,
       });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI * 0.36;
@@ -100,21 +95,19 @@ function makeCosmicBody(
       return { body, mainMat: mat };
     }
 
-    // 3 — Nebula ──────────────────────────────────────────────────────────
+    // 3 — Mars (NASA texture, no rings) ──────────────────────────────────
     case 3: {
-      const mat = pbr({ metalness: 0.0, roughness: 0.72, transparent: true, opacity: 0.72 });
-      body.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.46, 1), mat));
-      const pos: number[] = [];
-      for (let i = 0; i < 320; i++) {
-        const r = 0.52 + Math.random() * 0.58;
-        const t = Math.random() * Math.PI * 2;
-        const p = Math.acos(2 * Math.random() - 1);
-        pos.push(Math.sin(p)*Math.cos(t)*r, Math.cos(p)*r, Math.sin(p)*Math.sin(t)*r);
-      }
-      const pGeo = new THREE.BufferGeometry();
-      pGeo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-      body.add(new THREE.Points(pGeo, new THREE.PointsMaterial({ color, size: 0.038, transparent: true, opacity: 0.62 })));
-      return { body, mainMat: mat };
+      const diffuse = loadTex(`${BASE}/mars-texture.png`);
+      const bump    = loadTex(`${BASE}/mars-texture.png`, false);
+      const mat = new THREE.MeshStandardMaterial({
+        map:       diffuse,
+        bumpMap:   bump,
+        bumpScale: 0.045,
+        roughness: 0.90,
+        metalness: 0.0,
+      });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.60, 64, 64), mat));
+      return { body, mainMat: mat as unknown as THREE.MeshPhysicalMaterial };
     }
 
     // 4 — Pulsar ──────────────────────────────────────────────────────────
@@ -194,7 +187,7 @@ function makeCosmicBody(
         new THREE.SphereGeometry(0.3, 20, 20),
         new THREE.MeshBasicMaterial({ color: 0x010108 }),
       ));
-      let mainMat = new THREE.MeshPhysicalMaterial(); // will be overwritten
+      let mainMat = new THREE.MeshPhysicalMaterial();
       for (let r = 0; r < 3; r++) {
         const rMat = new THREE.MeshPhysicalMaterial({
           color, metalness: 0.6, roughness: 0.06, clearcoat: 1.0,
@@ -242,7 +235,7 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     let w = container.clientWidth;
     let h = container.clientHeight;
     const N      = CAROUSEL_ITEMS.length;
-    const RADIUS = 3.2;
+    const RADIUS = 3.8; // wider ring — less crowded
 
     // ── Renderer ──────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -252,23 +245,20 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     container.appendChild(renderer.domElement);
 
     // ── Camera ────────────────────────────────────────────────────────
-    const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
-    camera.position.set(0, 1.8, 8.8);
+    const camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 100);
+    camera.position.set(0, 1.6, 9.5);
     camera.lookAt(0, 0, 0);
 
     // ── Scene & lighting ──────────────────────────────────────────────
     const scene = new THREE.Scene();
     scene.add(new THREE.HemisphereLight(0xfff8f0, 0x080d24, 0.45));
-    // Strong key: upper-right-front — carves crater shadows on Moon
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
     keyLight.position.set(7, 12, 9);
     scene.add(keyLight);
-    // Cool fill / rim from behind
     const fillLight = new THREE.DirectionalLight(0x7a88ff, 0.55);
     fillLight.position.set(-6, 3, -9);
     scene.add(fillLight);
-    // Secondary warm fill for right-side depth on textured objects
-    const warmFill = new THREE.DirectionalLight(0xffddb0, 0.35);
+    const warmFill = new THREE.DirectionalLight(0xffddb0, 0.30);
     warmFill.position.set(5, -4, 6);
     scene.add(warmFill);
 
@@ -278,11 +268,12 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
 
     // ── Build cosmic objects ──────────────────────────────────────────
     type Obj = {
-      group:   THREE.Group;
-      body:    THREE.Group;
-      hit:     THREE.Mesh;
-      pt:      THREE.PointLight;
-      mainMat: THREE.MeshPhysicalMaterial;
+      group:        THREE.Group;
+      body:         THREE.Group;
+      hit:          THREE.Mesh;
+      pt:           THREE.PointLight;
+      mainMat:      THREE.MeshPhysicalMaterial;
+      initAngle:    number; // fixed angle in carousel local space
     };
 
     const objects: Obj[] = CAROUSEL_ITEMS.map((item, i) => {
@@ -294,16 +285,16 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
       g.add(body);
 
       const hit = new THREE.Mesh(
-        new THREE.SphereGeometry(1.15, 8, 8),
+        new THREE.SphereGeometry(1.1, 8, 8),
         new THREE.MeshBasicMaterial({ visible: false }),
       );
       g.add(hit);
 
-      const pt = new THREE.PointLight(item.color, 0, 4.5);
+      const pt = new THREE.PointLight(item.color, 0, 5);
       g.add(pt);
 
       carousel.add(g);
-      return { group: g, body, hit, pt, mainMat };
+      return { group: g, body, hit, pt, mainMat, initAngle: angle };
     });
 
     // ── Animation state ───────────────────────────────────────────────
@@ -352,35 +343,47 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
       objects.forEach((obj, i) => {
         const worldAngle = (2 * Math.PI * i) / N + currentAngle;
         const norm       = ((worldAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-        const fromFront  = Math.min(norm, 2 * Math.PI - norm);
+        const fromFront  = Math.min(norm, 2 * Math.PI - norm); // 0 = front, π = back
+        const angNorm    = fromFront / Math.PI;                 // 0..1
         const isFront    = i === sel;
         const isHovered  = hoveredIdx === i && !isFront;
 
-        // Self-rotation (galaxy spins on y, pulsar tilts on x too)
+        // ── Push front item outward (toward camera) ──
+        const tRadius = isFront ? RADIUS + 0.9 : RADIUS;
+        const tX = Math.sin(obj.initAngle) * tRadius;
+        const tZ = Math.cos(obj.initAngle) * tRadius;
+        obj.group.position.x += (tX - obj.group.position.x) * 0.07;
+        obj.group.position.z += (tZ - obj.group.position.z) * 0.07;
+
+        // ── Self-rotation ──
         selfAngles[i] += isFront ? 0.009 : 0.003;
         obj.body.rotation.y = selfAngles[i];
-        if (i === 5) obj.body.rotation.y = selfAngles[i] * 0.6; // galaxy: slower y
-        if (i === 4) obj.body.rotation.x = selfAngles[i] * 0.4; // pulsar: wobble
+        if (i === 5) obj.body.rotation.y = selfAngles[i] * 0.5; // galaxy slower
+        if (i === 4) obj.body.rotation.x = selfAngles[i] * 0.4; // pulsar wobble
 
-        // Scale
-        const tScale = isFront ? 1.48 : isHovered ? 1.18 : 1.0;
+        // ── Scale: front large, sides mid, back tiny ──
+        const tScale = isFront ? 1.55
+          : isHovered ? 1.12
+          : Math.max(0.42, 1.0 - angNorm * 0.82);
         obj.group.scale.lerp(new THREE.Vector3(tScale, tScale, tScale), 0.08);
 
-        // Float active item up
-        const tY = isFront ? 0.18 : 0;
+        // ── Float active item up ──
+        const tY = isFront ? 0.22 : 0;
         obj.group.position.y += (tY - obj.group.position.y) * 0.08;
 
-        // Material emissive pulse
-        const tEmissive = isFront ? 0.18 : isHovered ? 0.07 : 0.02;
+        // ── Emissive pulse ──
+        const tEmissive = isFront ? 0.20 : isHovered ? 0.07 : 0.01;
         obj.mainMat.emissiveIntensity += (tEmissive - obj.mainMat.emissiveIntensity) * 0.1;
 
-        // Opacity (distance fade)
-        const tOpacity = isFront ? 1.0 : isHovered ? 0.82 : Math.max(0.28, 1 - fromFront / Math.PI * 1.2);
-        obj.mainMat.opacity  = tOpacity;
+        // ── Opacity: front=1, sides fade, back nearly invisible ──
+        const tOpacity = isFront ? 1.0
+          : isHovered ? 0.80
+          : Math.max(0.04, 1.0 - angNorm * 1.55);
+        obj.mainMat.opacity = tOpacity;
         obj.mainMat.transparent = true;
 
-        // Point light
-        const tIntensity = isFront ? 2.4 : isHovered ? 0.9 : 0;
+        // ── Point light ──
+        const tIntensity = isFront ? 2.6 : isHovered ? 0.8 : 0;
         obj.pt.intensity += (tIntensity - obj.pt.intensity) * 0.08;
       });
 
