@@ -4,29 +4,191 @@ import { useRef, useEffect } from "react";
 import * as THREE from "three";
 
 export const CAROUSEL_ITEMS = [
-  { id: "quick-wins",     label: "Quick Wins",        essence: "5-min tasks anyone can use today.",              color: 0xF4D06F, hex: "#F4D06F" },
-  { id: "productivity",   label: "Productivity",      essence: "Scheduling, notes, planning, automation.",       color: 0x8FE3D2, hex: "#8FE3D2" },
-  { id: "writing",        label: "Writing & Copy",    essence: "Long-form, email, social, brand voice.",         color: 0xF08CA8, hex: "#F08CA8" },
-  { id: "research",       label: "Research",          essence: "Deep dives, synthesis, competitive intel.",      color: 0xB6A6FF, hex: "#B6A6FF" },
-  { id: "finance",        label: "Finance & FP&A",    essence: "Forecasting, modeling, variance, board decks.",  color: 0x6EE7A0, hex: "#6EE7A0" },
-  { id: "data-analytics", label: "Data & Analytics",  essence: "BI dashboards, pipelines, insight automation.",  color: 0xE8C089, hex: "#E8C089" },
-  { id: "coding",         label: "Code & Automation", essence: "Apps, APIs, scripts, architecture.",             color: 0x9F8CFF, hex: "#9F8CFF" },
-  { id: "creative-ai",    label: "Creative & Design", essence: "Image gen, UI/UX, visual direction, branding.",  color: 0x5EEAD4, hex: "#5EEAD4" },
-  { id: "game-advanced",  label: "Game & Advanced",   essence: "Game dev, 3D, agents, LLM pipelines.",          color: 0xE9D9B6, hex: "#E9D9B6" },
+  { id: "quick-wins",     label: "Quick Wins",        cosmicName: "The Moon",       essence: "Closest. Brightest. Easiest to reach.",             color: 0xD4C9A0, hex: "#D4C9A0" },
+  { id: "productivity",   label: "Productivity",      cosmicName: "Ringed Planet",  essence: "Orbits aligned. Momentum self-sustaining.",         color: 0x8FE3D2, hex: "#8FE3D2" },
+  { id: "writing",        label: "Writing & Copy",    cosmicName: "The Star",       essence: "Every word — a photon that travels forever.",        color: 0xF4C56A, hex: "#F4C56A" },
+  { id: "research",       label: "Research",          cosmicName: "The Nebula",     essence: "Vast. Formless. Until you look closely.",            color: 0xB6A6FF, hex: "#B6A6FF" },
+  { id: "finance",        label: "Finance & FP&A",    cosmicName: "The Pulsar",     essence: "Precise rhythm. Relentless accuracy.",               color: 0x6EE7A0, hex: "#6EE7A0" },
+  { id: "data-analytics", label: "Data & Analytics",  cosmicName: "The Galaxy",     essence: "Billions of points. One story.",                    color: 0xE8C089, hex: "#E8C089" },
+  { id: "coding",         label: "Code & Automation", cosmicName: "The Supernova",  essence: "One burst of energy. Everything changes.",          color: 0x9F8CFF, hex: "#9F8CFF" },
+  { id: "creative-ai",    label: "Creative & Design", cosmicName: "The Quasar",     essence: "Brightest object in the observable universe.",       color: 0x5EEAD4, hex: "#5EEAD4" },
+  { id: "game-advanced",  label: "Game & Advanced",   cosmicName: "Black Hole",     essence: "Where the rules of physics collapse.",              color: 0xC4A8F0, hex: "#C4A8F0" },
 ] as const;
 
-function makeGeo(idx: number): THREE.BufferGeometry {
+// ── Cosmic body factory ────────────────────────────────────────────────────
+function makeCosmicBody(
+  idx: number,
+  color: number,
+): { body: THREE.Group; mainMat: THREE.MeshPhysicalMaterial } {
+  const body = new THREE.Group();
+  const c    = new THREE.Color(color);
+
+  const pbr = (o: Partial<THREE.MeshPhysicalMaterialParameters> = {}) =>
+    new THREE.MeshPhysicalMaterial({
+      color, clearcoat: 0.9, clearcoatRoughness: 0.08,
+      reflectivity: 0.8, ...o,
+    });
+
   switch (idx) {
-    case 0: return new THREE.OctahedronGeometry(0.72, 0);              // Quick Wins — sharp gem
-    case 1: return new THREE.CylinderGeometry(0.52, 0.68, 0.88, 6, 1); // Productivity — hex disc
-    case 2: return new THREE.ConeGeometry(0.58, 1.25, 5, 1);           // Writing — pentagon cone
-    case 3: return new THREE.SphereGeometry(0.66, 40, 40);             // Research — perfect orb
-    case 4: return new THREE.IcosahedronGeometry(0.68, 0);             // Finance — angular precision
-    case 5: return new THREE.BoxGeometry(0.88, 0.88, 0.88);            // Data & Analytics — solid cube
-    case 6: return new THREE.TorusKnotGeometry(0.40, 0.15, 120, 14);   // Code — flowing knot
-    case 7: return new THREE.TorusGeometry(0.55, 0.22, 16, 48);        // Creative — ring/portal
-    case 8: return new THREE.DodecahedronGeometry(0.68);               // Game & Advanced — 12-face gem
-    default: return new THREE.SphereGeometry(0.65, 20, 20);
+    // 0 — Moon ────────────────────────────────────────────────────────────
+    case 0: {
+      const mat = pbr({ metalness: 0.0, roughness: 0.82, clearcoat: 0.05 });
+      body.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.66, 3), mat));
+      return { body, mainMat: mat };
+    }
+
+    // 1 — Ringed Planet (Saturn) ──────────────────────────────────────────
+    case 1: {
+      const mat = pbr({ metalness: 0.14, roughness: 0.38 });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.52, 40, 40), mat));
+      const ringGeo = new THREE.RingGeometry(0.72, 1.1, 80);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color, side: THREE.DoubleSide, transparent: true, opacity: 0.42,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI * 0.36;
+      body.add(ring);
+      return { body, mainMat: mat };
+    }
+
+    // 2 — Star / Sun ──────────────────────────────────────────────────────
+    case 2: {
+      const mat = pbr({ metalness: 0.0, roughness: 0.2, emissive: c, emissiveIntensity: 0.32 });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.58, 36, 36), mat));
+      for (let i = 0; i < 14; i++) {
+        const phi   = Math.acos(1 - 2 * (i / 14));
+        const theta = i * 2.399;
+        const h     = 0.22 + Math.random() * 0.14;
+        const cone  = new THREE.Mesh(
+          new THREE.ConeGeometry(0.035, h, 4),
+          new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.52 }),
+        );
+        const dir = new THREE.Vector3(
+          Math.sin(phi) * Math.cos(theta),
+          Math.cos(phi),
+          Math.sin(phi) * Math.sin(theta),
+        );
+        cone.position.copy(dir.clone().multiplyScalar(0.68));
+        cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+        body.add(cone);
+      }
+      return { body, mainMat: mat };
+    }
+
+    // 3 — Nebula ──────────────────────────────────────────────────────────
+    case 3: {
+      const mat = pbr({ metalness: 0.0, roughness: 0.72, transparent: true, opacity: 0.72 });
+      body.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.46, 1), mat));
+      const pos: number[] = [];
+      for (let i = 0; i < 320; i++) {
+        const r = 0.52 + Math.random() * 0.58;
+        const t = Math.random() * Math.PI * 2;
+        const p = Math.acos(2 * Math.random() - 1);
+        pos.push(Math.sin(p)*Math.cos(t)*r, Math.cos(p)*r, Math.sin(p)*Math.sin(t)*r);
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+      body.add(new THREE.Points(pGeo, new THREE.PointsMaterial({ color, size: 0.038, transparent: true, opacity: 0.62 })));
+      return { body, mainMat: mat };
+    }
+
+    // 4 — Pulsar ──────────────────────────────────────────────────────────
+    case 4: {
+      const mat = pbr({ metalness: 0.88, roughness: 0.04, emissive: c, emissiveIntensity: 0.18 });
+      body.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.44, 0), mat));
+      for (const sign of [1, -1]) {
+        const jet = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.0, 0.065, 0.82, 6),
+          new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.60 }),
+        );
+        jet.position.y = sign * 0.60;
+        if (sign < 0) jet.rotation.z = Math.PI;
+        body.add(jet);
+      }
+      return { body, mainMat: mat };
+    }
+
+    // 5 — Galaxy (spiral) ─────────────────────────────────────────────────
+    case 5: {
+      const mat = pbr({ metalness: 0.2, roughness: 0.5, emissive: c, emissiveIntensity: 0.22 });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), mat));
+      const pos: number[] = [];
+      for (let i = 0; i < 520; i++) {
+        const t     = i / 520;
+        const arm   = i % 2;
+        const angle = t * Math.PI * 5 + arm * Math.PI + (Math.random() - 0.5) * 0.52;
+        const r     = 0.16 + t * 0.96 + (Math.random() - 0.5) * 0.09;
+        pos.push(Math.cos(angle)*r, (Math.random()-0.5)*0.07, Math.sin(angle)*r);
+      }
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+      body.add(new THREE.Points(pGeo, new THREE.PointsMaterial({ color, size: 0.021, transparent: true, opacity: 0.9 })));
+      return { body, mainMat: mat };
+    }
+
+    // 6 — Supernova (spiky) ───────────────────────────────────────────────
+    case 6: {
+      const geo  = new THREE.IcosahedronGeometry(0.52, 1);
+      const attr = geo.attributes.position;
+      for (let i = 0; i < attr.count; i++) {
+        const v = new THREE.Vector3(attr.getX(i), attr.getY(i), attr.getZ(i));
+        v.multiplyScalar(1 + Math.random() * 0.46);
+        attr.setXYZ(i, v.x, v.y, v.z);
+      }
+      geo.computeVertexNormals();
+      const mat = pbr({ metalness: 0.28, roughness: 0.16, emissive: c, emissiveIntensity: 0.16 });
+      body.add(new THREE.Mesh(geo, mat));
+      return { body, mainMat: mat };
+    }
+
+    // 7 — Quasar (core + disc + jets) ─────────────────────────────────────
+    case 7: {
+      const mat = pbr({ metalness: 0.0, roughness: 0.08, emissive: c, emissiveIntensity: 0.48 });
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.3, 22, 22), mat));
+      const disc = new THREE.Mesh(
+        new THREE.TorusGeometry(0.66, 0.13, 10, 80),
+        new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity: 0.52, metalness: 0.3, roughness: 0.2 }),
+      );
+      disc.rotation.x = Math.PI * 0.36;
+      body.add(disc);
+      for (const sign of [1, -1]) {
+        const jet = new THREE.Mesh(
+          new THREE.ConeGeometry(0.068, 0.74, 6),
+          new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.44 }),
+        );
+        jet.position.y = sign * 0.58;
+        if (sign < 0) jet.rotation.z = Math.PI;
+        body.add(jet);
+      }
+      return { body, mainMat: mat };
+    }
+
+    // 8 — Black Hole ──────────────────────────────────────────────────────
+    case 8: {
+      body.add(new THREE.Mesh(
+        new THREE.SphereGeometry(0.3, 20, 20),
+        new THREE.MeshBasicMaterial({ color: 0x010108 }),
+      ));
+      let mainMat = new THREE.MeshPhysicalMaterial(); // will be overwritten
+      for (let r = 0; r < 3; r++) {
+        const rMat = new THREE.MeshPhysicalMaterial({
+          color, metalness: 0.6, roughness: 0.06, clearcoat: 1.0,
+          transparent: true, opacity: 0.88 - r * 0.24,
+          emissive: c, emissiveIntensity: 0.28 - r * 0.06,
+        });
+        if (r === 0) mainMat = rMat;
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.46 + r * 0.2, 0.054 - r * 0.01, 8, 80), rMat);
+        ring.rotation.x = Math.PI / 2 + (r - 1) * 0.11;
+        body.add(ring);
+      }
+      return { body, mainMat };
+    }
+
+    default: {
+      const mat = pbr({});
+      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.65, 20, 20), mat));
+      return { body, mainMat: mat };
+    }
   }
 }
 
@@ -39,11 +201,10 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
   const containerRef   = useRef<HTMLDivElement>(null);
   const selectRef      = useRef(onSelect);
   const selectedRef    = useRef(selectedIndex);
-  const targetAngleRef = useRef(0);  // ← lives on the component, not in a closure
+  const targetAngleRef = useRef(0);
 
   useEffect(() => { selectRef.current = onSelect; }, [onSelect]);
 
-  // Update BOTH the selected ref AND the target rotation angle whenever selectedIndex changes
   useEffect(() => {
     selectedRef.current    = selectedIndex;
     targetAngleRef.current = -(2 * Math.PI * selectedIndex) / CAROUSEL_ITEMS.length;
@@ -63,7 +224,6 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
     renderer.setSize(w, h);
     renderer.setClearColor(0x000000, 0);
-    renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
     // ── Camera ────────────────────────────────────────────────────────
@@ -73,16 +233,10 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
 
     // ── Scene & lighting ──────────────────────────────────────────────
     const scene = new THREE.Scene();
-
-    // Hemisphere: warm sky, cool ground
     scene.add(new THREE.HemisphereLight(0xfff8f0, 0x080d24, 0.45));
-
-    // Key light: white, upper-right-front
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
     keyLight.position.set(7, 12, 9);
     scene.add(keyLight);
-
-    // Fill / rim: cool blue-violet from behind
     const fillLight = new THREE.DirectionalLight(0x7a88ff, 0.55);
     fillLight.position.set(-6, 3, -9);
     scene.add(fillLight);
@@ -91,13 +245,13 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     const carousel = new THREE.Group();
     scene.add(carousel);
 
-    // ── Build objects ─────────────────────────────────────────────────
+    // ── Build cosmic objects ──────────────────────────────────────────
     type Obj = {
-      group: THREE.Group;
-      mesh:  THREE.Mesh;
-      hit:   THREE.Mesh;
-      pt:    THREE.PointLight;
-      selfAngle: number;
+      group:   THREE.Group;
+      body:    THREE.Group;
+      hit:     THREE.Mesh;
+      pt:      THREE.PointLight;
+      mainMat: THREE.MeshPhysicalMaterial;
     };
 
     const objects: Obj[] = CAROUSEL_ITEMS.map((item, i) => {
@@ -105,40 +259,25 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
       const g = new THREE.Group();
       g.position.set(Math.sin(angle) * RADIUS, 0, Math.cos(angle) * RADIUS);
 
-      const geo = makeGeo(i);
+      const { body, mainMat } = makeCosmicBody(i, item.color);
+      g.add(body);
 
-      // Solid PBR material — jewel-like with clearcoat
-      const mat = new THREE.MeshPhysicalMaterial({
-        color:              item.color,
-        metalness:          0.18,
-        roughness:          0.14,
-        clearcoat:          1.0,
-        clearcoatRoughness: 0.06,
-        reflectivity:       0.85,
-        emissive:           new THREE.Color(item.color),
-        emissiveIntensity:  0.04,
-      });
-      const mesh = new THREE.Mesh(geo, mat);
-      g.add(mesh);
-
-      // Invisible hit sphere for raycasting
       const hit = new THREE.Mesh(
-        new THREE.SphereGeometry(1.1, 8, 8),
-        new THREE.MeshBasicMaterial({ visible: false })
+        new THREE.SphereGeometry(1.15, 8, 8),
+        new THREE.MeshBasicMaterial({ visible: false }),
       );
       g.add(hit);
 
-      // Per-object accent point light
       const pt = new THREE.PointLight(item.color, 0, 4.5);
       g.add(pt);
 
       carousel.add(g);
-      return { group: g, mesh, hit, pt, selfAngle: 0 };
+      return { group: g, body, hit, pt, mainMat };
     });
 
     // ── Animation state ───────────────────────────────────────────────
     let currentAngle = 0;
-    const selfAngles   = new Array(N).fill(0);
+    const selfAngles = new Array(N).fill(0);
 
     // ── Hover / click raycasting ──────────────────────────────────────
     const raycaster = new THREE.Raycaster();
@@ -174,7 +313,6 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     const tick = () => {
       raf = requestAnimationFrame(tick);
 
-      // Smooth carousel rotation — uses the ref, not a closure variable
       currentAngle += (targetAngleRef.current - currentAngle) * 0.07;
       carousel.rotation.y = currentAngle;
 
@@ -187,32 +325,32 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
         const isFront    = i === sel;
         const isHovered  = hoveredIdx === i && !isFront;
 
-        // Self-rotation
-        selfAngles[i] += isFront ? 0.008 : 0.003;
-        obj.mesh.rotation.y = selfAngles[i];
-        obj.mesh.rotation.x = selfAngles[i] * 0.3;
+        // Self-rotation (galaxy spins on y, pulsar tilts on x too)
+        selfAngles[i] += isFront ? 0.009 : 0.003;
+        obj.body.rotation.y = selfAngles[i];
+        if (i === 5) obj.body.rotation.y = selfAngles[i] * 0.6; // galaxy: slower y
+        if (i === 4) obj.body.rotation.x = selfAngles[i] * 0.4; // pulsar: wobble
 
         // Scale
-        const targetScale = isFront ? 1.48 : isHovered ? 1.18 : 1.0;
-        obj.group.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.08);
+        const tScale = isFront ? 1.48 : isHovered ? 1.18 : 1.0;
+        obj.group.scale.lerp(new THREE.Vector3(tScale, tScale, tScale), 0.08);
 
         // Float active item up
-        const targetY = isFront ? 0.18 : 0;
-        obj.group.position.y += (targetY - obj.group.position.y) * 0.08;
+        const tY = isFront ? 0.18 : 0;
+        obj.group.position.y += (tY - obj.group.position.y) * 0.08;
 
-        // Material emissive pulse on active
-        const mat = obj.mesh.material as THREE.MeshPhysicalMaterial;
-        const targetEmissive = isFront ? 0.14 : isHovered ? 0.06 : 0.02;
-        mat.emissiveIntensity += (targetEmissive - mat.emissiveIntensity) * 0.1;
+        // Material emissive pulse
+        const tEmissive = isFront ? 0.18 : isHovered ? 0.07 : 0.02;
+        obj.mainMat.emissiveIntensity += (tEmissive - obj.mainMat.emissiveIntensity) * 0.1;
 
         // Opacity (distance fade)
-        const targetOpacity = isFront ? 1.0 : isHovered ? 0.82 : Math.max(0.28, 1 - fromFront / Math.PI * 1.2);
-        mat.opacity  = targetOpacity;
-        mat.transparent = true;
+        const tOpacity = isFront ? 1.0 : isHovered ? 0.82 : Math.max(0.28, 1 - fromFront / Math.PI * 1.2);
+        obj.mainMat.opacity  = tOpacity;
+        obj.mainMat.transparent = true;
 
-        // Point light intensity
-        const targetIntensity = isFront ? 2.2 : isHovered ? 0.9 : 0;
-        obj.pt.intensity += (targetIntensity - obj.pt.intensity) * 0.08;
+        // Point light
+        const tIntensity = isFront ? 2.4 : isHovered ? 0.9 : 0;
+        obj.pt.intensity += (tIntensity - obj.pt.intensity) * 0.08;
       });
 
       renderer.render(scene, camera);
@@ -222,8 +360,7 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     // ── Resize ────────────────────────────────────────────────────────
     const onResize = () => {
       if (!container) return;
-      w = container.clientWidth;
-      h = container.clientHeight;
+      w = container.clientWidth; h = container.clientHeight;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -239,9 +376,15 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
       renderer.dispose();
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
       objects.forEach(o => {
-        o.mesh.geometry.dispose();
-        (o.mesh.material as THREE.MeshPhysicalMaterial).dispose();
+        o.body.traverse(child => {
+          if ((child as THREE.Mesh).geometry) (child as THREE.Mesh).geometry.dispose();
+          if ((child as THREE.Mesh).material) {
+            const m = (child as THREE.Mesh).material;
+            if (Array.isArray(m)) m.forEach(x => x.dispose()); else (m as THREE.Material).dispose();
+          }
+        });
         o.hit.geometry.dispose();
+        (o.hit.material as THREE.Material).dispose();
       });
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

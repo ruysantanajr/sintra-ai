@@ -77,8 +77,8 @@ export default function CategoryBrowser() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <p className="eyebrow mb-2" style={{ color: selected.hex }}>
-              {String(selectedIdx + 1).padStart(2, "0")} / {String(CAROUSEL_ITEMS.length).padStart(2, "0")}
+            <p className="eyebrow mb-3" style={{ color: selected.hex }}>
+              {selected.cosmicName.toUpperCase()}
             </p>
             <h2
               className="font-serif font-light text-[clamp(36px,5vw,72px)] leading-[1.03] tracking-[-0.02em] text-fg-1"
@@ -90,7 +90,7 @@ export default function CategoryBrowser() {
               {selected.essence}
             </p>
             <span className="font-mono text-[11px] text-fg-4 tracking-[0.08em] mt-3 block">
-              {DISC_COUNTS[selected.id] ?? 0} use cases
+              {String(selectedIdx + 1).padStart(2, "0")} / {String(CAROUSEL_ITEMS.length).padStart(2, "0")} &nbsp;·&nbsp; {DISC_COUNTS[selected.id] ?? 0} use cases
             </span>
           </motion.div>
         </AnimatePresence>
