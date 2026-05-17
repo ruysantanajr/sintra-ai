@@ -46,10 +46,17 @@ function makeCosmicBody(
     });
 
   switch (idx) {
-    // 0 — Moon (NASA texture, 128-segment sphere for full UV coverage) ─────────
+    // 0 — Moon (NASA texture, 128-segment sphere) ────────────────────────────
     case 0: {
       const diffuse = loadTex(`${BASE}/moon-texture.png`);
       const bump    = loadTex(`${BASE}/moon-texture.png`, false);
+      // Both textures share 52px dark borders L/R and 57/56px T/B out of 1408×768.
+      // Crop them precisely so every pixel on the sphere shows actual surface data.
+      for (const t of [diffuse, bump]) {
+        t.wrapS = THREE.RepeatWrapping; // seamless horizontal wrap at seam
+        t.repeat.set(0.9261, 0.8529);
+        t.offset.set(0.0369, 0.0729);
+      }
       const mat = new THREE.MeshStandardMaterial({
         map:       diffuse,
         bumpMap:   bump,
@@ -98,17 +105,15 @@ function makeCosmicBody(
       return { body, mainMat: mat };
     }
 
-    // 3 — Mars (NASA texture, 128-segment sphere for full UV coverage) ────────
+    // 3 — Mars (NASA texture, 128-segment sphere) ────────────────────────────
     case 3: {
       const diffuse = loadTex(`${BASE}/mars-texture.png`);
       const bump    = loadTex(`${BASE}/mars-texture.png`, false);
-      // The source image has dark letterbox borders (~34px top & bottom of 768px).
-      // Crop them by shifting the UV origin up and scaling to use only the
-      // actual content band, so the polar regions show Mars surface, not black.
+      // Same 52px L/R + 57/56px T/B dark borders as moon — apply identical crop.
       for (const t of [diffuse, bump]) {
-        t.wrapS = THREE.RepeatWrapping; // clean horizontal seam wrap
-        t.repeat.set(1, 0.91);
-        t.offset.set(0, 0.045);
+        t.wrapS = THREE.RepeatWrapping;
+        t.repeat.set(0.9261, 0.8529);
+        t.offset.set(0.0369, 0.0729);
       }
       const mat = new THREE.MeshStandardMaterial({
         map:       diffuse,
