@@ -236,14 +236,48 @@ button { font-family: inherit; cursor: pointer; }
   transition: border-color 200ms var(--ease-out), background 200ms;
   margin-bottom: 2px;
 }
-.card-visual svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.card-visual--featured { height: 80px; }
+.card-visual svg { width: 100%; height: 100%; display: block; }
 .card:hover .card-visual {
   border-color: rgba(159,140,255,0.25);
   background: rgba(159,140,255,0.025);
+}
+
+/* Category accent top-bar on hover */
+.card-visual::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--cat-color, var(--violet));
+  opacity: 0;
+  transition: opacity 200ms;
+  border-radius: 2px 2px 0 0;
+  z-index: 2;
+}
+.card:hover .card-visual::before { opacity: 0.55; }
+
+/* Featured card */
+.card--featured { padding: 24px; }
+
+/* Clickable tag button */
+.tag-btn {
+  border: 1px solid var(--hairline);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  padding: 3px 8px;
+  border-radius: 2px;
+  color: var(--fg-3);
+  background: rgba(255,255,255,0.025);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 120ms, background 120ms, border-color 120ms;
+}
+.tag-btn:hover {
+  color: var(--violet-bright);
+  background: rgba(159,140,255,0.10);
+  border-color: rgba(159,140,255,0.35);
 }
 
 .modal-overlay {

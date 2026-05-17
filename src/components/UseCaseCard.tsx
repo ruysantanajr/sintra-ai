@@ -5,13 +5,25 @@ import { UseCase, DIFF_COLOR } from "@/lib/data";
 import OutputKindIcon, { outputKindLabel } from "./OutputKindIcon";
 import CardVisual from "./CardVisual";
 
+const CAT_ACCENT: Record<string, string> = {
+  marketing:   "#F08CA8",
+  engineering: "#8FE3D2",
+  operations:  "#E8C089",
+  research:    "#B6A6FF",
+  design:      "#9F8CFF",
+  leadership:  "#E9D9B6",
+};
+
 interface Props {
   item: UseCase;
   onOpen: (item: UseCase) => void;
+  onTagFilter?: (tag: string) => void;
+  isFeatured?: boolean;
 }
 
-export default function UseCaseCard({ item, onOpen }: Props) {
-  const color = DIFF_COLOR[item.difficulty];
+export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = false }: Props) {
+  const diffColor = DIFF_COLOR[item.difficulty];
+  const catColor  = CAT_ACCENT[item.category] || "#9F8CFF";
   const ref = useRef<HTMLButtonElement>(null);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,35 +48,36 @@ export default function UseCaseCard({ item, onOpen }: Props) {
   return (
     <button
       ref={ref}
-      className="card group focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-bright focus-visible:-outline-offset-[3px]"
+      className={`card group focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-bright focus-visible:-outline-offset-[3px]${isFeatured ? " card--featured" : ""}`}
       onClick={() => onOpen(item)}
       aria-label={`Open use case: ${item.title}`}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
+      style={{ "--cat-color": catColor } as React.CSSProperties}
     >
       <span className="card-shimmer" aria-hidden="true" />
 
       {/* Output-kind abstract visual */}
-      <CardVisual kind={item.output_kind} difficulty={item.difficulty} />
+      <CardVisual kind={item.output_kind} difficulty={item.difficulty} isFeatured={isFeatured} />
 
       {/* Difficulty · category eyebrow */}
       <span className="flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase text-fg-3 font-medium">
         <span
           className="w-2 h-2 rounded-full shrink-0"
-          style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+          style={{ background: diffColor, boxShadow: `0 0 8px ${diffColor}` }}
         />
         {item.difficulty}
         <span className="text-fg-4">·</span>
-        {item.category}
+        <span style={{ color: catColor, opacity: 0.85 }}>{item.category}</span>
       </span>
 
       {/* Title */}
-      <h3 className="font-serif font-normal text-[22px] leading-[1.15] tracking-[-0.01em] text-fg-1 m-0 text-left transition-colors duration-140 ease-out-custom group-hover:text-violet-bright">
+      <h3 className={`font-serif font-normal leading-[1.15] tracking-[-0.01em] text-fg-1 m-0 text-left transition-colors duration-140 group-hover:text-violet-bright${isFeatured ? " text-[28px]" : " text-[22px]"}`}>
         {item.title}
       </h3>
 
       {/* Outcome */}
-      <p className="font-sans text-[13.5px] leading-[1.55] text-fg-2 m-0 text-left line-clamp-3">
+      <p className={`font-sans text-[13.5px] leading-[1.55] text-fg-2 m-0 text-left${isFeatured ? "" : " line-clamp-3"}`}>
         {item.outcome || item.desc}
       </p>
 
@@ -91,10 +104,21 @@ export default function UseCaseCard({ item, onOpen }: Props) {
         )}
       </div>
 
-      {/* Tags */}
+      {/* Tags — clickable to filter */}
       <div className="mt-auto flex gap-1.5 items-center flex-wrap pt-2">
-        {item.tags.slice(0, 3).map(t => (
-          <span key={t} className="tag">{t}</span>
+        {item.tags.slice(0, isFeatured ? 4 : 3).map(t => (
+          onTagFilter ? (
+            <button
+              key={t}
+              className="tag tag-btn"
+              onClick={e => { e.stopPropagation(); onTagFilter(t); }}
+              aria-label={`Filter by tag: ${t}`}
+            >
+              {t}
+            </button>
+          ) : (
+            <span key={t} className="tag">{t}</span>
+          )
         ))}
       </div>
     </button>

@@ -59,6 +59,10 @@ export default function LibraryBrowser({ initialCategory, initialCategoryNonce }
     if (!filtered.length) return;
     setActiveItem(filtered[Math.floor(Math.random() * filtered.length)]);
   };
+  const onTagFilter = (tag: string) => {
+    setFilters({ q: tag });
+    document.getElementById("library")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const hasActiveFilters = filters.category !== "all" || filters.difficulty !== "all" || filters.q;
 
@@ -200,19 +204,28 @@ export default function LibraryBrowser({ initialCategory, initialCategoryNonce }
                 </button>
               </motion.div>
             ) : (
-              filtered.map((item, i) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  custom={i}
-                  variants={CARD_VARIANTS}
-                  initial="hidden"
-                  animate="show"
-                  exit="exit"
-                >
-                  <UseCaseCard item={item} onOpen={setActiveItem} />
-                </motion.div>
-              ))
+              filtered.map((item, i) => {
+                const featured = i === 0 && filtered.length >= 4;
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    custom={i}
+                    variants={CARD_VARIANTS}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                    className={featured ? "sm:col-span-2 lg:col-span-2" : ""}
+                  >
+                    <UseCaseCard
+                      item={item}
+                      onOpen={setActiveItem}
+                      onTagFilter={onTagFilter}
+                      isFeatured={featured}
+                    />
+                  </motion.div>
+                );
+              })
             )}
           </AnimatePresence>
         </div>

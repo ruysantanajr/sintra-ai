@@ -8,10 +8,13 @@ interface Props {
   total: number;
 }
 
+import { BASE_PATH } from "@/lib/data";
+
 const LINKS = [
-  { href: "#library",       label: "Library" },
-  { href: "#disciplines",   label: "Disciplines" },
-  { href: "#by-difficulty", label: "By difficulty" },
+  { href: "#library",                           label: "Library" },
+  { href: "#disciplines",                       label: "Disciplines" },
+  { href: "#by-difficulty",                     label: "By difficulty" },
+  { href: `${BASE_PATH}/google-ai-tools/`,      label: "Google AI Tools", external: true },
 ];
 
 export default function Header({ total }: Props) {
@@ -53,7 +56,12 @@ export default function Header({ total }: Props) {
               <a
                 key={l.href}
                 href={l.href}
-                className="font-sans text-[13px] text-fg-3 hover:text-fg-1 transition-colors duration-140 ease-out-custom whitespace-nowrap"
+                className={[
+                  "font-sans text-[13px] transition-colors duration-140 ease-out-custom whitespace-nowrap",
+                  l.external
+                    ? "text-cyan-ice/70 hover:text-cyan-ice"
+                    : "text-fg-3 hover:text-fg-1",
+                ].join(" ")}
               >
                 {l.label}
               </a>
@@ -102,7 +110,10 @@ export default function Header({ total }: Props) {
                 key={l.href}
                 href={l.href}
                 onClick={() => setMobileOpen(false)}
-                className="font-serif text-3xl text-fg-1 py-2 border-b border-violet/[0.12]"
+                className={[
+                  "font-serif text-3xl py-2 border-b border-violet/[0.12]",
+                  l.external ? "text-cyan-ice" : "text-fg-1",
+                ].join(" ")}
               >
                 {l.label}
               </a>

@@ -11,16 +11,18 @@ const DIFF_ACCENT: Record<string, string> = {
 interface Props {
   kind: OutputKind;
   difficulty: string;
+  isFeatured?: boolean;
 }
 
-export default function CardVisual({ kind, difficulty }: Props) {
+export default function CardVisual({ kind, difficulty, isFeatured = false }: Props) {
   const id = React.useId().replace(/:/g, "");
   const a = DIFF_ACCENT[difficulty] || "#9F8CFF";
+  const cls = `card-visual${isFeatured ? " card-visual--featured" : ""}`;
 
   switch (kind) {
     case "analysis":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             {[7, 14, 10, 22, 16, 30, 18, 26, 20, 34, 22, 28].map((h, i) => (
               <rect
@@ -35,7 +37,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "code":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <rect x="4"  y="5"  width="26" height="3.5" rx="1.75" fill={a} opacity="0.7" />
             <rect x="4"  y="13" width="52" height="3.5" rx="1.75" fill="rgba(143,227,210,0.45)" />
@@ -50,7 +52,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "visual":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <defs>
               <linearGradient id={`vg-${id}`} x1="0" y1="0" x2="0" y2="1">
@@ -74,7 +76,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "spec":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <rect x="4"  y="16" width="20" height="12" rx="2" stroke="rgba(159,140,255,0.4)" strokeWidth="1" fill="rgba(159,140,255,0.06)" />
             <rect x="50" y="6"  width="20" height="12" rx="2" stroke={a} strokeWidth="1" fill={`${a}30`} />
@@ -90,7 +92,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "templates":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <rect x="34" y="18" width="74" height="24" rx="2" fill="rgba(159,140,255,0.03)" stroke="rgba(159,140,255,0.15)" strokeWidth="1" />
             <rect x="24" y="11" width="74" height="24" rx="2" fill="rgba(159,140,255,0.05)" stroke="rgba(159,140,255,0.25)" strokeWidth="1" />
@@ -104,7 +106,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "table":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <rect x="4" y="4" width="112" height="36" rx="2" stroke="rgba(159,140,255,0.2)" strokeWidth="1" fill="none" />
             <rect x="4" y="4" width="112" height="10" rx="2" fill="rgba(159,140,255,0.08)" />
@@ -122,7 +124,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
 
     case "deck":
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <rect x="4"  y="4"  width="90" height="36" rx="2" fill="rgba(159,140,255,0.06)" stroke={a} strokeWidth="1" opacity="0.8" />
             <rect x="10" y="10" width="44" height="5" rx="1.5" fill="rgba(255,255,255,0.25)" />
@@ -139,7 +141,7 @@ export default function CardVisual({ kind, difficulty }: Props) {
     case "plan":
     default:
       return (
-        <div className="card-visual">
+        <div className={cls}>
           <svg viewBox="0 0 120 44" fill="none" aria-hidden="true">
             <line x1="6" y1="22" x2="114" y2="22" stroke="rgba(159,140,255,0.2)" strokeWidth="1" />
             {[16, 36, 60, 84, 104].map((cx, i) => (
