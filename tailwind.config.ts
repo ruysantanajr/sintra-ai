@@ -85,6 +85,10 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(10px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "hero-float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-18px)" },
+        },
       },
       animation: {
         "hero-drift": "hero-drift 32s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate",
@@ -92,6 +96,7 @@ const config: Config = {
         "modal-in": "modal-in 320ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "scrim-in": "scrim-in 240ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "fade-up": "fade-up 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards",
+        "hero-float": "hero-float 7s ease-in-out infinite",
       },
     },
   },

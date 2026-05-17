@@ -2,9 +2,8 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import dynamic from "next/dynamic";
 
-const Tesseract3D = dynamic(() => import("./Tesseract3D"), { ssr: false });
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 interface Props {
   total: number;
@@ -41,11 +40,17 @@ export default function HeroMinimal({ total }: Props) {
         style={{ scale: orbitScale, opacity: orbitOpacity }}
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
       >
-        <div
-          style={{ width: "clamp(320px, 62vw, 620px)", height: "clamp(320px, 62vw, 620px)" }}
-        >
-          <Tesseract3D />
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`${BASE_PATH}/hero-orb.png`}
+          alt=""
+          className="animate-hero-float"
+          style={{
+            width: "clamp(320px, 62vw, 680px)",
+            height: "auto",
+            filter: "drop-shadow(0 0 80px rgba(94,234,212,0.28)) drop-shadow(0 0 32px rgba(159,140,255,0.22))",
+          }}
+        />
       </motion.div>
 
       {/* ── Radial vignette so text stays readable ───────────────────── */}
