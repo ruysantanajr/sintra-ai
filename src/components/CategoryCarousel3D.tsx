@@ -159,22 +159,37 @@ function makeCosmicBody(
       return { body, mainMat: mat };
     }
 
-    // 7 — Quasar (core + disc + jets) ─────────────────────────────────────
+    // 7 — Quasar (NASA texture disk + dark core + relativistic jets) ────────
     case 7: {
-      const mat = pbr({ metalness: 0.0, roughness: 0.08, emissive: c, emissiveIntensity: 0.48 });
-      body.add(new THREE.Mesh(new THREE.SphereGeometry(0.3, 22, 22), mat));
-      const disc = new THREE.Mesh(
-        new THREE.TorusGeometry(0.66, 0.13, 10, 80),
-        new THREE.MeshPhysicalMaterial({ color, transparent: true, opacity: 0.52, metalness: 0.3, roughness: 0.2 }),
-      );
-      disc.rotation.x = Math.PI * 0.36;
-      body.add(disc);
+      const tex = loadTex(`${BASE}/quasar-texture.png`);
+      // Textured accretion disk — flat circle tilted like the image
+      const mat = new THREE.MeshPhysicalMaterial({
+        map: tex,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.93,
+        roughness: 0.10,
+        metalness: 0.04,
+        emissive: c,
+        emissiveIntensity: 0.10,
+      });
+      const disk = new THREE.Mesh(new THREE.CircleGeometry(0.90, 96), mat);
+      disk.rotation.x = Math.PI * 0.30; // tilt to match image perspective
+      body.add(disk);
+
+      // Dark singularity at center
+      body.add(new THREE.Mesh(
+        new THREE.SphereGeometry(0.13, 20, 20),
+        new THREE.MeshBasicMaterial({ color: 0x000005 }),
+      ));
+
+      // Relativistic jets (up + down from poles)
       for (const sign of [1, -1]) {
         const jet = new THREE.Mesh(
-          new THREE.ConeGeometry(0.068, 0.74, 6),
-          new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.44 }),
+          new THREE.ConeGeometry(0.055, 0.78, 6),
+          new THREE.MeshBasicMaterial({ color: 0xaaddff, transparent: true, opacity: 0.50 }),
         );
-        jet.position.y = sign * 0.58;
+        jet.position.y = sign * 0.54;
         if (sign < 0) jet.rotation.z = Math.PI;
         body.add(jet);
       }
