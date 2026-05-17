@@ -46,6 +46,7 @@ All use cases live in `src/data/useCases.json`. Each object must follow this sch
 | `"Business Intelligence"` | Data & Finance | 5 |
 | `"Software Development"` | Code & Build | 6 |
 | `"Creative AI"` | Creative AI | 7 |
+| `"Design & Creative"` | Creative AI | 7 — legacy alias |
 | `"Game Development"` | Game & Advanced | 8 |
 
 To add a new top-level category, update `DOMAIN_MAP` in `src/lib/data.ts` and add the entry to `CAROUSEL_ITEMS` in `src/components/CategoryCarousel3D.tsx`.
