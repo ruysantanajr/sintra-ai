@@ -45,15 +45,16 @@ export default function Header({ total }: Props) {
             : "bg-transparent",
         ].join(" ")}
       >
-        <div className="w-full max-w-[1200px] mx-auto px-6 md:px-8 flex items-center gap-7">
-          <a href="#" className="flex items-center gap-2.5 text-violet-bright [filter:drop-shadow(0_0_12px_rgba(159,140,255,0.25))]" aria-label="Sintra Tesseract — home">
+        <div className="w-full max-w-[1200px] mx-auto px-4 md:px-8 flex items-center gap-2 md:gap-4 lg:gap-6">
+          <a href={`${BASE_PATH}/`} className="flex items-center gap-2 shrink-0 text-violet-bright [filter:drop-shadow(0_0_12px_rgba(159,140,255,0.25))]" aria-label="Sintra Tesseract — home">
             <TesseractMark size={20} />
-            <span className="font-serif text-[17px] text-fg-1 leading-none tracking-[0.005em]">
+            <span className="font-serif text-[16px] md:text-[17px] text-fg-1 leading-none tracking-[0.005em]">
               Sintra <em className="italic text-violet-bright">Tesseract</em>
             </span>
           </a>
 
-          <nav className="hidden md:flex gap-6 ml-7">
+          {/* Desktop nav — only shows at lg+ to avoid overflow */}
+          <nav className="hidden lg:flex gap-5 ml-4">
             {LINKS.map(l => (
               <a
                 key={l.href}
@@ -72,14 +73,14 @@ export default function Header({ total }: Props) {
 
           <div className="flex-1" />
 
-          <span className="hidden sm:inline font-mono text-[11px] text-fg-3 tracking-[0.06em] whitespace-nowrap">
+          <span className="hidden lg:inline font-mono text-[11px] text-fg-3 tracking-[0.06em] whitespace-nowrap">
             <b className="text-fg-1 font-medium">{total}</b> {locale === "pt" ? "casos de uso" : "use cases"}
           </span>
 
           {/* Language toggle — pill */}
           <button
             onClick={toggle}
-            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-violet/[0.12] border border-violet/30 font-mono text-[11px] tracking-[0.06em] font-medium text-fg-1 hover:bg-violet/25 hover:border-violet/60 transition-all duration-150"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-violet/[0.12] border border-violet/30 font-mono text-[11px] tracking-[0.06em] font-medium text-fg-1 hover:bg-violet/25 hover:border-violet/60 transition-all duration-150 shrink-0"
             aria-label={locale === "en" ? "Switch to Portuguese" : "Mudar para Inglês"}
             title={locale === "en" ? "Switch to Portuguese (PT-BR)" : "Switch to English (EN)"}
           >
@@ -87,10 +88,11 @@ export default function Header({ total }: Props) {
             {locale === "en" ? "PT" : "EN"}
           </button>
 
-          <a href="#library" className="btn hidden sm:inline-flex">{t.nav_enter_library}</a>
+          <a href="#explore" className="btn hidden md:inline-flex shrink-0">{t.nav_enter_library}</a>
 
+          {/* Hamburger — visible below lg where nav is hidden */}
           <button
-            className="md:hidden flex items-center justify-center w-10 h-10 -mr-2 text-fg-1"
+            className="lg:hidden flex items-center justify-center w-10 h-10 shrink-0 text-fg-1"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
@@ -103,7 +105,7 @@ export default function Header({ total }: Props) {
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-[60] bg-abyss/95 backdrop-blur-md animate-scrim-in">
           <div className="flex items-center justify-between h-16 px-6">
-            <a href="#" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5 text-violet-bright">
+            <a href={`${BASE_PATH}/`} onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5 text-violet-bright">
               <TesseractMark size={20} />
               <span className="font-serif text-[17px] text-fg-1">
                 Sintra <em className="italic text-violet-bright">Tesseract</em>
@@ -142,7 +144,7 @@ export default function Header({ total }: Props) {
               </a>
             ))}
             <a
-              href="#library"
+              href="#explore"
               onClick={() => setMobileOpen(false)}
               className="btn mt-6 self-start"
             >

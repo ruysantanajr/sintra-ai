@@ -56,58 +56,58 @@ export interface UseCase {
 
 const LLM_MAP: Record<string, Record<string, { model: string; reason: string }>> = {
   "quick-wins": {
-    beginner:     { model: "Claude Haiku 3.5",  reason: "Instant responses for simple, high-frequency tasks" },
-    intermediate: { model: "Claude Haiku 3.5",  reason: "Fast and cost-effective for everyday productivity" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "More nuance for complex quick-win workflows" },
-    expert:       { model: "Claude 3.5 Sonnet", reason: "Full context handling for multi-step daily tasks" },
+    beginner:     { model: "Claude Haiku 4.5",  reason: "Instant responses for simple, high-frequency tasks" },
+    intermediate: { model: "Claude Haiku 4.5",  reason: "Fast and cost-effective for everyday productivity" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "More nuance for complex quick-win workflows" },
+    expert:       { model: "Claude Sonnet 4.5", reason: "Full context handling for multi-step daily tasks" },
   },
   "productivity": {
-    beginner:     { model: "Claude Haiku 3.5",  reason: "Snappy responses for note-taking and scheduling" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "Balances speed with structured planning output" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Long context for complex workflow automation" },
-    expert:       { model: "Claude Opus 4",     reason: "Deep reasoning for intricate operational systems" },
+    beginner:     { model: "Claude Haiku 4.5",  reason: "Snappy responses for note-taking and scheduling" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "Balances speed with structured planning output" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Long context for complex workflow automation" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Deep reasoning for intricate operational systems" },
   },
   "writing": {
-    beginner:     { model: "Claude Haiku 3.5",  reason: "Fast, fluent copy generation for everyday tasks" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "Superior tone control and long-form writing quality" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Best-in-class writing with deep contextual nuance" },
-    expert:       { model: "Claude Opus 4",     reason: "Campaign-level strategic thinking plus brilliant prose" },
+    beginner:     { model: "Claude Haiku 4.5",  reason: "Fast, fluent copy generation for everyday tasks" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "Superior tone control and long-form writing quality" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Best-in-class writing with deep contextual nuance" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Campaign-level strategic thinking plus brilliant prose" },
   },
   "research": {
     beginner:     { model: "Perplexity",        reason: "Real-time web synthesis for quick research questions" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "200k context; excels at multi-source synthesis" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Deep literature synthesis with citation precision" },
-    expert:       { model: "Claude Opus 4",     reason: "Most rigorous reasoning for complex research" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "200k context; excels at multi-source synthesis" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Deep literature synthesis with citation precision" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Most rigorous reasoning for complex research" },
   },
   "finance": {
     beginner:     { model: "GPT-4o",            reason: "Strong at spreadsheets and structured financial data" },
     intermediate: { model: "GPT-4o",            reason: "Excellent tabular logic and financial model structuring" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Long context for multi-document FP&A analysis" },
-    expert:       { model: "Claude Opus 4",     reason: "Complex cross-functional modeling and strategic trade-offs" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Long context for multi-document FP&A analysis" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Complex cross-functional modeling and strategic trade-offs" },
   },
   "data-analytics": {
     beginner:     { model: "GPT-4o",            reason: "Strong data reasoning and chart interpretation" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "Handles complex queries across large datasets" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Deep BI workflow design and data pipeline reasoning" },
-    expert:       { model: "Claude Opus 4",     reason: "Autonomous analytics reasoning for enterprise-scale systems" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "Handles complex queries across large datasets" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Deep BI workflow design and data pipeline reasoning" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Autonomous analytics reasoning for enterprise-scale systems" },
   },
   "coding": {
-    beginner:     { model: "Claude Haiku 3.5",  reason: "Quick snippets and boilerplate at low latency" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "#1 on SWE-bench; precise multi-file reasoning" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Leads coding benchmarks for complex refactors" },
-    expert:       { model: "Claude Opus 4",     reason: "Deepest architectural reasoning for system design" },
+    beginner:     { model: "Claude Haiku 4.5",  reason: "Quick snippets and boilerplate at low latency" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "Top SWE-bench score; precise multi-file reasoning" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Leads coding benchmarks for complex refactors" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Deepest architectural reasoning for system design" },
   },
   "creative-ai": {
     beginner:     { model: "GPT-4o",            reason: "Multimodal; understands and generates visual briefs" },
     intermediate: { model: "GPT-4o",            reason: "Best visual reasoning for creative direction" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Detailed prompt engineering for generative models" },
-    expert:       { model: "Claude Opus 4",     reason: "Deep aesthetic reasoning and brand-level thinking" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Detailed prompt engineering for generative models" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Deep aesthetic reasoning and brand-level thinking" },
   },
   "game-advanced": {
-    beginner:     { model: "Claude 3.5 Sonnet", reason: "Clear game design explanations and basic scripts" },
-    intermediate: { model: "Claude 3.5 Sonnet", reason: "Game logic, dialogue systems, and level design" },
-    advanced:     { model: "Claude 3.5 Sonnet", reason: "Complex game mechanics and AI agent workflows" },
-    expert:       { model: "Claude Opus 4",     reason: "Deep systems design for advanced game architecture" },
+    beginner:     { model: "Claude Sonnet 4.5", reason: "Clear game design explanations and basic scripts" },
+    intermediate: { model: "Claude Sonnet 4.5", reason: "Game logic, dialogue systems, and level design" },
+    advanced:     { model: "Claude Sonnet 4.5", reason: "Complex game mechanics and AI agent workflows" },
+    expert:       { model: "Claude Opus 4.7",   reason: "Deep systems design for advanced game architecture" },
   },
 };
 
@@ -127,7 +127,7 @@ const DOMAIN_MAP: Record<string, Exclude<Category, "all">> = {
 export const USE_CASES: UseCase[] = (rawData as any[]).map((item, idx) => {
   const cat   = DOMAIN_MAP[item.domain] ?? "productivity";
   const skill = (item.skill_level as string).toLowerCase();
-  const llmRec = LLM_MAP[cat]?.[skill] ?? { model: "Claude 3.5 Sonnet", reason: "Best overall balance of capability and speed" };
+  const llmRec = LLM_MAP[cat]?.[skill] ?? { model: "Claude Sonnet 4.5", reason: "Best overall balance of capability and speed" };
   return {
     id: idx + 1,
     title: item.title,
