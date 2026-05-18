@@ -21,6 +21,8 @@ export default function Header({ total }: Props) {
     { href: `${BASE_PATH}/tools/`,           label: t.nav_tools,        external: true },
     { href: `${BASE_PATH}/news/`,            label: t.nav_news,         external: true },
     { href: `${BASE_PATH}/learn/`,           label: t.nav_learn,        external: true },
+    { href: `${BASE_PATH}/claude/`,          label: t.nav_claude,       external: true },
+    { href: `${BASE_PATH}/resources/`,       label: t.nav_resources,    external: true },
     { href: `${BASE_PATH}/concepts/`,        label: t.nav_concepts,     external: true },
     { href: `${BASE_PATH}/ai-history/`,      label: t.nav_ai_history,   external: true },
     { href: `${BASE_PATH}/ai-labs/`,         label: t.nav_ai_labs,      external: true },

@@ -5,6 +5,8 @@ export interface Translations {
   nav_tools:         string;
   nav_news:          string;
   nav_learn:         string;
+  nav_claude:        string;
+  nav_resources:     string;
   nav_google_tools:  string;
   nav_concepts:      string;
   nav_ai_history:    string;
@@ -57,6 +59,8 @@ const translations: Record<Locale, Translations> = {
     nav_tools:         "AI Tools",
     nav_news:          "News",
     nav_learn:         "Learn",
+    nav_claude:        "Claude",
+    nav_resources:     "Resources",
     nav_google_tools:  "Google AI",
     nav_concepts:      "Concepts",
     nav_ai_history:    "AI History",
@@ -107,6 +111,8 @@ const translations: Record<Locale, Translations> = {
     nav_tools:         "Ferramentas IA",
     nav_news:          "Notícias",
     nav_learn:         "Aprender",
+    nav_claude:        "Claude",
+    nav_resources:     "Recursos",
     nav_google_tools:  "Google AI",
     nav_concepts:      "Conceitos",
     nav_ai_history:    "História da IA",

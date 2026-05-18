@@ -3,17 +3,19 @@ import { BASE_PATH } from "@/lib/data";
 
 const NAV_COLS = [
   {
-    head: "Explore",
+    head: "Discover",
     links: [
       ["Use Cases",            "#explore"],
       ["AI Tools Directory",   `${BASE_PATH}/tools/`],
       ["AI News",              `${BASE_PATH}/news/`],
       ["Learning Paths",       `${BASE_PATH}/learn/`],
+      ["Resources & Links",    `${BASE_PATH}/resources/`],
     ],
   },
   {
     head: "Reference",
     links: [
+      ["Claude & Anthropic",   `${BASE_PATH}/claude/`],
       ["AI Concepts",          `${BASE_PATH}/concepts/`],
       ["AI History",           `${BASE_PATH}/ai-history/`],
       ["AI Labs",              `${BASE_PATH}/ai-labs/`],
