@@ -415,6 +415,144 @@ export const AI_NEWS: NewsItem[] = [
     provider: "Anthropic",
     providerColor: "#d97706",
   },
+
+  // ── 2025 (continued) ─────────────────────────────────────────────────────
+
+  {
+    id: "meta-scale-ai",
+    date: "Jun 2025",
+    dateNum: 202506,
+    title: "Meta Acquires 49% of Scale AI — $29 Billion Data Valuation",
+    summary:
+      "Meta acquired a 49% non-voting stake in Scale AI, valuing the data-labeling and AI evaluation company at $29 billion — the largest acquisition in AI infrastructure at the time. The deal gave Meta privileged access to Scale's training data pipelines and human-feedback systems, directly competing with OpenAI and Anthropic on the data layer. Meta simultaneously announced Scale AI's CEO Alexandr Wang would join Meta's board, signaling a deeper strategic alignment.",
+    tags: ["Meta", "Scale AI", "Data", "Infrastructure", "Acquisition"],
+    significance: "major",
+    provider: "Meta",
+    providerColor: "#0866ff",
+  },
+  {
+    id: "gpt-5-launch",
+    date: "Aug 2025",
+    dateNum: 202508,
+    title: "GPT-5 Launches — Unified Reasoning Model Free for Everyone",
+    summary:
+      "OpenAI released GPT-5 on August 7, 2025 as its first model unifying fast chat and deep reasoning in a single endpoint, ending the need to choose between GPT-4o and the o-series. GPT-5 scored 74.9% on SWE-bench Verified, 94.6% on AIME 2025 without tools, and 84.2% on MMMU, setting new records across coding, mathematics, and multimodal understanding simultaneously. The model was made available to all free ChatGPT users at launch — the first time a unified reasoning model reached the free tier.",
+    tags: ["OpenAI", "GPT-5", "Reasoning", "SWE-bench", "Free Access", "Multimodal"],
+    significance: "landmark",
+    provider: "OpenAI",
+    providerColor: "#10a37f",
+  },
+  {
+    id: "gemini-3-pro",
+    date: "Nov 2025",
+    dateNum: 202511,
+    title: "Gemini 3 Pro — Google's Most Capable Multimodal Model Launches",
+    summary:
+      "Google launched Gemini 3 Pro on November 20, 2025 across Search, the Gemini app, AI Studio, and Vertex AI simultaneously. The model features a 1,048,576-token context window, native understanding of text, images, video, audio, and PDFs, and a Deep Think mode for demanding reasoning tasks. Gemini 3 Pro was immediately deployed as the backbone of Google's consumer AI products, replacing Gemini 2.0, and marked Google's most aggressive model launch across its entire product surface at once.",
+    tags: ["Google", "Gemini 3", "Multimodal", "1M Context", "Deep Think", "Agents"],
+    significance: "landmark",
+    provider: "Google",
+    providerColor: "#4285f4",
+  },
+  {
+    id: "claude-opus-4-5",
+    date: "Nov 2025",
+    dateNum: 202511,
+    title: "Claude Opus 4.5 — First Model to Break 80% on SWE-bench",
+    summary:
+      "Anthropic released Claude Opus 4.5 on November 24, 2025, scoring 80.9% on SWE-bench Verified — the first AI model to cross the 80% threshold on the leading real-world coding benchmark, surpassing GPT-5.1 at 76.3% and Gemini 3 Pro at 76.2%. Pricing dropped by approximately 67% from previous Opus models to $5 per million input tokens and $25 per million output tokens. An 'endless chat' feature automatically compressed context at limits, enabling uninterrupted multi-hour agentic workflows.",
+    tags: ["Anthropic", "Claude Opus 4.5", "SWE-bench", "Coding", "Agents", "Pricing"],
+    significance: "landmark",
+    provider: "Anthropic",
+    providerColor: "#d97706",
+  },
+  {
+    id: "gpt-5-2-codex",
+    date: "Dec 2025",
+    dateNum: 202512,
+    title: "OpenAI GPT-5.2-Codex — Agentic Coding Specialist Counters Gemini 3",
+    summary:
+      "OpenAI released GPT-5.2-Codex in December 2025 as a specialist coding model optimized for multi-step agentic software engineering tasks, directly responding to Gemini 3 Pro's strong coding performance. The model was positioned for autonomous repository-level coding, integration testing, and codebase exploration rather than single-file tasks. GPT-5.2-Codex debuted on the OpenAI Codex platform and via the Assistants API, targeting professional engineering teams running long-horizon automated workflows.",
+    tags: ["OpenAI", "GPT-5.2", "Codex", "Coding", "Agents", "Agentic"],
+    significance: "major",
+    provider: "OpenAI",
+    providerColor: "#10a37f",
+  },
+  {
+    id: "meta-manus",
+    date: "Dec 2025",
+    dateNum: 202512,
+    title: "Meta Acquires Manus AI for $2B+ — General-Purpose Agent Platform",
+    summary:
+      "Meta acquired Manus, a Singapore-based AI startup, for over $2 billion — the largest acquisition of an AI agent company to date. Manus had built a general-purpose AI agent capable of performing complex multi-step real-world tasks across web browsing, file management, coding, and data analysis without domain-specific customization. The acquisition positioned Meta to compete directly with OpenAI Operator and Anthropic Computer Use in the emerging market for autonomous agent products.",
+    tags: ["Meta", "Manus", "Agents", "Acquisition", "Automation"],
+    significance: "major",
+    provider: "Meta",
+    providerColor: "#0866ff",
+  },
+
+  // ── 2026 ─────────────────────────────────────────────────────────────────
+
+  {
+    id: "gemini-3-1-pro",
+    date: "Feb 2026",
+    dateNum: 202602,
+    title: "Gemini 3.1 Pro — Leads Every Published Reasoning Benchmark",
+    summary:
+      "Google released Gemini 3.1 Pro in February 2026, immediately reaching the top of all major published benchmarks including GPQA Diamond at 94.3% and ARC-AGI-2 at 77.1%. The model matched GPT-5.5's 1-million-token context window while offering more competitive API pricing, making it the preferred choice for cost-sensitive high-throughput workloads. Gemini 3.1 Flash-Lite launched simultaneously as Google's most cost-efficient model for latency-critical production deployments.",
+    tags: ["Google", "Gemini 3.1 Pro", "Reasoning", "GPQA", "ARC-AGI", "Benchmark"],
+    significance: "major",
+    provider: "Google",
+    providerColor: "#4285f4",
+  },
+  {
+    id: "claude-mythos-glasswing",
+    date: "Apr 2026",
+    dateNum: 202604,
+    title: "Claude Mythos and Project Glasswing — AI Discovers Thousands of Zero-Days",
+    summary:
+      "Anthropic announced Claude Mythos Preview, a frontier model sitting a full capability tier above Opus 4.7 and not available to the public, alongside Project Glasswing — an initiative to use Mythos to secure critical software infrastructure. Using Mythos, Anthropic autonomously identified thousands of zero-day vulnerabilities across every major operating system and web browser, including a 17-year-old remote code execution vulnerability in FreeBSD that allows complete server takeover. Launch partners include AWS, Apple, Cisco, CrowdStrike, Google, JPMorganChase, Microsoft, and NVIDIA, with $100 million in model credits committed.",
+    tags: ["Anthropic", "Claude Mythos", "Project Glasswing", "Security", "Zero-Day", "Cybersecurity"],
+    significance: "landmark",
+    provider: "Anthropic",
+    providerColor: "#d97706",
+  },
+  {
+    id: "claude-opus-4-7",
+    date: "Apr 2026",
+    dateNum: 202604,
+    title: "Claude Opus 4.7 — Anthropic's 2026 Flagship With Enhanced Vision and Coding",
+    summary:
+      "Anthropic released Claude Opus 4.7 on April 16, 2026, delivering a 10.9-point improvement on SWE-bench Pro to 64.3%, a threefold increase in visual resolution to 3.75 megapixels per image, enhanced file-system memory for persistent agentic tasks, and a new 'xhigh' reasoning effort level above the previous maximum. Pricing remained unchanged at $5 per million input and $25 per million output tokens despite the capability improvements. Opus 4.7 led software engineering and tool orchestration benchmarks against all competing models at launch.",
+    tags: ["Anthropic", "Claude Opus 4.7", "SWE-bench", "Vision", "Coding", "Reasoning"],
+    significance: "major",
+    provider: "Anthropic",
+    providerColor: "#d97706",
+  },
+  {
+    id: "gpt-5-5",
+    date: "Apr 2026",
+    dateNum: 202604,
+    title: "GPT-5.5 — OpenAI's 1M-Context Default Model With Agentic Workflows",
+    summary:
+      "OpenAI released GPT-5.5 on April 24, 2026, matching Gemini 3.1 Pro's 1-million-token context window for the first time while improving token efficiency at equivalent latency versus GPT-5.4. Greg Brockman described GPT-5.5 as 'a new class of intelligence' for its ability to decompose ambiguous problems and determine next steps without explicit instruction. GPT-5.5 Instant subsequently became the default model for all ChatGPT users in May 2026, replacing GPT-4o as the standard-tier model.",
+    tags: ["OpenAI", "GPT-5.5", "1M Context", "Agentic", "ChatGPT", "Default Model"],
+    significance: "major",
+    provider: "OpenAI",
+    providerColor: "#10a37f",
+  },
+  {
+    id: "anthropic-30b-revenue",
+    date: "May 2026",
+    dateNum: 202605,
+    title: "Anthropic Hits $30B Revenue Run-Rate — $950B Valuation Talks",
+    summary:
+      "Anthropic's annualized revenue surpassed $30 billion in May 2026 — more than triple its $9 billion run-rate at end of 2025 — driven by explosive enterprise adoption of Claude Opus 4.7 and Claude Code. The company entered talks to raise $30–50 billion at a valuation approaching $950 billion, which would make it one of the most valuable private companies in history. Anthropic simultaneously expanded its compute partnership with Google and Broadcom to support the infrastructure demands of serving its rapidly growing customer base.",
+    tags: ["Anthropic", "Revenue", "Valuation", "Enterprise", "Growth"],
+    significance: "notable",
+    provider: "Anthropic",
+    providerColor: "#d97706",
+  },
 ];
 
 // ── Derived exports ────────────────────────────────────────────────────────
