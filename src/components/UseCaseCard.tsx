@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
+import { Copy, Check } from "lucide-react";
 import { UseCase, DIFF_COLOR } from "@/lib/data";
 import OutputKindIcon, { outputKindLabel } from "./OutputKindIcon";
 import CardVisual from "./CardVisual";
@@ -28,6 +29,7 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
   const diffColor = DIFF_COLOR[item.difficulty];
   const catColor  = CAT_ACCENT[item.category] || "#9F8CFF";
   const ref = useRef<HTMLButtonElement>(null);
+  const [copied, setCopied] = useState(false);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const el = ref.current;
@@ -48,6 +50,13 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
     el.style.transform = "";
   }, []);
 
+  const quickCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard?.writeText(item.prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
+
   return (
     <button
       ref={ref}
@@ -59,6 +68,35 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
       style={{ "--cat-color": catColor } as React.CSSProperties}
     >
       <span className="card-shimmer" aria-hidden="true" />
+
+      {/* Difficulty left-border accent */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute", top: 0, left: 0, bottom: 0,
+          width: 3, borderRadius: "7px 0 0 7px",
+          background: diffColor, pointerEvents: "none", zIndex: 2,
+        }}
+      />
+
+      {/* Subtle difficulty bg tint */}
+      <span
+        aria-hidden="true"
+        style={{
+          position: "absolute", inset: 0, borderRadius: "inherit",
+          background: `${diffColor}07`, pointerEvents: "none", zIndex: 0,
+        }}
+      />
+
+      {/* Quick-copy button — visible on hover */}
+      <button
+        onClick={quickCopy}
+        aria-label="Copy prompt"
+        style={{ position: "absolute", top: 10, right: 10, zIndex: 10 }}
+        className="opacity-0 group-hover:opacity-100 transition-opacity duration-150 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-[#0E1120]/90 border border-violet/30 font-mono text-[10px] text-fg-3 hover:text-violet-bright hover:border-violet/60 backdrop-blur-sm"
+      >
+        {copied ? <><Check size={10} /> Copied!</> : <><Copy size={10} /> Copy</>}
+      </button>
 
       {/* Output-kind abstract visual */}
       <CardVisual kind={item.output_kind} difficulty={item.difficulty} isFeatured={isFeatured} />
@@ -86,7 +124,6 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
 
       {/* Meta row: output kind · tools */}
       <div className="flex items-center gap-2 flex-wrap font-mono text-[10px] text-fg-3 tracking-[0.04em]">
-        {/* LLM recommendation */}
         <span className="inline-flex items-center gap-1 font-mono text-[10px] text-fg-4 bg-violet/[0.07] border border-violet/[0.18] rounded px-1.5 py-0.5 whitespace-nowrap">
           <span className="text-violet-bright">⬡</span>
           {item.best_llm}

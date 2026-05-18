@@ -193,12 +193,24 @@ export default function GoogleAiToolsPage() {
                   {cat.tools.map((tool) => (
                     <div
                       key={tool.name}
-                      className="group p-4 rounded-[4px] bg-white/[0.025] border border-hairline hover:border-violet/40 hover:bg-white/[0.04] transition-all duration-200"
+                      className={`group p-4 rounded-[4px] border transition-all duration-200 ${tool.url ? "bg-white/[0.025] border-hairline hover:border-violet/40 hover:bg-white/[0.04]" : "bg-white/[0.012] border-hairline/50 opacity-70 hover:opacity-90"}`}
                     >
                       <div className="flex items-start justify-between gap-3 mb-2">
-                        <h3 className="font-sans font-medium text-[14px] text-fg-1 leading-tight">
-                          {tool.name}
-                        </h3>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-sans font-medium text-[14px] text-fg-1 leading-tight">
+                            {tool.name}
+                          </h3>
+                          {tool.url ? (
+                            <span className="inline-flex items-center gap-1 font-mono text-[9px] px-1.5 py-0.5 rounded-full border border-green-500/40 text-green-400 bg-green-500/10 uppercase tracking-[0.08em]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                              Live
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 font-mono text-[9px] px-1.5 py-0.5 rounded-full border border-amber-500/40 text-amber-400/80 bg-amber-500/08 uppercase tracking-[0.08em]">
+                              Coming soon
+                            </span>
+                          )}
+                        </div>
                         {tool.url && (
                           <a
                             href={tool.url}

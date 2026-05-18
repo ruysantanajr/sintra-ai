@@ -225,6 +225,9 @@ export default function AIHistoryTimeline() {
             );
           })}
         </div>
+
+        {/* Temporal scale bar — proportional time spans (power-law compressed) */}
+        <TemporalScaleBar activeEraIdx={activeEraIdx} onSelect={goTo} />
       </div>
 
       {/* ── Era content ─────────────────────────────────────── */}
@@ -366,6 +369,55 @@ export default function AIHistoryTimeline() {
           onClose={() => setMilestone(null)}
         />
       )}
+    </div>
+  );
+}
+
+// ─── Temporal scale bar ──────────────────────────────────────────────────────
+// Year spans per era; ancient uses power-law compression so other eras are visible
+const ERA_SPANS: Record<string, number> = {
+  ancient:  Math.pow(21843, 0.25),  // ~20,000 BC – 1843
+  theory:   Math.pow(19,    0.25),  // 1936 – 1955
+  ai1:      Math.pow(28,    0.25),  // 1951 – 1979
+  hardware: Math.pow(24,    0.25),  // 1971 – 1995
+  ml:       Math.pow(26,    0.25),  // 1986 – 2012
+  deep:     Math.pow(8,     0.25),  // 2012 – 2020
+  gen:      Math.pow(3,     0.25),  // 2021 – 2023
+  agents:   Math.pow(3,     0.25),  // 2024 – Now
+};
+const TOTAL_SPAN = Object.values(ERA_SPANS).reduce((s, v) => s + v, 0);
+
+function TemporalScaleBar({ activeEraIdx, onSelect }: { activeEraIdx: number; onSelect: (i: number) => void }) {
+  return (
+    <div className="px-4 pb-2 max-w-5xl mx-auto">
+      <div className="flex h-[5px] rounded-full overflow-hidden gap-px">
+        {ERAS.map((era, idx) => {
+          const width = (ERA_SPANS[era.id] / TOTAL_SPAN) * 100;
+          const active = idx === activeEraIdx;
+          return (
+            <button
+              key={era.id}
+              onClick={() => onSelect(idx)}
+              title={`${era.label} (${era.years})`}
+              className="h-full transition-all duration-300 rounded-[1px] hover:opacity-100"
+              style={{
+                width: `${width}%`,
+                background: era.color,
+                opacity: active ? 1 : 0.28,
+                flexShrink: 0,
+              }}
+              aria-label={era.label}
+            />
+          );
+        })}
+      </div>
+      <div className="flex items-center justify-between mt-1 font-mono text-[9px] text-fg-4 opacity-60">
+        <span>~20,000 BC</span>
+        <span className="hidden sm:inline">1936</span>
+        <span className="hidden sm:inline">1970</span>
+        <span className="hidden sm:inline">2012</span>
+        <span>Now</span>
+      </div>
     </div>
   );
 }

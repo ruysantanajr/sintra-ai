@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Copy, Check, X } from "lucide-react";
+import { Copy, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { UseCase, DIFF_COLOR } from "@/lib/data";
@@ -13,6 +13,7 @@ import { useLanguage } from "@/context/LanguageContext";
 interface Props {
   item: UseCase | null;
   onClose: () => void;
+  items?: UseCase[];
 }
 
 const CAT_ACCENT: Record<string, string> = {
@@ -27,33 +28,48 @@ const CAT_ACCENT: Record<string, string> = {
   "game-advanced":  "#E9D9B6",
 };
 
-export default function ExpandedCard({ item, onClose }: Props) {
+export default function ExpandedCard({ item, onClose, items }: Props) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const [currentItem, setCurrentItem] = useState<UseCase | null>(item);
+
+  // Sync internal item when parent opens a different card
+  useEffect(() => { setCurrentItem(item); setCopied(false); }, [item]);
+
+  const shown = currentItem;
+  const shownIdx = items && shown ? items.findIndex(u => u.id === shown.id) : -1;
+  const hasPrev = shownIdx > 0;
+  const hasNext = items ? shownIdx < items.length - 1 : false;
 
   useEffect(() => {
-    if (!item) return;
+    if (!shown) return;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
-  }, [item]);
+  }, [shown]);
 
   useEffect(() => {
-    if (!item) return;
-    const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    if (!shown) return;
+    const fn = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (items) {
+        if (e.key === "ArrowLeft" && hasPrev) { setCopied(false); setCurrentItem(items[shownIdx - 1]); }
+        if (e.key === "ArrowRight" && hasNext) { setCopied(false); setCurrentItem(items[shownIdx + 1]); }
+      }
+    };
     window.addEventListener("keydown", fn);
     return () => window.removeEventListener("keydown", fn);
-  }, [item, onClose]);
+  }, [shown, onClose, hasPrev, hasNext, items, shownIdx]);
 
   const copy = () => {
-    if (!item) return;
-    navigator.clipboard?.writeText(item.prompt);
+    if (!shown) return;
+    navigator.clipboard?.writeText(shown.prompt);
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
 
   return (
     <AnimatePresence>
-      {item && (
+      {item && shown && (
         <>
           {/* Scrim */}
           <motion.div
@@ -81,7 +97,7 @@ export default function ExpandedCard({ item, onClose }: Props) {
             {/* Accent bar at top */}
             <div
               className="h-[3px] w-full rounded-t-[inherit] shrink-0"
-              style={{ background: `linear-gradient(90deg, ${CAT_ACCENT[item.category] || "#9F8CFF"}, transparent)` }}
+              style={{ background: `linear-gradient(90deg, ${CAT_ACCENT[shown.category] || "#9F8CFF"}, transparent)` }}
             />
 
             <div className="expanded-card__inner">
@@ -89,34 +105,34 @@ export default function ExpandedCard({ item, onClose }: Props) {
               <div className="expanded-card__left">
                 {/* Big visual */}
                 <div className="expanded-card__visual">
-                  <CardVisual kind={item.output_kind} difficulty={item.difficulty} isFeatured />
+                  <CardVisual kind={shown.output_kind} difficulty={shown.difficulty} isFeatured />
                 </div>
 
                 {/* Output kind badge */}
                 <div className="flex items-center gap-2 mt-4 mb-3">
                   <span className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.12em] uppercase text-violet-bright">
-                    <OutputKindIcon kind={item.output_kind} size={13} />
-                    You get: {outputKindLabel(item.output_kind)}
+                    <OutputKindIcon kind={shown.output_kind} size={13} />
+                    You get: {outputKindLabel(shown.output_kind)}
                   </span>
                 </div>
 
                 {/* Tool chips */}
-                {item.tools.length > 0 && (
+                {shown.tools.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-6">
-                    {item.tools.map(t => (
-                      <span key={t} className="font-mono text-[10px] px-2 py-1 rounded-sm bg-violet/[0.08] text-fg-2 border border-violet/20">
-                        {t}
+                    {shown.tools.map(tool => (
+                      <span key={tool} className="font-mono text-[10px] px-2 py-1 rounded-sm bg-violet/[0.08] text-fg-2 border border-violet/20">
+                        {tool}
                       </span>
                     ))}
                   </div>
                 )}
 
                 {/* What you'll need */}
-                {item.inputs.length > 0 && (
+                {shown.inputs.length > 0 && (
                   <div className="mb-6">
                     <span className="eyebrow block mb-2.5">{t.expanded_inputs}</span>
                     <div className="flex flex-wrap gap-2">
-                      {item.inputs.map(inp => (
+                      {shown.inputs.map(inp => (
                         <span key={inp.label} className="font-mono text-[12px] px-2.5 py-1.5 rounded-sm bg-steel border border-hairline text-cyan-ice">
                           [{inp.label}]
                         </span>
@@ -136,7 +152,7 @@ export default function ExpandedCard({ item, onClose }: Props) {
                       {copied ? <><Check size={11} /> {t.expanded_copied}</> : <><Copy size={11} /> {t.expanded_copy}</>}
                     </button>
                   </div>
-                  <div className="prompt-block">{item.prompt}</div>
+                  <div className="prompt-block">{shown.prompt}</div>
                 </div>
               </div>
 
@@ -146,11 +162,16 @@ export default function ExpandedCard({ item, onClose }: Props) {
                 <span className="flex gap-2.5 items-center flex-wrap font-mono text-[11px] tracking-[0.18em] uppercase text-fg-3 mb-3">
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
-                    style={{ background: DIFF_COLOR[item.difficulty], boxShadow: `0 0 8px ${DIFF_COLOR[item.difficulty]}` }}
+                    style={{ background: DIFF_COLOR[shown.difficulty], boxShadow: `0 0 8px ${DIFF_COLOR[shown.difficulty]}` }}
                   />
-                  {item.difficulty}
+                  {shown.difficulty}
                   <span className="text-fg-4">·</span>
-                  <span style={{ color: CAT_ACCENT[item.category] || "#9F8CFF" }}>{item.category}</span>
+                  <span style={{ color: CAT_ACCENT[shown.category] || "#9F8CFF" }}>{shown.category}</span>
+                  {items && shownIdx >= 0 && (
+                    <span className="ml-auto font-mono text-[10px] text-fg-4">
+                      {shownIdx + 1} / {items.length}
+                    </span>
+                  )}
                 </span>
 
                 {/* Title */}
@@ -158,14 +179,14 @@ export default function ExpandedCard({ item, onClose }: Props) {
                   id="ec-title"
                   className="font-serif font-normal text-[clamp(26px,3.5vw,44px)] leading-[1.06] tracking-[-0.015em] text-fg-1 mb-5"
                 >
-                  {item.title}
+                  {shown.title}
                 </h2>
 
                 {/* Outcome callout */}
-                {item.outcome && (
+                {shown.outcome && (
                   <p className="font-serif italic text-[18px] md:text-[20px] leading-[1.45] text-fg-2 mb-7 border-l-2 pl-5"
-                    style={{ borderColor: CAT_ACCENT[item.category] || "#9F8CFF" }}>
-                    {item.outcome}
+                    style={{ borderColor: CAT_ACCENT[shown.category] || "#9F8CFF" }}>
+                    {shown.outcome}
                   </p>
                 )}
 
@@ -174,27 +195,27 @@ export default function ExpandedCard({ item, onClose }: Props) {
                   <span className="font-mono text-[18px] text-violet-bright leading-none mt-0.5">⬡</span>
                   <div>
                     <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 block mb-1">Best model</span>
-                    <span className="font-serif text-[15px] text-fg-1 font-medium">{item.best_llm}</span>
-                    <p className="font-sans text-[13px] text-fg-3 mt-0.5 leading-[1.45]">{item.llm_reason}</p>
+                    <span className="font-serif text-[15px] text-fg-1 font-medium">{shown.best_llm}</span>
+                    <p className="font-sans text-[13px] text-fg-3 mt-0.5 leading-[1.45]">{shown.llm_reason}</p>
                   </div>
                 </div>
 
                 {/* Expected output */}
-                {item.sample_output && (
+                {shown.sample_output && (
                   <div>
                     <span className="eyebrow block mb-3">{t.expanded_sample}</span>
                     <div className="sample-output">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {item.sample_output}
+                        {shown.sample_output}
                       </ReactMarkdown>
                     </div>
                   </div>
                 )}
 
                 {/* Tags */}
-                {item.tags.length > 0 && (
+                {shown.tags.length > 0 && (
                   <div className="mt-6 pt-5 border-t border-hairline flex flex-wrap gap-1.5">
-                    {item.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                    {shown.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
                   </div>
                 )}
               </div>
@@ -211,6 +232,27 @@ export default function ExpandedCard({ item, onClose }: Props) {
 
             {/* Bottom action bar */}
             <div className="expanded-card__bar">
+              {/* Prev/Next navigation */}
+              {items && items.length > 1 && (
+                <div className="flex items-center gap-1 mr-auto">
+                  <button
+                    onClick={() => { if (hasPrev) { setCopied(false); setCurrentItem(items[shownIdx - 1]); } }}
+                    disabled={!hasPrev}
+                    className="flex items-center justify-center w-8 h-8 rounded-full border border-violet/20 text-fg-3 hover:text-fg-1 hover:border-violet/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    aria-label="Previous use case"
+                  >
+                    <ChevronLeft size={15} />
+                  </button>
+                  <button
+                    onClick={() => { if (hasNext) { setCopied(false); setCurrentItem(items[shownIdx + 1]); } }}
+                    disabled={!hasNext}
+                    className="flex items-center justify-center w-8 h-8 rounded-full border border-violet/20 text-fg-3 hover:text-fg-1 hover:border-violet/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    aria-label="Next use case"
+                  >
+                    <ChevronRight size={15} />
+                  </button>
+                </div>
+              )}
               <button className="btn" onClick={copy}>
                 {copied ? <><Check size={14} /> {t.expanded_copied}</> : <><Copy size={14} /> {t.expanded_copy}</>}
               </button>

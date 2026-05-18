@@ -109,12 +109,19 @@ export default function HeroMinimal({ total }: Props) {
 
         <motion.p
           custom={2} variants={line} initial="hidden" animate="show"
-          className="font-sans text-[17px] leading-[1.65] text-fg-3 max-w-[420px] mx-auto mb-10 whitespace-pre-line"
+          className="font-sans text-[17px] leading-[1.65] text-fg-3 max-w-[420px] mx-auto mb-6 whitespace-pre-line"
         >
           {t.hero_tagline}
         </motion.p>
 
-        <motion.div custom={3} variants={line} initial="hidden" animate="show">
+        <motion.p
+          custom={3} variants={line} initial="hidden" animate="show"
+          className="font-mono text-[11px] tracking-[0.14em] uppercase text-fg-4 max-w-[380px] mx-auto mb-10"
+        >
+          {total} battle-tested prompts &nbsp;·&nbsp; 9 disciplines &nbsp;·&nbsp; built for practitioners
+        </motion.p>
+
+        <motion.div custom={4} variants={line} initial="hidden" animate="show">
           <a
             href="#explore"
             className="btn"
@@ -130,7 +137,7 @@ export default function HeroMinimal({ total }: Props) {
 
       {/* ── Scroll cue ───────────────────────────────────────────────── */}
       <motion.div
-        custom={4} variants={line} initial="hidden" animate="show"
+        custom={5} variants={line} initial="hidden" animate="show"
         aria-hidden="true"
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 font-mono text-[9px] tracking-[0.24em] uppercase text-fg-4"
       >

@@ -250,10 +250,80 @@ function LabCard({ lab, onClick }: { lab: AILab; onClick: () => void }) {
   );
 }
 
+// ─── Compare table ───────────────────────────────────────────────────────────
+function CompareTable({ labs }: { labs: AILab[] }) {
+  return (
+    <div className="overflow-x-auto rounded-xl border border-violet/[0.12] mt-2">
+      <table className="w-full min-w-[640px] text-left border-collapse">
+        <thead>
+          <tr className="border-b border-violet/[0.12] bg-violet/[0.04]">
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Lab</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Type</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Founded</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Models</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Top model</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">Free tier</th>
+            <th className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 px-4 py-3 font-normal">API</th>
+          </tr>
+        </thead>
+        <tbody>
+          {labs.map((lab, i) => {
+            const topModel = lab.models.find(m => !m.freeAccess) ?? lab.models[0];
+            const hasFree  = lab.models.some(m => m.freeAccess);
+            return (
+              <tr
+                key={lab.id}
+                className="border-b border-violet/[0.06] hover:bg-white/[0.02] transition-colors"
+                style={{ borderLeft: `2px solid ${lab.color}44` }}
+              >
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg leading-none">{lab.emoji}</span>
+                    <span className="font-serif text-[14px] text-fg-1">{lab.name}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="font-mono text-[9px] tracking-[0.10em] uppercase px-1.5 py-0.5 rounded-full border"
+                    style={{ color: lab.color, borderColor: lab.color + "44", background: lab.color + "12" }}>
+                    {TYPE_LABEL[lab.type]}
+                  </span>
+                </td>
+                <td className="px-4 py-3 font-mono text-[11px] text-fg-3">{lab.founded}</td>
+                <td className="px-4 py-3 font-mono text-[11px] text-fg-2">{lab.models.length}</td>
+                <td className="px-4 py-3">
+                  <div className="font-sans text-[12px] text-fg-1">{topModel?.name ?? "—"}</div>
+                  {topModel?.inputPrice && !topModel.freeAccess && (
+                    <div className="font-mono text-[10px] text-fg-4">In: {topModel.inputPrice}</div>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  {hasFree ? (
+                    <span className="font-mono text-[10px] px-2 py-0.5 rounded-full border border-green-500/40 text-green-400 bg-green-500/10">Yes</span>
+                  ) : (
+                    <span className="font-mono text-[10px] text-fg-4">—</span>
+                  )}
+                </td>
+                <td className="px-4 py-3">
+                  {lab.api.available ? (
+                    <span className="font-mono text-[10px] px-2 py-0.5 rounded-full border border-violet/40 text-violet-bright bg-violet/10">Available</span>
+                  ) : (
+                    <span className="font-mono text-[10px] text-fg-4">—</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 // ─── Main page ───────────────────────────────────────────────────────────────
 export default function AILabsPage() {
   const [activeType, setActiveType]   = useState<string>("all");
   const [activeLab,  setActiveLab]    = useState<AILab | null>(null);
+  const [viewMode,   setViewMode]     = useState<"gallery" | "compare">("gallery");
 
   const filtered = activeType === "all"
     ? AI_LABS
@@ -275,9 +345,9 @@ export default function AILabsPage() {
         </p>
       </div>
 
-      {/* Filter tabs */}
+      {/* Filter tabs + view toggle */}
       <div className="sticky top-16 z-40 bg-void/90 backdrop-blur-md border-b border-violet/[0.08]">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: "none" }}>
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-2 overflow-x-auto scrollbar-none" style={{ scrollbarWidth: "none" }}>
           {LAB_TYPES.map(t => (
             <button
               key={t.id}
@@ -292,24 +362,59 @@ export default function AILabsPage() {
               {t.label}
             </button>
           ))}
+
+          <div className="ml-auto flex-shrink-0 flex items-center gap-1 bg-void border border-violet/[0.12] rounded-full p-0.5">
+            <button
+              onClick={() => setViewMode("gallery")}
+              className="font-mono text-[10px] tracking-[0.08em] px-3 py-1 rounded-full transition-all duration-150"
+              style={{
+                background: viewMode === "gallery" ? "#9F8CFF22" : "transparent",
+                color:      viewMode === "gallery" ? "#B6A6FF" : "#6b6a8a",
+              }}
+            >
+              Gallery
+            </button>
+            <button
+              onClick={() => setViewMode("compare")}
+              className="font-mono text-[10px] tracking-[0.08em] px-3 py-1 rounded-full transition-all duration-150"
+              style={{
+                background: viewMode === "compare" ? "#9F8CFF22" : "transparent",
+                color:      viewMode === "compare" ? "#B6A6FF" : "#6b6a8a",
+              }}
+            >
+              Compare
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Lab grid */}
+      {/* Content */}
       <div className="max-w-5xl mx-auto px-4 pt-8">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeType}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.22 }}
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {filtered.map(lab => (
-              <LabCard key={lab.id} lab={lab} onClick={() => setActiveLab(lab)} />
-            ))}
-          </motion.div>
+          {viewMode === "gallery" ? (
+            <motion.div
+              key={`gallery-${activeType}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22 }}
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {filtered.map(lab => (
+                <LabCard key={lab.id} lab={lab} onClick={() => setActiveLab(lab)} />
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`compare-${activeType}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22 }}
+            >
+              <CompareTable labs={filtered} />
+            </motion.div>
+          )}
         </AnimatePresence>
 
         {filtered.length === 0 && (
