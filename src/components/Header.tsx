@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 import TesseractMark from "./TesseractMark";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -75,12 +75,14 @@ export default function Header({ total }: Props) {
             <b className="text-fg-1 font-medium">{total}</b> {locale === "pt" ? "casos de uso" : "use cases"}
           </span>
 
-          {/* Language toggle */}
+          {/* Language toggle — pill */}
           <button
             onClick={toggle}
-            className="hidden sm:inline-flex items-center justify-center h-7 px-2.5 rounded border border-violet/[0.22] font-mono text-[10px] tracking-[0.08em] uppercase text-fg-3 hover:text-fg-1 hover:border-violet/60 transition-all duration-140"
+            className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-violet/[0.12] border border-violet/30 font-mono text-[11px] tracking-[0.06em] font-medium text-fg-1 hover:bg-violet/25 hover:border-violet/60 transition-all duration-150"
             aria-label={locale === "en" ? "Switch to Portuguese" : "Mudar para Inglês"}
+            title={locale === "en" ? "Switch to Portuguese (PT-BR)" : "Switch to English (EN)"}
           >
+            <Globe size={13} className="text-violet-bright shrink-0" />
             {locale === "en" ? "PT" : "EN"}
           </button>
 
@@ -109,9 +111,10 @@ export default function Header({ total }: Props) {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => { toggle(); }}
-                className="flex items-center justify-center h-7 px-2.5 rounded border border-violet/[0.22] font-mono text-[10px] tracking-[0.08em] uppercase text-fg-3 hover:text-fg-1 transition-all"
+                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-violet/[0.12] border border-violet/30 font-mono text-[11px] tracking-[0.06em] font-medium text-fg-1 hover:bg-violet/25 transition-all"
                 aria-label={locale === "en" ? "Switch to Portuguese" : "Mudar para Inglês"}
               >
+                <Globe size={13} className="text-violet-bright shrink-0" />
                 {locale === "en" ? "PT" : "EN"}
               </button>
               <button
