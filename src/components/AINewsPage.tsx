@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { NEWS_ITEMS, NEWS_TAGS, type NewsItem } from "@/lib/newsData";
 import { BASE_PATH } from "@/lib/data";
 
@@ -41,21 +41,48 @@ function NewsCard({ item }: { item: NewsItem }) {
           </span>
         </div>
 
-        {/* Title */}
-        <h3 className="font-serif text-[18px] md:text-[22px] leading-[1.2] tracking-[-0.01em] text-fg-1 mb-3 group-hover:text-violet-bright transition-colors duration-200">
-          {item.title}
-        </h3>
+        {/* Title — links to source if available */}
+        {item.url ? (
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/link inline-block"
+          >
+            <h3 className="font-serif text-[18px] md:text-[22px] leading-[1.2] tracking-[-0.01em] text-fg-1 mb-3 group-hover/link:text-violet-bright transition-colors duration-200 inline">
+              {item.title}
+            </h3>
+            <ExternalLink
+              size={13}
+              className="inline ml-2 mb-0.5 text-fg-4 opacity-0 group-hover/link:opacity-100 transition-opacity duration-150 shrink-0"
+            />
+          </a>
+        ) : (
+          <h3 className="font-serif text-[18px] md:text-[22px] leading-[1.2] tracking-[-0.01em] text-fg-1 mb-3 group-hover:text-violet-bright transition-colors duration-200">
+            {item.title}
+          </h3>
+        )}
 
         {/* Summary */}
         <p className="font-sans text-[14px] leading-[1.65] text-fg-2 mb-4">{item.summary}</p>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5">
+        {/* Tags + optional source link */}
+        <div className="flex flex-wrap items-center gap-1.5">
           {item.tags.map(tag => (
             <span key={tag} className="font-mono text-[10px] px-2 py-0.5 rounded-sm bg-violet/[0.08] text-fg-3 border border-violet/[0.12]">
               {tag}
             </span>
           ))}
+          {item.url && (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto font-mono text-[10px] tracking-[0.06em] text-fg-4 hover:text-violet-bright transition-colors duration-150 flex items-center gap-1 shrink-0"
+            >
+              Source <ExternalLink size={10} />
+            </a>
+          )}
         </div>
       </div>
     </motion.article>

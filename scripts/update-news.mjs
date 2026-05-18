@@ -55,7 +55,8 @@ For each significant event, return a JSON object with these exact fields:
   "tags": ["Company", "ModelName", "Feature", "Category"],
   "significance": "landmark OR major OR notable",
   "provider": "Company Name",
-  "providerColor": "#hexcolor"
+  "providerColor": "#hexcolor",
+  "url": "https://... (official announcement URL, or most authoritative source)"
 }
 
 Provider hex colors:
@@ -67,9 +68,11 @@ Significance guide:
 - major: significant release or event most practitioners should know
 - notable: worth tracking but not world-changing
 
+For the url field, prefer official blog posts or press releases (e.g. openai.com/index/..., anthropic.com/news/..., blog.google/...). Only include a url if you found the actual page; omit the field entirely if unsure.
+
 Return ONLY a valid JSON array. Example:
 [
-  { "id": "example-event", "date": "May 2026", "dateNum": 202605, "title": "...", "summary": "...", "tags": ["..."], "significance": "major", "provider": "OpenAI", "providerColor": "#10a37f" }
+  { "id": "example-event", "date": "May 2026", "dateNum": 202605, "title": "...", "summary": "...", "tags": ["..."], "significance": "major", "provider": "OpenAI", "providerColor": "#10a37f", "url": "https://openai.com/index/..." }
 ]
 
 If no significant events were found in the date range, return an empty array: []`;
@@ -86,7 +89,7 @@ function itemToTs(item) {
     tags: [${tags}],
     significance: "${item.significance}",
     provider: "${item.provider}",
-    providerColor: "${item.providerColor}",
+    providerColor: "${item.providerColor}",${item.url ? `\n    url: "${item.url}",` : ""}
   },`;
 }
 

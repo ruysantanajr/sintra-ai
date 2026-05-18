@@ -8,6 +8,7 @@ export interface NewsItem {
   significance: "landmark" | "major" | "notable";
   provider: string;      // company name
   providerColor: string; // hex color
+  url?: string;          // link to original announcement
 }
 
 export const AI_NEWS: NewsItem[] = [
@@ -24,6 +25,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Microsoft",
     providerColor: "#0078d4",
+    url: "https://blogs.microsoft.com/blog/2023/02/07/reinventing-search-with-a-new-ai-powered-microsoft-bing/",
   },
   {
     id: "llama-1-leak",
@@ -36,6 +38,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Meta",
     providerColor: "#0866ff",
+    url: "https://ai.meta.com/blog/large-language-model-llama-meta-ai/",
   },
   {
     id: "gpt-4-launch",
@@ -48,6 +51,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/gpt-4/",
   },
   {
     id: "claude-1",
@@ -60,6 +64,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/introducing-claude",
   },
   {
     id: "google-bard-launch",
@@ -72,6 +77,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://blog.google/technology/ai/bard-google-ai-search-updates/",
   },
   {
     id: "gpt-4-plugins",
@@ -84,6 +90,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/chatgpt-plugins/",
   },
   {
     id: "claude-2",
@@ -96,6 +103,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-2",
   },
   {
     id: "llama-2-release",
@@ -108,6 +116,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Meta",
     providerColor: "#0866ff",
+    url: "https://ai.meta.com/blog/llama-2/",
   },
   {
     id: "mistral-7b",
@@ -120,6 +129,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "notable",
     provider: "Mistral AI",
     providerColor: "#ff7000",
+    url: "https://mistral.ai/news/announcing-mistral-7b",
   },
   {
     id: "gpt-4-vision",
@@ -132,6 +142,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/gpt-4v-system-card/",
   },
   {
     id: "openai-custom-gpts",
@@ -144,6 +155,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-gpts/",
   },
   {
     id: "sam-altman-fired",
@@ -156,6 +168,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "notable",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/openai-response/",
   },
   {
     id: "gemini-1-announce",
@@ -168,6 +181,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://blog.google/technology/ai/google-gemini-ai/",
   },
 
   // ── 2024 ─────────────────────────────────────────────────────────────────
@@ -183,6 +197,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/sora/",
   },
   {
     id: "gemini-1-5",
@@ -195,6 +210,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/",
   },
   {
     id: "claude-3-family",
@@ -207,6 +223,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-3-family",
   },
   {
     id: "llama-3-release",
@@ -219,6 +236,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Meta",
     providerColor: "#0866ff",
+    url: "https://ai.meta.com/blog/meta-llama-3/",
   },
   {
     id: "gpt-4o",
@@ -231,6 +249,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/hello-gpt-4o/",
   },
   {
     id: "claude-3-5-sonnet",
@@ -243,6 +262,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-3-5-sonnet",
   },
   {
     id: "apple-intelligence",
@@ -255,6 +275,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Apple",
     providerColor: "#555555",
+    url: "https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/",
   },
   {
     id: "openai-o1",
@@ -267,6 +288,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-openai-o1-preview/",
   },
   {
     id: "anthropic-computer-use",
@@ -279,6 +301,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/computer-use",
   },
   {
     id: "alphafold-nobel",
@@ -291,6 +314,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "DeepMind",
     providerColor: "#4285f4",
+    url: "https://www.nobelprize.org/prizes/chemistry/2024/press-release/",
   },
   {
     id: "gemini-2-flash",
@@ -303,6 +327,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/",
   },
   {
     id: "sora-public-release",
@@ -315,6 +340,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/sora-is-here/",
   },
 
   // ── 2025 ─────────────────────────────────────────────────────────────────
@@ -330,6 +356,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "DeepSeek",
     providerColor: "#1a73e8",
+    url: "https://github.com/deepseek-ai/DeepSeek-R1",
   },
   {
     id: "openai-operator",
@@ -342,6 +369,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-operator/",
   },
   {
     id: "claude-3-7-sonnet",
@@ -354,6 +382,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-3-7-sonnet",
   },
   {
     id: "gemini-2-5-pro",
@@ -366,6 +395,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/",
   },
   {
     id: "gpt-4o-image-gen",
@@ -378,6 +408,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-4o-image-generation/",
   },
   {
     id: "openai-o3",
@@ -390,6 +421,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-o3-and-o4-mini/",
   },
   {
     id: "llama-4-release",
@@ -402,6 +434,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Meta",
     providerColor: "#0866ff",
+    url: "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
   },
   {
     id: "claude-4-sonnet-opus",
@@ -414,6 +447,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-4",
   },
 
   // ── 2025 (continued) ─────────────────────────────────────────────────────
@@ -441,6 +475,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-gpt-5/",
   },
   {
     id: "gemini-3-pro",
@@ -453,6 +488,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Google",
     providerColor: "#4285f4",
+    url: "https://workspaceupdates.googleblog.com/2025/11/introducing-gemini-3-pro-for-gemini-app.html",
   },
   {
     id: "claude-opus-4-5",
@@ -465,6 +501,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-opus-4-5",
   },
   {
     id: "gpt-5-2-codex",
@@ -477,6 +514,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://openai.com/index/introducing-gpt-5-2-codex/",
   },
   {
     id: "meta-manus",
@@ -516,6 +554,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "landmark",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/glasswing",
   },
   {
     id: "claude-opus-4-7",
@@ -528,6 +567,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://www.anthropic.com/news/claude-opus-4-7",
   },
   {
     id: "gpt-5-5",
@@ -540,6 +580,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "major",
     provider: "OpenAI",
     providerColor: "#10a37f",
+    url: "https://techcrunch.com/2026/05/05/openai-releases-gpt-5-5-instant-a-new-default-model-for-chatgpt/",
   },
   {
     id: "anthropic-30b-revenue",
@@ -552,6 +593,7 @@ export const AI_NEWS: NewsItem[] = [
     significance: "notable",
     provider: "Anthropic",
     providerColor: "#d97706",
+    url: "https://fortune.com/2026/05/13/behold-the-googlebook/",
   },
 ];
 
