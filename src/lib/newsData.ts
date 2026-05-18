@@ -595,6 +595,35 @@ export const AI_NEWS: NewsItem[] = [
     providerColor: "#d97706",
     url: "https://fortune.com/2026/05/13/behold-the-googlebook/",
   },
+
+  // ── Auto-updated 2026-05-18 ────────────────────────────────────────────
+
+  {
+    id: "mistral-medium-3-5",
+    date: "May 2026",
+    dateNum: 202605,
+    title: "Mistral Medium 3.5 — 128B Open-Weight Model With 77.6% SWE-bench",
+    summary:
+      "Mistral AI released Medium 3.5, a 128-billion-parameter dense model with a 256,000-token context window, scoring 77.6% on SWE-bench Verified and unifying instruction-following, reasoning, coding, and vision in a single set of weights. The model was released with open weights under a modified MIT license and priced at $1.50/$7.50 per million input/output tokens via API. Mistral simultaneously launched Work Mode in Le Chat — an agentic interface powered by Medium 3.5 that executes multi-step workflows across connected tools in parallel.",
+    tags: ["Mistral AI", "Medium 3.5", "128B", "Open Weights", "SWE-bench", "Agents"],
+    significance: "major",
+    provider: "Mistral AI",
+    providerColor: "#ff7000",
+    url: "https://mistral.ai/news/vibe-remote-agents-mistral-medium-3-5",
+  },
+  {
+    id: "microsoft-agent-365-ga",
+    date: "May 2026",
+    dateNum: 202605,
+    title: "Microsoft Agent 365 Generally Available — Enterprise AI Agent Governance",
+    summary:
+      "Microsoft made Agent 365 generally available on May 1, 2026, introducing enterprise-grade visibility, governance, and security controls for AI agent fleets at $15 per user per month. The platform extends Microsoft Entra network controls to Copilot Studio agents and locally-running agents, enabling IT teams to identify unsanctioned AI usage, restrict connections to approved destinations, and block prompt-injection attacks. Agent 365 is bundled into the new Microsoft 365 E7 tier alongside Copilot and the full Microsoft 365 E5 suite.",
+    tags: ["Microsoft", "Agent 365", "Enterprise", "Governance", "Security", "Copilot"],
+    significance: "major",
+    provider: "Microsoft",
+    providerColor: "#0078d4",
+    url: "https://www.microsoft.com/en-us/security/blog/2026/05/01/microsoft-agent-365-now-generally-available-expands-capabilities-and-integrations/",
+  },
 ];
 
 // ── Derived exports ────────────────────────────────────────────────────────
