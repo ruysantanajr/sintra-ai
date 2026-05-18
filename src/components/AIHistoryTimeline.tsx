@@ -437,16 +437,16 @@ export default function AIHistoryTimeline() {
 
       {/* ── Fixed UI overlays ── */}
 
-      {/* Top gradient fade */}
-      <div className="absolute top-0 inset-x-0 h-24 pointer-events-none z-20"
-        style={{ background: "linear-gradient(180deg, #060411 0%, transparent 100%)" }} />
+      {/* Top gradient fade — covers from site header downward */}
+      <div className="absolute top-0 inset-x-0 h-32 pointer-events-none z-20"
+        style={{ background: "linear-gradient(180deg, #060411 0%, #060411 40%, transparent 100%)" }} />
 
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 inset-x-0 h-24 pointer-events-none z-20"
         style={{ background: "linear-gradient(0deg, #060411 0%, transparent 100%)" }} />
 
-      {/* Header bar */}
-      <div className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-6 pt-5 pb-3 pointer-events-none">
+      {/* Header bar — sits below the fixed site header (h-16 = 4rem) */}
+      <div className="absolute top-16 inset-x-0 z-30 flex items-center justify-between px-6 pt-4 pb-3 pointer-events-none">
         <div className="flex items-center gap-3 pointer-events-auto">
           {activeEra ? (
             <button
