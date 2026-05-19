@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, ArrowLeft, Search } from "lucide-react";
 import dynamic from "next/dynamic";
 import { USE_CASES, UseCase, DISC_COUNTS, DIFF_COLOR } from "@/lib/data";
@@ -12,27 +12,33 @@ import { useLanguage } from "@/context/LanguageContext";
 
 const CategoryCarousel3D = dynamic(() => import("./CategoryCarousel3D"), { ssr: false });
 
-const CARD_VARIANTS = {
-  hidden: { opacity: 0, y: 24, scale: 0.97 },
-  show: (i: number) => ({
-    opacity: 1, y: 0, scale: 1,
-    transition: { duration: 0.35, delay: Math.min(i, 12) * 0.045, ease: [0.22, 1, 0.36, 1] as const },
-  }),
-  exit: { opacity: 0, scale: 0.95, transition: { duration: 0.15 } },
-};
-
 const DIFFS = ["all", "beginner", "intermediate", "advanced", "expert"] as const;
 
 export default function CategoryBrowser() {
   const { t } = useLanguage();
+  const prefersReducedMotion = useReducedMotion();
   const [selectedIdx, setSelectedIdx]   = useState(0);
   const [browsingIdx, setBrowsingIdx]   = useState<number | null>(null);
   const [expanded, setExpanded]         = useState<UseCase | null>(null);
   const [expandedItems, setExpandedItems] = useState<UseCase[]>([]);
 
+  // Global search
+  const [globalSearch, setGlobalSearch] = useState("");
+
   // Panel search/filter state
   const [panelSearch, setPanelSearch]   = useState("");
   const [panelDiff, setPanelDiff]       = useState<string>("all");
+
+  const CARD_VARIANTS = useMemo(() => ({
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24, scale: prefersReducedMotion ? 1 : 0.97 },
+    show: (i: number) => ({
+      opacity: 1, y: 0, scale: 1,
+      transition: prefersReducedMotion
+        ? { duration: 0.1 }
+        : { duration: 0.35, delay: Math.min(i, 12) * 0.045, ease: [0.22, 1, 0.36, 1] as const },
+    }),
+    exit: { opacity: 0, scale: prefersReducedMotion ? 1 : 0.95, transition: { duration: prefersReducedMotion ? 0.1 : 0.15 } },
+  }), [prefersReducedMotion]);
 
   const selected  = CAROUSEL_ITEMS[selectedIdx];
   const browsing  = browsingIdx !== null ? CAROUSEL_ITEMS[browsingIdx] : null;
@@ -53,6 +59,18 @@ export default function CategoryBrowser() {
     }
     // Don't reset to #explore on close — let the section anchor remain
   }, [browsingIdx]);
+
+  // ── Global search results (across all categories) ───────────────────────────
+  const globalResults = useMemo(() => {
+    if (!globalSearch.trim()) return [];
+    const q = globalSearch.toLowerCase();
+    return USE_CASES.filter(c =>
+      c.title.toLowerCase().includes(q) ||
+      c.desc.toLowerCase().includes(q) ||
+      c.outcome.toLowerCase().includes(q) ||
+      c.tags.some(tag => tag.toLowerCase().includes(q))
+    );
+  }, [globalSearch]);
 
   // ── Cases for current browsing category ─────────────────────────────────────
   const cases = useMemo(
@@ -101,9 +119,82 @@ export default function CategoryBrowser() {
 
   return (
     <section id="explore" className="relative bg-void overflow-hidden">
+      {/* ── Global search ────────────────────────────────────────────── */}
+      <div className="relative z-20 max-w-xl mx-auto px-6 pt-10 pb-2">
+        <div className="relative">
+          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-4 pointer-events-none" />
+          <input
+            type="search"
+            value={globalSearch}
+            onChange={e => setGlobalSearch(e.target.value)}
+            placeholder={`Search all ${USE_CASES.length} use cases…`}
+            aria-label="Search all use cases"
+            className="w-full bg-white/[0.04] border border-hairline rounded-xl pl-9 pr-4 py-2.5 font-mono text-[13px] text-fg-1 placeholder:text-fg-4 outline-none focus:border-violet/60 transition-colors"
+          />
+          {globalSearch && (
+            <button
+              onClick={() => setGlobalSearch("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-fg-4 hover:text-fg-2 transition-colors"
+              aria-label="Clear search"
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+        {globalSearch && (
+          <p className="font-mono text-[11px] text-fg-4 mt-2 ml-1">
+            {globalResults.length} result{globalResults.length !== 1 ? "s" : ""} across all categories
+          </p>
+        )}
+      </div>
+
+      {/* ── Global search results ────────────────────────────────────── */}
+      <AnimatePresence>
+        {globalSearch.trim() && (
+          <motion.div
+            key="global-results"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: prefersReducedMotion ? 0.1 : 0.25 }}
+            className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-8 pb-16"
+          >
+            {globalResults.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="font-mono text-[13px] text-fg-4">No use cases match &ldquo;{globalSearch}&rdquo;.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 pt-6">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {globalResults.map((item, i) => (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      custom={i}
+                      variants={CARD_VARIANTS}
+                      initial="hidden"
+                      animate="show"
+                      exit="exit"
+                      className={i === 0 && globalResults.length >= 4 ? "sm:col-span-2 lg:col-span-2" : ""}
+                    >
+                      <UseCaseCard
+                        item={item}
+                        onOpen={item => { setExpanded(item); setExpandedItems(globalResults); }}
+                        onTagFilter={() => {}}
+                        isFeatured={i === 0 && globalResults.length >= 4}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0, y: 40 }}
+        whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
@@ -124,9 +215,9 @@ export default function CategoryBrowser() {
           <AnimatePresence mode="wait">
             <motion.div
               key={selected.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              initial={prefersReducedMotion ? {} : { opacity: 0, y: 10 }}
+              animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? {} : { opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
               <p className="eyebrow mb-3" style={{ color: selected.hex }}>
@@ -174,6 +265,27 @@ export default function CategoryBrowser() {
               />
             ))}
           </div>
+
+          {/* Category chip rail — quick-select fallback */}
+          <div className="mt-6 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+            <div className="flex gap-2 justify-center flex-wrap px-4 pb-1">
+              {CAROUSEL_ITEMS.map((item, i) => (
+                <button
+                  key={item.id}
+                  onClick={() => { setSelectedIdx(i); setBrowsingIdx(i); }}
+                  className="font-mono text-[10px] tracking-[0.07em] uppercase px-3 py-1.5 rounded-full border transition-all duration-150 whitespace-nowrap"
+                  style={{
+                    background:  i === selectedIdx ? `${item.hex}20` : "transparent",
+                    borderColor: i === selectedIdx ? `${item.hex}70` : "#ffffff15",
+                    color:       i === selectedIdx ? item.hex : "#6b6a8a",
+                  }}
+                  aria-current={i === selectedIdx ? "true" : undefined}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </motion.div>
 
@@ -182,10 +294,10 @@ export default function CategoryBrowser() {
         {browsing && (
           <motion.div
             key="domain-panel"
-            initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "100%" }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: "100%" }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: "100%" }}
+            transition={{ duration: prefersReducedMotion ? 0.15 : 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-[60] bg-void overflow-y-auto"
             style={{ paddingTop: "env(safe-area-inset-top)" }}
           >

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { USE_CASES } from "@/lib/data";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -10,7 +11,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Sintra Tesseract — AI Use Case Library",
-  description: "A multidimensional library of AI use cases. 66 curated prompts for business, engineering, design, and research.",
+  description: `A curated library of ${USE_CASES.length} AI use cases mapped across every way to think with a machine.`,
   keywords: ["AI prompts", "ChatGPT", "Claude", "AI use cases", "prompt engineering"],
 };
 

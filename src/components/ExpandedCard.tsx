@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -28,10 +28,14 @@ const CAT_ACCENT: Record<string, string> = {
   "game-advanced":  "#E9D9B6",
 };
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export default function ExpandedCard({ item, onClose, items }: Props) {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [currentItem, setCurrentItem] = useState<UseCase | null>(item);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<Element | null>(null);
 
   // Sync internal item when parent opens a different card
   useEffect(() => { setCurrentItem(item); setCopied(false); }, [item]);
@@ -47,10 +51,38 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
     return () => { document.body.style.overflow = ""; };
   }, [shown]);
 
+  // Save trigger element, focus first focusable in panel, restore on close
+  useEffect(() => {
+    if (!shown) return;
+    triggerRef.current = document.activeElement;
+    const panel = panelRef.current;
+    if (panel) {
+      const first = panel.querySelector<HTMLElement>(FOCUSABLE);
+      first?.focus();
+    }
+    return () => {
+      (triggerRef.current as HTMLElement | null)?.focus();
+    };
+  }, [shown]);
+
   useEffect(() => {
     if (!shown) return;
     const fn = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Tab") {
+        const panel = panelRef.current;
+        if (!panel) return;
+        const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last  = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+        return;
+      }
       if (items) {
         if (e.key === "ArrowLeft" && hasPrev) { setCopied(false); setCurrentItem(items[shownIdx - 1]); }
         if (e.key === "ArrowRight" && hasNext) { setCopied(false); setCurrentItem(items[shownIdx + 1]); }
@@ -85,6 +117,7 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
           {/* Panel — slides up from bottom */}
           <motion.div
             key="panel"
+            ref={panelRef}
             className="expanded-card"
             role="dialog"
             aria-modal="true"

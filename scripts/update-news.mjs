@@ -142,9 +142,21 @@ async function main() {
     return;
   }
 
+  const VALID_SIGNIFICANCE = new Set(["landmark", "major", "notable"]);
+
   // Filter out duplicates and validate required fields
   const newItems = items.filter((item) => {
-    if (!item.id || !item.title || !item.date || !item.summary) return false;
+    if (!item.id || typeof item.id !== "string") { console.warn("Skipping: missing id"); return false; }
+    if (!item.title || typeof item.title !== "string") { console.warn(`Skipping ${item.id}: missing title`); return false; }
+    if (!item.date || typeof item.date !== "string") { console.warn(`Skipping ${item.id}: missing date`); return false; }
+    if (!item.summary || typeof item.summary !== "string") { console.warn(`Skipping ${item.id}: missing summary`); return false; }
+    if (!item.provider || typeof item.provider !== "string") { console.warn(`Skipping ${item.id}: missing provider`); return false; }
+    if (!VALID_SIGNIFICANCE.has(item.significance)) { console.warn(`Skipping ${item.id}: invalid significance "${item.significance}"`); return false; }
+    if (typeof item.dateNum !== "number" || !/^\d{6}$/.test(String(item.dateNum))) { console.warn(`Skipping ${item.id}: invalid dateNum`); return false; }
+    if (item.url && (typeof item.url !== "string" || !item.url.startsWith("https://"))) {
+      console.warn(`Stripping invalid URL for ${item.id}: "${item.url}"`);
+      delete item.url;
+    }
     if (existingIds.has(item.id)) {
       console.log(`Skipping duplicate: ${item.id}`);
       return false;

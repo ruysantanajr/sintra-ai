@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "update-news": "node scripts/update-news.mjs"
+    "update-news": "node scripts/update-news.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint",
+    "check": "npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "clsx": "^2.1.1",

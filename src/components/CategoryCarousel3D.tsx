@@ -313,6 +313,8 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
     const container = containerRef.current;
     if (!container) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let w = container.clientWidth;
     let h = container.clientHeight;
     const N       = CAROUSEL_ITEMS.length;
@@ -429,16 +431,17 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
         const tX = diff * SPACING;
         const tZ = isFront ? 0.3 : isAdj ? -0.3 : -20;
         const tY = isFront ? 0.12 : 0;
-        obj.group.position.x += (tX - obj.group.position.x) * 0.08;
-        obj.group.position.z += (tZ - obj.group.position.z) * 0.08;
-        obj.group.position.y += (tY - obj.group.position.y) * 0.08;
+        const lerpFactor = prefersReducedMotion ? 1 : 0.08;
+        obj.group.position.x += (tX - obj.group.position.x) * lerpFactor;
+        obj.group.position.z += (tZ - obj.group.position.z) * lerpFactor;
+        obj.group.position.y += (tY - obj.group.position.y) * lerpFactor;
 
         // ── Scale ──
         const tScale = isFront   ? 1.40
           : isHovered ? 0.65
           : isAdj     ? 0.56
           : 0.01;
-        obj.group.scale.lerp(new THREE.Vector3(tScale, tScale, tScale), 0.08);
+        obj.group.scale.lerp(new THREE.Vector3(tScale, tScale, tScale), prefersReducedMotion ? 1 : 0.08);
 
         // ── Opacity ──
         const tOpacity = isFront ? 1.0 : isAdj ? 0.52 : 0;
@@ -446,7 +449,7 @@ export default function CategoryCarousel3D({ selectedIndex, onSelect }: Props) {
         obj.mainMat.transparent = true;
 
         // ── Self-rotation ──
-        selfAngles[i] += isFront ? 0.009 : isAdj ? 0.002 : 0;
+        if (!prefersReducedMotion) selfAngles[i] += isFront ? 0.009 : isAdj ? 0.002 : 0;
         obj.body.rotation.y = selfAngles[i];
         if (i === 5) obj.body.rotation.y = selfAngles[i] * 0.4; // galaxy slow-spin
 
