@@ -54,6 +54,7 @@ export interface UseCase {
   llm_reason: string;
 }
 
+// Verified 2026-05 — model quality shifts quarterly; treat recommendations as starting points
 const LLM_MAP: Record<string, Record<string, { model: string; reason: string }>> = {
   "quick-wins": {
     beginner:     { model: "Claude Haiku 4.5",  reason: "Instant responses for simple, high-frequency tasks" },

@@ -468,7 +468,7 @@ export default function CategoryBrowser({ heroSearch }: Props) {
                           <UseCaseCard
                             item={item}
                             onOpen={handleOpenExpanded}
-                            onTagFilter={() => {}}
+                            onTagFilter={tag => { closeBrowsing(); setGlobalSearch(tag); }}
                             isFeatured={featured}
                           />
                         </motion.div>

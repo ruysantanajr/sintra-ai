@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -42,6 +42,15 @@ export default function HeroMinimal({ total, onSearch }: Props) {
   const textY        = useTransform(scrollYProgress, [0, 0.55], [0, -56]);
   const orbitScale   = useTransform(scrollYProgress, [0, 0.45], [1, 1.18]);
   const orbitOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    if (isMobile) return;
+    const delay = prefersReducedMotion ? 300 : 1500;
+    const t = setTimeout(() => inputRef.current?.focus(), delay);
+    return () => clearTimeout(t);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = (q: string) => {
     const trimmed = q.trim();
@@ -139,7 +148,7 @@ export default function HeroMinimal({ total, onSearch }: Props) {
           custom={3} variants={lineVariants} initial="hidden" animate="show"
           className="font-mono text-[11px] tracking-[0.14em] uppercase text-fg-4 max-w-[380px] mx-auto mb-8"
         >
-          {total} prompts &nbsp;·&nbsp; 9 disciplines &nbsp;·&nbsp; built for practitioners
+          {total} prompts &nbsp;·&nbsp; finance · data · code · writing &nbsp;·&nbsp; copy-ready
         </motion.p>
 
         {/* ── Hero search ────────────────────────────────────────────── */}

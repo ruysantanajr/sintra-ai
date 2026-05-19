@@ -3,6 +3,8 @@ import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { USE_CASES } from "@/lib/data";
 
+const SITE_URL = "https://joaoccaldas.github.io/sintra-ai";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -10,9 +12,36 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Sintra Tesseract — AI Use Case Library",
-  description: `A curated library of ${USE_CASES.length} AI use cases mapped across every way to think with a machine.`,
-  keywords: ["AI prompts", "ChatGPT", "Claude", "AI use cases", "prompt engineering"],
+  description: `${USE_CASES.length} copy-ready AI prompts for finance, data analytics, writing, and software teams. Find the right prompt, copy it, ship the work.`,
+  keywords: [
+    "AI prompts", "ChatGPT prompts", "Claude prompts",
+    "AI use cases", "prompt engineering",
+    "FP&A AI", "finance AI prompts", "data analytics AI",
+    "productivity prompts", "copy-ready AI templates",
+  ],
+  openGraph: {
+    title: "Sintra Tesseract — AI Use Case Library",
+    description: `${USE_CASES.length} copy-ready AI prompts for finance, analytics & knowledge work.`,
+    url: SITE_URL,
+    siteName: "Sintra Tesseract",
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/tesseract-hero.webp`,
+        width: 1200,
+        height: 630,
+        alt: "Sintra Tesseract — AI Use Case Library",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sintra Tesseract — AI Use Case Library",
+    description: `${USE_CASES.length} copy-ready AI prompts for finance, analytics & knowledge work.`,
+    images: [`${SITE_URL}/tesseract-hero.webp`],
+  },
 };
 
 export default function RootLayout({
