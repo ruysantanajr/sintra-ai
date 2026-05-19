@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, ArrowLeft, Search, Copy, Check } from "lucide-react";
 import dynamic from "next/dynamic";
-import { USE_CASES, UseCase, DISC_COUNTS, DIFF_COLOR } from "@/lib/data";
+import { USE_CASES, UseCase, DISC_COUNTS, DIFF_COLOR, matchesUseCase } from "@/lib/data";
 import { CAROUSEL_ITEMS } from "./CategoryCarousel3D";
 import UseCaseCard from "./UseCaseCard";
 import ExpandedCard from "./ExpandedCard";
@@ -75,7 +75,11 @@ function SearchResultRow({ item, onOpen }: { item: UseCase; onOpen: (item: UseCa
   );
 }
 
-export default function CategoryBrowser() {
+interface Props {
+  heroSearch?: { query: string; version: number };
+}
+
+export default function CategoryBrowser({ heroSearch }: Props) {
   const { t } = useLanguage();
   const prefersReducedMotion = useReducedMotion();
   const [selectedIdx, setSelectedIdx]   = useState(0);
@@ -83,8 +87,11 @@ export default function CategoryBrowser() {
   const [expanded, setExpanded]         = useState<UseCase | null>(null);
   const [expandedItems, setExpandedItems] = useState<UseCase[]>([]);
 
-  // Global search
+  // Global search — seeded by hero search prop
   const [globalSearch, setGlobalSearch] = useState("");
+  useEffect(() => {
+    if (heroSearch?.query) setGlobalSearch(heroSearch.query);
+  }, [heroSearch?.version]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Panel search/filter state
   const [panelSearch, setPanelSearch]   = useState("");
@@ -121,18 +128,10 @@ export default function CategoryBrowser() {
     // Don't reset to #explore on close — let the section anchor remain
   }, [browsingIdx]);
 
-  // ── Global search results (across all categories + prompt text) ─────────────
+  // ── Global search results — uses shared matchesUseCase helper ───────────────
   const globalResults = useMemo(() => {
     if (!globalSearch.trim()) return [];
-    const q = globalSearch.toLowerCase();
-    return USE_CASES.filter(c =>
-      c.title.toLowerCase().includes(q) ||
-      c.desc.toLowerCase().includes(q) ||
-      c.outcome.toLowerCase().includes(q) ||
-      c.prompt.toLowerCase().includes(q) ||
-      c.tools.some(tool => tool.toLowerCase().includes(q)) ||
-      c.tags.some(tag => tag.toLowerCase().includes(q))
-    );
+    return USE_CASES.filter(c => matchesUseCase(c, globalSearch));
   }, [globalSearch]);
 
   // ── Cases for current browsing category ─────────────────────────────────────
@@ -142,13 +141,11 @@ export default function CategoryBrowser() {
   );
 
   // Filtered cases (search + difficulty)
+  // Panel search uses the same matchesUseCase helper as global search
   const filteredCases = useMemo(() => {
     return cases.filter(c => {
       if (panelDiff !== "all" && c.difficulty !== panelDiff) return false;
-      if (panelSearch) {
-        const q = panelSearch.toLowerCase();
-        if (!c.title.toLowerCase().includes(q) && !c.outcome.toLowerCase().includes(q) && !c.desc.toLowerCase().includes(q)) return false;
-      }
+      if (panelSearch && !matchesUseCase(c, panelSearch)) return false;
       return true;
     });
   }, [cases, panelSearch, panelDiff]);
@@ -271,8 +268,8 @@ export default function CategoryBrowser() {
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* ── 3D Carousel ─────────────────────────────────────────────── */}
-        <div className="relative h-[56vh] min-h-[360px] max-h-[520px] w-full">
+        {/* ── 3D Carousel — hidden on mobile, shown md+ ───────────────── */}
+        <div className="hidden md:block relative h-[56vh] min-h-[360px] max-h-[520px] w-full">
           <CategoryCarousel3D selectedIndex={selectedIdx} onSelect={handleSelect} />
 
           <button onClick={prev} className="carousel-arrow carousel-arrow--left" aria-label="Previous category">

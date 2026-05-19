@@ -9,7 +9,8 @@
     "update-news": "node scripts/update-news.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
-    "check": "npm run typecheck && npm run lint && npm run build"
+    "validate-data": "node scripts/validate-data.mjs",
+    "check": "npm run validate-data && npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -24,14 +25,15 @@
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@anthropic-ai/sdk": "^0.39.0",
     "@types/three": "^0.170.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "zod": "^4.4.3"
   }
 }

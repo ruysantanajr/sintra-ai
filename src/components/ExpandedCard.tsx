@@ -227,7 +227,7 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
                 <div className="flex items-start gap-3 rounded-lg px-4 py-3 mb-6 border border-violet/20 bg-violet/[0.06]">
                   <span className="font-mono text-[18px] text-violet-bright leading-none mt-0.5">⬡</span>
                   <div>
-                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 block mb-1">Best model</span>
+                    <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 block mb-1">Suggested model</span>
                     <span className="font-serif text-[15px] text-fg-1 font-medium">{shown.best_llm}</span>
                     <p className="font-sans text-[13px] text-fg-3 mt-0.5 leading-[1.45]">{shown.llm_reason}</p>
                   </div>

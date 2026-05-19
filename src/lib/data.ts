@@ -195,4 +195,21 @@ export const DISC_COUNTS: Record<string, number> = Object.fromEntries(
   ])
 );
 
+/** Single source of truth for all use-case search — used by global search and panel search. */
+export function matchesUseCase(item: UseCase, query: string): boolean {
+  const q = query.toLowerCase();
+  return [
+    item.title,
+    item.desc,
+    item.outcome,
+    item.prompt,
+    item.source ?? "",
+    item.best_llm,
+    item.llm_reason,
+    ...item.tools,
+    ...item.tags,
+    ...item.inputs.map(i => i.label),
+  ].some(v => v.toLowerCase().includes(q));
+}
+
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Header from "@/components/Header";
 import HeroMinimal from "@/components/HeroMinimal";
 import CategoryBrowser from "@/components/CategoryBrowser";
@@ -8,6 +9,12 @@ import BackToTop from "@/components/BackToTop";
 import { USE_CASES } from "@/lib/data";
 
 export default function Home() {
+  const [heroSearch, setHeroSearch] = useState({ query: "", version: 0 });
+
+  const handleHeroSearch = (q: string) => {
+    setHeroSearch(prev => ({ query: q, version: prev.version + 1 }));
+  };
+
   return (
     <>
       <a
@@ -19,8 +26,8 @@ export default function Home() {
       <div className="bg-void min-h-screen">
         <Header total={USE_CASES.length} />
         <main>
-          <HeroMinimal total={USE_CASES.length} />
-          <CategoryBrowser />
+          <HeroMinimal total={USE_CASES.length} onSearch={handleHeroSearch} />
+          <CategoryBrowser heroSearch={heroSearch} />
         </main>
         <Footer />
         <BackToTop />
