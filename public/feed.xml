@@ -7,14 +7,14 @@
     <atom:link href="https://joaoccaldas.github.io/sintra-ai/feed.xml" rel="self" type="application/rss+xml"/>
     <language>en-us</language>
     <copyright>Open source · sintra-ai</copyright>
-    <lastBuildDate>Tue, 19 May 2026 18:19:27 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 20 May 2026 03:56:33 GMT</lastBuildDate>
     <ttl>1440</ttl>
 
   <item>
     <title><![CDATA[Anthropic Hits $30B Revenue Run-Rate — $950B Valuation Talks]]></title>
     <description><![CDATA[Anthropic's annualized revenue surpassed $30 billion in May 2026 — more than triple its $9 billion run-rate at end of 2025 — driven by explosive enterprise adoption of Claude Opus 4.7 and Claude Code. The company entered talks to raise $30–50 billion at a valuation approaching $950 billion, which would make it one of the most valuable private companies in history. Anthropic simultaneously expanded its compute partnership with Google and Broadcom to support the infrastructure demands of serving its rapidly growing customer base.]]></description>
-    <link>https://fortune.com/2026/05/13/behold-the-googlebook/</link>
-    <guid isPermaLink="true">https://fortune.com/2026/05/13/behold-the-googlebook/</guid>
+    <link>https://joaoccaldas.github.io/sintra-ai/news/</link>
+    <guid isPermaLink="false">https://joaoccaldas.github.io/sintra-ai/news/#anthropic-30b-revenue</guid>
     <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
     <category>Anthropic</category>
   </item>
