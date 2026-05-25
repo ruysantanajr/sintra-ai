@@ -127,10 +127,16 @@ export const SEARCH_INDEX: SearchDocument[] = [
     id: `resource-${r.id}`,
     kind: "resource" as EntityKind,
     title: r.name,
-    summary: r.tagline,
+    summary: r.tagline.en,
     tags: r.tags,
     href: `${BASE_PATH}/resources/`,
-    body: [r.name, r.tagline, r.category, r.highlight ?? "", ...r.tags].join(" "),
+    body: [
+      r.name,
+      r.tagline.en, r.tagline["pt-BR"],
+      r.category,
+      r.highlight?.en ?? "", r.highlight?.["pt-BR"] ?? "",
+      ...r.tags,
+    ].join(" "),
   })),
 ];
 

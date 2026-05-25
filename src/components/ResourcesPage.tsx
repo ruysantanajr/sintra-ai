@@ -5,8 +5,32 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ExternalLink, Search } from "lucide-react";
 import { RESOURCES, RESOURCE_CATEGORIES, type ResourceLink, type ResourceCategory } from "@/lib/resourcesData";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
+
+const COPY = {
+  back:         l("Back to Sintra",                "Voltar para o Sintra"),
+  eyebrow:      l("AI Ecosystem",                  "Ecossistema de IA"),
+  titleA:       l("Resources &",                   "Recursos &"),
+  titleB:       l("links.",                        "links."),
+  subtitle: l(
+    "The full AI developer ecosystem in one place — APIs, frameworks, agents, vector stores, MCP servers, eval tools, communities, and research.",
+    "O ecossistema completo de IA num só lugar — APIs, frameworks, agentes, bancos vetoriais, servidores MCP, ferramentas de avaliação, comunidades e pesquisa.",
+  ),
+  curated:      l("resources curated",             "recursos curados"),
+  categoriesLabel: l("categories",                 "categorias"),
+  free:         l("free",                          "grátis"),
+  freeBadge:    l("Free",                          "Grátis"),
+  searchPlaceholder: l("Search resources…",        "Buscar recursos…"),
+  freeOnly:     l("Free only",                     "Só grátis"),
+  results:      l("results",                       "resultados"),
+  all:          l("All",                           "Todos"),
+  nothingFound: l("Nothing found",                 "Nada encontrado"),
+  clearFilters: l("Clear filters",                 "Limpar filtros"),
+};
 
 function ResourceCard({ res }: { res: ResourceLink }) {
+  const { locale } = useLanguage();
   const cat = RESOURCE_CATEGORIES.find(c => c.id === res.category)!;
   return (
     <a
@@ -23,20 +47,20 @@ function ResourceCard({ res }: { res: ResourceLink }) {
               {res.name}
             </h3>
             {res.free && (
-              <span className="font-mono text-[8px] px-1.5 py-0.5 rounded-full border border-green-500/40 text-green-400 bg-green-500/10 uppercase tracking-[0.08em]">Free</span>
+              <span className="font-mono text-[8px] px-1.5 py-0.5 rounded-full border border-green-500/40 text-green-400 bg-green-500/10 uppercase tracking-[0.08em]">{localize(COPY.freeBadge, locale)}</span>
             )}
           </div>
-          <p className="font-sans text-[11px] text-fg-4 mt-0.5">{res.tagline}</p>
+          <p className="font-sans text-[11px] text-fg-4 mt-0.5">{localize(res.tagline, locale)}</p>
         </div>
         <ExternalLink size={12} className="text-fg-4 group-hover:text-fg-2 transition-colors shrink-0 mt-0.5" />
       </div>
 
       {res.highlight && (
-        <p className="font-sans text-[12px] text-fg-3 leading-[1.5] line-clamp-2">{res.highlight}</p>
+        <p className="font-sans text-[12px] text-fg-3 leading-[1.5] line-clamp-2">{localize(res.highlight, locale)}</p>
       )}
 
       <div className="flex items-center gap-2 flex-wrap mt-auto pt-2 border-t border-hairline/40">
-        <span className="font-mono text-[9px]" style={{ color: cat.color }}>{cat.icon} {cat.label}</span>
+        <span className="font-mono text-[9px]" style={{ color: cat.color }}>{cat.icon} {localize(cat.label, locale)}</span>
         {res.tags.slice(0, 2).map(tag => (
           <span key={tag} className="font-mono text-[9px] px-1.5 py-0.5 rounded-sm bg-violet/[0.06] text-fg-4 border border-violet/[0.10]">
             {tag}
@@ -48,6 +72,7 @@ function ResourceCard({ res }: { res: ResourceLink }) {
 }
 
 export default function ResourcesPage() {
+  const { locale } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<ResourceCategory | "all">("all");
   const [search, setSearch] = useState("");
   const [freeOnly, setFreeOnly] = useState(false);
@@ -58,14 +83,16 @@ export default function ResourcesPage() {
       if (freeOnly && !r.free) return false;
       if (search) {
         const q = search.toLowerCase();
+        const tagline = localize(r.tagline, locale).toLowerCase();
+        const highlight = r.highlight ? localize(r.highlight, locale).toLowerCase() : "";
         if (!r.name.toLowerCase().includes(q) &&
-            !r.tagline.toLowerCase().includes(q) &&
-            !(r.highlight ?? "").toLowerCase().includes(q) &&
+            !tagline.includes(q) &&
+            !highlight.includes(q) &&
             !r.tags.some(t => t.toLowerCase().includes(q))) return false;
       }
       return true;
     });
-  }, [activeCategory, search, freeOnly]);
+  }, [activeCategory, search, freeOnly, locale]);
 
   // Group filtered results by category when showing all
   const grouped = useMemo(() => {
@@ -93,7 +120,7 @@ export default function ResourcesPage() {
           <a href={`${BASE_PATH}/`}
             className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-fg-3 hover:text-violet-bright transition-colors group">
             <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back to Sintra
+            {localize(COPY.back, locale)}
           </a>
         </div>
 
@@ -103,27 +130,27 @@ export default function ResourcesPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
           <div className="inline-flex gap-3.5 items-center mb-6">
             <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-            <span className="eyebrow violet">AI Ecosystem</span>
+            <span className="eyebrow violet">{localize(COPY.eyebrow, locale)}</span>
           </div>
           <h1 className="font-serif font-light text-[clamp(40px,6vw,88px)] leading-[1.04] tracking-[-0.025em] text-fg-1 mb-5">
-            Resources &{" "}
+            {localize(COPY.titleA, locale)}{" "}
             <em className="italic" style={{
               backgroundImage: "linear-gradient(180deg, #F4F2EA 0%, #5EEAD4 100%)",
               WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
-            }}>links.</em>
+            }}>{localize(COPY.titleB, locale)}</em>
           </h1>
           <p className="font-sans text-[17px] text-fg-2 max-w-xl leading-[1.55]">
-            The full AI developer ecosystem in one place — APIs, frameworks, agents, vector stores, MCP servers, eval tools, communities, and research.
+            {localize(COPY.subtitle, locale)}
           </p>
           <div className="flex items-center gap-4 mt-8 font-mono text-[11px] text-fg-3 tracking-[0.06em]">
             <span className="inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              {RESOURCES.length} resources curated
+              {RESOURCES.length} {localize(COPY.curated, locale)}
             </span>
             <span className="text-fg-4">·</span>
-            <span>{RESOURCE_CATEGORIES.length} categories</span>
+            <span>{RESOURCE_CATEGORIES.length} {localize(COPY.categoriesLabel, locale)}</span>
             <span className="text-fg-4">·</span>
-            <span>{RESOURCES.filter(r => r.free).length} free</span>
+            <span>{RESOURCES.filter(r => r.free).length} {localize(COPY.free, locale)}</span>
           </div>
         </motion.header>
 
@@ -136,7 +163,7 @@ export default function ResourcesPage() {
                 type="search"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search resources…"
+                placeholder={localize(COPY.searchPlaceholder, locale)}
                 className="w-full bg-white/[0.04] border border-hairline rounded-lg pl-8 pr-3 py-1.5 font-mono text-[12px] text-fg-1 placeholder:text-fg-4 outline-none focus:border-violet/60 transition-colors"
               />
             </div>
@@ -149,10 +176,10 @@ export default function ResourcesPage() {
                 color:       freeOnly ? "#10b981" : "#6b6a8a",
               }}
             >
-              Free only
+              {localize(COPY.freeOnly, locale)}
             </button>
             {(search || freeOnly || activeCategory !== "all") && (
-              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} results</span>
+              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} {localize(COPY.results, locale)}</span>
             )}
           </div>
         </div>
@@ -168,13 +195,13 @@ export default function ResourcesPage() {
               color:       activeCategory === "all" ? "#B6A6FF" : "#6b6a8a",
             }}
           >
-            🌐 All
+            🌐 {localize(COPY.all, locale)}
           </button>
           {RESOURCE_CATEGORIES.map(cat => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              title={cat.desc}
+              title={localize(cat.desc, locale)}
               className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border transition-all font-mono text-[11px] tracking-[0.04em] whitespace-nowrap"
               style={{
                 background:  activeCategory === cat.id ? cat.color + "22" : "transparent",
@@ -182,7 +209,7 @@ export default function ResourcesPage() {
                 color:       activeCategory === cat.id ? cat.color : "#6b6a8a",
               }}
             >
-              {cat.icon} {cat.label}
+              {cat.icon} {localize(cat.label, locale)}
             </button>
           ))}
         </div>
@@ -199,9 +226,9 @@ export default function ResourcesPage() {
             >
               {filtered.length === 0 ? (
                 <div className="text-center py-24">
-                  <p className="font-serif text-[22px] text-fg-3 mb-3">Nothing found</p>
+                  <p className="font-serif text-[22px] text-fg-3 mb-3">{localize(COPY.nothingFound, locale)}</p>
                   <button onClick={() => { setSearch(""); setActiveCategory("all"); setFreeOnly(false); }}
-                    className="font-mono text-[12px] text-violet-bright hover:underline">Clear filters</button>
+                    className="font-mono text-[12px] text-violet-bright hover:underline">{localize(COPY.clearFilters, locale)}</button>
                 </div>
               ) : (
                 grouped.map(({ cat, items }) => (
@@ -209,7 +236,7 @@ export default function ResourcesPage() {
                     {cat && (
                       <div className="flex items-center gap-3 mb-5">
                         <span className="font-mono text-[11px] tracking-[0.14em] uppercase" style={{ color: cat.color }}>
-                          {cat.icon} {cat.label}
+                          {cat.icon} {localize(cat.label, locale)}
                         </span>
                         <div className="flex-1 h-px" style={{ background: cat.color + "22" }} />
                         <span className="font-mono text-[10px] text-fg-4">{items.length}</span>
