@@ -5,6 +5,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import * as THREE from "three";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { ERAS, MILESTONES, type Era, type Milestone } from "@/lib/timelineData";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
+
+const COPY = {
+  milestones:   l("milestones",        "marcos"),
+  eras:         l("eras",              "eras"),
+  heroTitle:    l("History of",        "História da"),
+  heroEm:       l("Artificial Intelligence", "Inteligência Artificial"),
+  heroSub:      l(
+    "From ancient mathematics to agentic AI — explore every milestone that shaped the field.",
+    "Da matemática ancestral à IA agêntica — explore cada marco que moldou o campo.",
+  ),
+  milestoneSingular: l("milestone",    "marco"),
+  whyMatters:   l("Why it matters",    "Por que importa"),
+};
 
 // ─── StarField ───────────────────────────────────────────────────────────────
 function StarField() {
@@ -68,6 +83,7 @@ function StarField() {
 
 // ─── Milestone detail modal ──────────────────────────────────────────────────
 function MilestoneModal({ m, era, onClose }: { m: Milestone; era: Era; onClose: () => void }) {
+  const { locale } = useLanguage();
   useEffect(() => {
     const fn = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", fn);
@@ -94,27 +110,27 @@ function MilestoneModal({ m, era, onClose }: { m: Milestone; era: Era; onClose: 
                   <span className="text-2xl">{m.emoji}</span>
                   <span className="font-mono text-[10px] tracking-[0.16em] uppercase px-2 py-0.5 rounded-full border"
                     style={{ color: era.color, borderColor: era.color + "44", background: era.color + "14" }}>
-                    {era.icon} {era.label}
+                    {era.icon} {localize(era.label, locale)}
                   </span>
                   <span className="font-mono text-[12px] text-fg-3">{m.year}</span>
                 </div>
                 <h2 className="font-serif font-normal text-[clamp(20px,3.5vw,34px)] leading-[1.08] tracking-[-0.015em] text-fg-1">
-                  {m.title}
+                  {localize(m.title, locale)}
                 </h2>
-                {m.by && <p className="font-mono text-[11px] text-fg-3 mt-1.5">{m.by}</p>}
+                {m.by && <p className="font-mono text-[11px] text-fg-3 mt-1.5">{localize(m.by, locale)}</p>}
               </div>
               <button onClick={onClose}
                 className="shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-violet/[0.10] border border-violet/20 text-fg-3 hover:text-fg-1 hover:bg-violet/20 transition-all">
                 <X size={15} />
               </button>
             </div>
-            <p className="font-sans text-[15px] leading-[1.65] text-fg-2 mb-5">{m.desc}</p>
+            <p className="font-sans text-[15px] leading-[1.65] text-fg-2 mb-5">{localize(m.desc, locale)}</p>
             <div className="rounded-xl px-5 py-4 mb-5 border"
               style={{ borderColor: era.color + "33", background: era.color + "0a" }}>
               <span className="font-mono text-[10px] tracking-[0.14em] uppercase block mb-1.5" style={{ color: era.color }}>
-                Why it matters
+                {localize(COPY.whyMatters, locale)}
               </span>
-              <p className="font-serif italic text-[16px] leading-[1.5] text-fg-1">{m.significance}</p>
+              <p className="font-serif italic text-[16px] leading-[1.5] text-fg-1">{localize(m.significance, locale)}</p>
             </div>
             {m.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-5">
@@ -125,11 +141,11 @@ function MilestoneModal({ m, era, onClose }: { m: Milestone; era: Era; onClose: 
             )}
             {m.links && m.links.length > 0 && (
               <div className="flex flex-wrap gap-3">
-                {m.links.map(link => (
-                  <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer"
+                {m.links.map((link, i) => (
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
                     className="font-mono text-[12px] tracking-[0.04em] px-3 py-2 rounded-lg border transition-colors"
                     style={{ color: era.color, borderColor: era.color + "44", background: era.color + "0e" }}>
-                    {link.label}
+                    {localize(link.label, locale)}
                   </a>
                 ))}
               </div>
@@ -143,6 +159,7 @@ function MilestoneModal({ m, era, onClose }: { m: Milestone; era: Era; onClose: 
 
 // ─── Main Timeline ───────────────────────────────────────────────────────────
 export default function AIHistoryTimeline() {
+  const { locale } = useLanguage();
   const [activeEraIdx, setActiveEraIdx] = useState(0);
   const [milestone,    setMilestone]    = useState<Milestone | null>(null);
   const [direction,    setDirection]    = useState<1 | -1>(1);
@@ -185,13 +202,13 @@ export default function AIHistoryTimeline() {
       {/* ── Hero header ─────────────────────────────────────── */}
       <div className="relative z-10 pt-24 pb-10 text-center px-4">
         <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-fg-3 mb-3">
-          {MILESTONES.length} milestones · {ERAS.length} eras
+          {MILESTONES.length} {localize(COPY.milestones, locale)} · {ERAS.length} {localize(COPY.eras, locale)}
         </p>
         <h1 className="font-serif text-[clamp(32px,6vw,64px)] font-normal tracking-[-0.02em] text-fg-1 leading-[1.04]">
-          History of <em className="italic text-violet-bright">Artificial Intelligence</em>
+          {localize(COPY.heroTitle, locale)} <em className="italic text-violet-bright">{localize(COPY.heroEm, locale)}</em>
         </h1>
         <p className="font-sans text-[15px] text-fg-3 mt-3 max-w-lg mx-auto leading-[1.6]">
-          From ancient mathematics to agentic AI — explore every milestone that shaped the field.
+          {localize(COPY.heroSub, locale)}
         </p>
       </div>
 
@@ -219,7 +236,7 @@ export default function AIHistoryTimeline() {
                 }}
               >
                 <span>{era.icon}</span>
-                <span className="hidden sm:inline">{era.label}</span>
+                <span className="hidden sm:inline">{localize(era.label, locale)}</span>
                 <span className="sm:hidden">{era.years.split("–")[0].trim()}</span>
               </button>
             );
@@ -254,10 +271,10 @@ export default function AIHistoryTimeline() {
                   {activeEra.years}
                 </p>
                 <h2 className="font-serif text-[24px] md:text-[30px] font-normal text-fg-1 leading-[1.1]">
-                  {activeEra.label}
+                  {localize(activeEra.label, locale)}
                 </h2>
                 <p className="font-mono text-[11px] text-fg-3 mt-1">
-                  {eraMs.length} milestone{eraMs.length !== 1 ? "s" : ""}
+                  {eraMs.length} {eraMs.length !== 1 ? localize(COPY.milestones, locale) : localize(COPY.milestoneSingular, locale)}
                 </p>
               </div>
             </div>
@@ -321,8 +338,8 @@ export default function AIHistoryTimeline() {
                         <span className="text-xl shrink-0 mt-0.5">{m.emoji}</span>
                         <div className="min-w-0">
                           <p className="font-mono text-[10px] tracking-[0.12em] uppercase mb-1" style={{ color: activeEra.color }}>{m.year}</p>
-                          <p className="font-serif text-[15px] leading-[1.3] text-fg-1">{m.title}</p>
-                          {m.by && <p className="font-mono text-[10px] text-fg-4 mt-1 truncate">{m.by}</p>}
+                          <p className="font-serif text-[15px] leading-[1.3] text-fg-1">{localize(m.title, locale)}</p>
+                          {m.by && <p className="font-mono text-[10px] text-fg-4 mt-1 truncate">{localize(m.by, locale)}</p>}
                         </div>
                         <ChevronRight size={14} className="shrink-0 mt-1 text-fg-4" />
                       </button>
@@ -342,7 +359,7 @@ export default function AIHistoryTimeline() {
             className="flex items-center gap-2 font-mono text-[12px] tracking-[0.06em] text-fg-3 hover:text-fg-1 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft size={16} />
-            {activeEraIdx > 0 ? ERAS[activeEraIdx - 1].label : ""}
+            {activeEraIdx > 0 ? localize(ERAS[activeEraIdx - 1].label, locale) : ""}
           </button>
 
           <span className="font-mono text-[11px] text-fg-4">
@@ -354,7 +371,7 @@ export default function AIHistoryTimeline() {
             disabled={activeEraIdx === ERAS.length - 1}
             className="flex items-center gap-2 font-mono text-[12px] tracking-[0.06em] text-fg-3 hover:text-fg-1 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
-            {activeEraIdx < ERAS.length - 1 ? ERAS[activeEraIdx + 1].label : ""}
+            {activeEraIdx < ERAS.length - 1 ? localize(ERAS[activeEraIdx + 1].label, locale) : ""}
             <ChevronRight size={16} />
           </button>
         </div>
@@ -388,17 +405,19 @@ const ERA_SPANS: Record<string, number> = {
 const TOTAL_SPAN = Object.values(ERA_SPANS).reduce((s, v) => s + v, 0);
 
 function TemporalScaleBar({ activeEraIdx, onSelect }: { activeEraIdx: number; onSelect: (i: number) => void }) {
+  const { locale } = useLanguage();
   return (
     <div className="px-4 pb-2 max-w-5xl mx-auto">
       <div className="flex h-[5px] rounded-full overflow-hidden gap-px">
         {ERAS.map((era, idx) => {
           const width = (ERA_SPANS[era.id] / TOTAL_SPAN) * 100;
           const active = idx === activeEraIdx;
+          const label = localize(era.label, locale);
           return (
             <button
               key={era.id}
               onClick={() => onSelect(idx)}
-              title={`${era.label} (${era.years})`}
+              title={`${label} (${era.years})`}
               className="h-full transition-all duration-300 rounded-[1px] hover:opacity-100"
               style={{
                 width: `${width}%`,
@@ -406,7 +425,7 @@ function TemporalScaleBar({ activeEraIdx, onSelect }: { activeEraIdx: number; on
                 opacity: active ? 1 : 0.28,
                 flexShrink: 0,
               }}
-              aria-label={era.label}
+              aria-label={label}
             />
           );
         })}
@@ -426,6 +445,7 @@ function TemporalScaleBar({ activeEraIdx, onSelect }: { activeEraIdx: number; on
 function MilestoneCard({
   m, era, onClick, align,
 }: { m: Milestone; era: Era; onClick: () => void; align: "left" | "right" }) {
+  const { locale } = useLanguage();
   return (
     <button
       onClick={onClick}
@@ -436,11 +456,11 @@ function MilestoneCard({
         <span className="text-[20px] shrink-0 mt-0.5">{m.emoji}</span>
         <div className="min-w-0">
           <p className="font-mono text-[10px] tracking-[0.12em] uppercase mb-1" style={{ color: era.color }}>{m.year}</p>
-          <p className="font-serif text-[14px] leading-[1.3] text-fg-1 group-hover:text-white transition-colors">{m.title}</p>
-          {m.by && <p className="font-mono text-[10px] text-fg-4 mt-1 truncate">{m.by}</p>}
+          <p className="font-serif text-[14px] leading-[1.3] text-fg-1 group-hover:text-white transition-colors">{localize(m.title, locale)}</p>
+          {m.by && <p className="font-mono text-[10px] text-fg-4 mt-1 truncate">{localize(m.by, locale)}</p>}
         </div>
       </div>
-      <p className="font-sans text-[12px] text-fg-3 mt-2.5 leading-[1.5] line-clamp-2">{m.desc}</p>
+      <p className="font-sans text-[12px] text-fg-3 mt-2.5 leading-[1.5] line-clamp-2">{localize(m.desc, locale)}</p>
     </button>
   );
 }
