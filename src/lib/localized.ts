@@ -14,3 +14,8 @@ export function localizeArray(
   if (Array.isArray(value)) return value;
   return value[locale] ?? value.en ?? [];
 }
+
+/** Compact constructor — `l("hello", "olá")` → `{ en: "hello", "pt-BR": "olá" }`. */
+export function l(en: string, ptBR: string): LocalizedString {
+  return { en, "pt-BR": ptBR };
+}

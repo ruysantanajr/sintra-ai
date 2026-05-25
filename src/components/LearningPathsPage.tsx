@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronRight, Clock, ArrowRight, X } from "lucide-react";
 import { LEARNING_PATHS, type LearningPath, type PathStep } from "@/lib/learningPathsData";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
 
 const LEVEL_STYLE = {
-  beginner:     { label: "Beginner",     color: "#10b981" },
-  intermediate: { label: "Intermediate", color: "#9F8CFF" },
-  advanced:     { label: "Advanced",     color: "#ef4444" },
+  beginner:     { label: l("Beginner",     "Iniciante"),     color: "#10b981" },
+  intermediate: { label: l("Intermediate", "Intermediário"), color: "#9F8CFF" },
+  advanced:     { label: l("Advanced",     "Avançado"),      color: "#ef4444" },
 };
 
 const STEP_TYPE_ICON: Record<PathStep["type"], string> = {
@@ -20,7 +22,28 @@ const STEP_TYPE_ICON: Record<PathStep["type"], string> = {
   read:       "📖",
 };
 
+const PAGE_COPY = {
+  back:    l("Back to Sintra",                  "Voltar para o Sintra"),
+  steps:   l("steps",                           "passos"),
+  step:    l("Step",                            "Passo"),
+  open:    l("Open",                            "Abrir"),
+  eyebrow: l("Structured Learning",             "Aprendizado estruturado"),
+  titleA:  l("Learning",                        "Trilhas de"),
+  titleB:  l("paths.",                          "aprendizado."),
+  subtitle: l(
+    "Structured tracks that chain concepts, prompts, tools, and history into a curriculum — wherever you are in your AI journey.",
+    "Trilhas estruturadas que encadeiam conceitos, prompts, ferramentas e história em um currículo — onde quer que você esteja na sua jornada com IA.",
+  ),
+  soonTitle: l("Paths coming soon", "Trilhas em breve"),
+  soonBody:  l("The first learning tracks are being curated.", "As primeiras trilhas estão sendo curadas."),
+  footer: l(
+    "Each path links directly to existing Sintra content — use cases, concepts, labs, and tools. No fluff, just signal.",
+    "Cada trilha leva direto a conteúdo já existente no Sintra — casos de uso, conceitos, labs e ferramentas. Sem enrolação, só sinal.",
+  ),
+};
+
 function PathCard({ path, onClick }: { path: LearningPath; onClick: () => void }) {
+  const { locale } = useLanguage();
   const lvl = LEVEL_STYLE[path.level];
   return (
     <motion.button
@@ -38,14 +61,14 @@ function PathCard({ path, onClick }: { path: LearningPath; onClick: () => void }
         <span className="text-4xl">{path.emoji}</span>
         <span className="font-mono text-[9px] tracking-[0.12em] uppercase px-2 py-0.5 rounded-full border"
           style={{ color: lvl.color, borderColor: lvl.color + "44", background: lvl.color + "12" }}>
-          {lvl.label}
+          {localize(lvl.label, locale)}
         </span>
       </div>
 
       <h3 className="font-serif text-[22px] font-normal text-fg-1 leading-[1.15] mb-2 group-hover:text-white transition-colors">
-        {path.title}
+        {localize(path.title, locale)}
       </h3>
-      <p className="font-sans text-[13px] text-fg-3 leading-[1.5] mb-5">{path.tagline}</p>
+      <p className="font-sans text-[13px] text-fg-3 leading-[1.5] mb-5">{localize(path.tagline, locale)}</p>
 
       {/* Meta */}
       <div className="flex items-center gap-3 text-fg-4">
@@ -53,15 +76,15 @@ function PathCard({ path, onClick }: { path: LearningPath; onClick: () => void }
           <Clock size={10} /> {path.totalDuration}
         </span>
         <span className="text-fg-4">·</span>
-        <span className="font-mono text-[10px]">{path.steps.length} steps</span>
+        <span className="font-mono text-[10px]">{path.steps.length} {localize(PAGE_COPY.steps, locale)}</span>
         <span className="text-fg-4">·</span>
-        <span className="font-mono text-[10px]">{path.audience}</span>
+        <span className="font-mono text-[10px]">{localize(path.audience, locale)}</span>
       </div>
 
       {/* Steps preview */}
       <div className="flex items-center gap-1 mt-4 pt-4 border-t border-hairline/40">
         {path.steps.slice(0, 5).map((step, i) => (
-          <span key={i} title={step.label}
+          <span key={i} title={localize(step.label, locale)}
             className="w-7 h-7 rounded-lg flex items-center justify-center text-sm bg-white/[0.04] border border-hairline/60">
             {step.icon}
           </span>
@@ -76,6 +99,7 @@ function PathCard({ path, onClick }: { path: LearningPath; onClick: () => void }
 }
 
 function PathDetail({ path, onClose }: { path: LearningPath; onClose: () => void }) {
+  const { locale } = useLanguage();
   const lvl = LEVEL_STYLE[path.level];
   return (
     <>
@@ -95,11 +119,11 @@ function PathDetail({ path, onClose }: { path: LearningPath; onClose: () => void
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
               <span className="text-4xl block mb-3">{path.emoji}</span>
-              <h2 className="font-serif text-[28px] font-normal text-fg-1 leading-[1.1] mb-1">{path.title}</h2>
+              <h2 className="font-serif text-[28px] font-normal text-fg-1 leading-[1.1] mb-1">{localize(path.title, locale)}</h2>
               <div className="flex items-center gap-2 mt-2">
                 <span className="font-mono text-[10px] tracking-[0.12em] uppercase px-2 py-0.5 rounded-full border"
                   style={{ color: lvl.color, borderColor: lvl.color + "44", background: lvl.color + "12" }}>
-                  {lvl.label}
+                  {localize(lvl.label, locale)}
                 </span>
                 <span className="font-mono text-[10px] text-fg-4 flex items-center gap-1">
                   <Clock size={10} /> {path.totalDuration}
@@ -114,9 +138,9 @@ function PathDetail({ path, onClose }: { path: LearningPath; onClose: () => void
 
           <p className="font-serif italic text-[16px] leading-[1.5] text-fg-2 pl-4 border-l-2 mb-6"
             style={{ borderColor: path.color }}>
-            {path.tagline}
+            {localize(path.tagline, locale)}
           </p>
-          <p className="font-mono text-[11px] text-fg-4 mb-8">{path.audience}</p>
+          <p className="font-mono text-[11px] text-fg-4 mb-8">{localize(path.audience, locale)}</p>
 
           {/* Steps */}
           <div className="flex flex-col gap-0">
@@ -135,18 +159,18 @@ function PathDetail({ path, onClose }: { path: LearningPath; onClose: () => void
                 <div className="flex-1 pb-6">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-[9px] tracking-[0.10em] uppercase text-fg-4">
-                      Step {idx + 1} · {step.duration}
+                      {localize(PAGE_COPY.step, locale)} {idx + 1} · {step.duration}
                     </span>
                   </div>
-                  <p className="font-serif text-[15px] text-fg-1 leading-[1.3] mb-1">{step.label}</p>
-                  <p className="font-sans text-[13px] text-fg-3 leading-[1.5] mb-3">{step.desc}</p>
+                  <p className="font-serif text-[15px] text-fg-1 leading-[1.3] mb-1">{localize(step.label, locale)}</p>
+                  <p className="font-sans text-[13px] text-fg-3 leading-[1.5] mb-3">{localize(step.desc, locale)}</p>
                   <a
                     href={step.href}
                     className="inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.06em] px-3 py-1.5 rounded-lg border transition-all"
                     style={{ color: path.color, borderColor: path.color + "44", background: path.color + "0e" }}
                     {...(step.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   >
-                    Open <ArrowRight size={11} />
+                    {localize(PAGE_COPY.open, locale)} <ArrowRight size={11} />
                   </a>
                 </div>
               </div>
@@ -159,6 +183,7 @@ function PathDetail({ path, onClose }: { path: LearningPath; onClose: () => void
 }
 
 export default function LearningPathsPage() {
+  const { locale } = useLanguage();
   const [activePath, setActivePath] = useState<LearningPath | null>(null);
 
   return (
@@ -175,7 +200,7 @@ export default function LearningPathsPage() {
           <a href={`${BASE_PATH}/`}
             className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-fg-3 hover:text-violet-bright transition-colors group">
             <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back to Sintra
+            {localize(PAGE_COPY.back, locale)}
           </a>
         </div>
 
@@ -185,17 +210,17 @@ export default function LearningPathsPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
           <div className="inline-flex gap-3.5 items-center mb-6">
             <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-            <span className="eyebrow violet">Structured Learning</span>
+            <span className="eyebrow violet">{localize(PAGE_COPY.eyebrow, locale)}</span>
           </div>
           <h1 className="font-serif font-light text-[clamp(40px,6vw,80px)] leading-[1.04] tracking-[-0.025em] text-fg-1 mb-5">
-            Learning{" "}
+            {localize(PAGE_COPY.titleA, locale)}{" "}
             <em className="italic" style={{
               backgroundImage: "linear-gradient(180deg, #F4F2EA 0%, #9F8CFF 100%)",
               WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
-            }}>paths.</em>
+            }}>{localize(PAGE_COPY.titleB, locale)}</em>
           </h1>
           <p className="font-sans text-[17px] text-fg-2 max-w-xl leading-[1.55]">
-            Structured tracks that chain concepts, prompts, tools, and history into a curriculum — wherever you are in your AI journey.
+            {localize(PAGE_COPY.subtitle, locale)}
           </p>
         </motion.header>
 
@@ -203,8 +228,8 @@ export default function LearningPathsPage() {
         <div className="py-12">
           {LEARNING_PATHS.length === 0 ? (
             <div className="text-center py-24 border border-dashed border-violet/[0.15] rounded-2xl">
-              <p className="font-serif text-[22px] text-fg-3 mb-2">Paths coming soon</p>
-              <p className="font-mono text-[12px] text-fg-4">The first learning tracks are being curated.</p>
+              <p className="font-serif text-[22px] text-fg-3 mb-2">{localize(PAGE_COPY.soonTitle, locale)}</p>
+              <p className="font-mono text-[12px] text-fg-4">{localize(PAGE_COPY.soonBody, locale)}</p>
             </div>
           ) : (
             <motion.div
@@ -223,7 +248,7 @@ export default function LearningPathsPage() {
         {/* Callout */}
         <div className="pb-24 border-t border-violet/[0.08] pt-10">
           <p className="font-sans text-[14px] text-fg-4 text-center leading-[1.6] max-w-md mx-auto">
-            Each path links directly to existing Sintra content — use cases, concepts, labs, and tools. No fluff, just signal.
+            {localize(PAGE_COPY.footer, locale)}
           </p>
         </div>
       </div>
