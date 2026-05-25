@@ -10,9 +10,43 @@ import {
   ConceptCategory, Concept,
 } from "@/lib/concepts";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 const ALL_CATS = ["all", "fundamentals", "models", "tools", "protocols"] as const;
 type Filter = (typeof ALL_CATS)[number];
+
+const PAGE_COPY = {
+  all:        { en: "All",         "pt-BR": "Todos" },
+  back:       { en: "librAIry",    "pt-BR": "bibliotec(IA)" },
+  count:      { en: "concepts",    "pt-BR": "conceitos" },
+  eyebrow:    { en: "Concepts & Definitions", "pt-BR": "Conceitos & Definições" },
+  titleA:     { en: "AI, decod",   "pt-BR": "IA, decodific" },
+  titleB:     { en: "ed",          "pt-BR": "ada" },
+  titleSuffix:{ en: ".",           "pt-BR": "." },
+  subtitle: {
+    en:      "Plain-English definitions for every AI term you’ll encounter — from tokens to agents, APIs to MCP.",
+    "pt-BR": "Definições claras para todo termo de IA que você vai encontrar — de tokens a agentes, de APIs a MCP.",
+  },
+  related:    { en: "Related concepts", "pt-BR": "Conceitos relacionados" },
+  learnMore:  { en: "Learn more",       "pt-BR": "Saiba mais" },
+  close:      { en: "Close",            "pt-BR": "Fechar" },
+  added:      { en: "Added",            "pt-BR": "Adicionado em" },
+  analogy:    { en: "Analogy",          "pt-BR": "Analogia" },
+  addEyebrow: { en: "Add a concept",    "pt-BR": "Adicionar um conceito" },
+  addBody: {
+    en:      "Every concept follows a fixed schema in",
+    "pt-BR": "Todo conceito segue um schema fixo em",
+  },
+  addBody2: {
+    en:      "Add an entry to the",
+    "pt-BR": "Adicione uma entrada ao array",
+  },
+  addBody3: {
+    en:      "array with: id, term, category, tagline, body, analogy, icon, difficulty, related.",
+    "pt-BR": "com: id, term, category, tagline, body, analogy, icon, difficulty, related.",
+  },
+} as const;
 
 // ── Card ─────────────────────────────────────────────────────────────────────
 
@@ -23,7 +57,9 @@ function ConceptCard({
   concept: Concept;
   onClick: (c: Concept) => void;
 }) {
+  const { locale } = useLanguage();
   const cat = CAT_META[concept.category];
+  const dateLocale = locale === "pt-BR" ? "pt-BR" : "en-GB";
   return (
     <motion.button
       layout
@@ -49,7 +85,7 @@ function ConceptCard({
         {/* Term */}
         <div className="flex items-start gap-2 flex-wrap mb-1">
           <h3 className="font-serif font-normal text-[20px] leading-[1.15] text-fg-1">
-            {concept.term}
+            {localize(concept.term, locale)}
           </h3>
           {concept.shortTerm && (
             <span
@@ -64,27 +100,27 @@ function ConceptCard({
         {/* Category + difficulty + date */}
         <div className="flex items-center gap-2 mb-3 flex-wrap">
           <span className="font-mono text-[10px] tracking-[0.12em] uppercase" style={{ color: cat.hex }}>
-            {cat.label}
+            {localize(cat.label, locale)}
           </span>
           <span className="text-fg-4">·</span>
           <span
             className="font-mono text-[10px] tracking-[0.08em] uppercase"
             style={{ color: DIFF_HEX[concept.difficulty] }}
           >
-            {DIFF_LABEL[concept.difficulty]}
+            {localize(DIFF_LABEL[concept.difficulty], locale)}
           </span>
           <span className="text-fg-4">·</span>
           <time
             dateTime={concept.addedAt}
             className="font-mono text-[10px] text-fg-4 tracking-[0.06em]"
           >
-            {new Date(concept.addedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+            {new Date(concept.addedAt).toLocaleDateString(dateLocale, { day: "numeric", month: "short", year: "numeric" })}
           </time>
         </div>
 
         {/* Tagline */}
         <p className="font-sans text-[13px] text-fg-3 leading-[1.55] mb-4">
-          {concept.tagline}
+          {localize(concept.tagline, locale)}
         </p>
 
         {/* Related chips */}
@@ -97,7 +133,7 @@ function ConceptCard({
                   key={id}
                   className="font-mono text-[10px] px-2 py-0.5 rounded-sm bg-night border border-hairline text-fg-4"
                 >
-                  {rel.shortTerm ?? rel.term}
+                  {rel.shortTerm ?? localize(rel.term, locale)}
                 </span>
               ) : null;
             })}
@@ -119,6 +155,9 @@ function ConceptDrawer({
   onClose: () => void;
   onNavigate: (id: string) => void;
 }) {
+  const { locale } = useLanguage();
+  const dateLocale = locale === "pt-BR" ? "pt-BR" : "en-GB";
+
   useEffect(() => {
     if (!concept) return;
     document.body.style.overflow = "hidden";
@@ -192,13 +231,13 @@ function ConceptDrawer({
                         background: `${CAT_META[concept.category].hex}10`,
                       }}
                     >
-                      {CAT_META[concept.category].label}
+                      {localize(CAT_META[concept.category].label, locale)}
                     </span>
                     <span
                       className="font-mono text-[11px] tracking-[0.1em] uppercase px-2 py-1 rounded border border-hairline"
                       style={{ color: DIFF_HEX[concept.difficulty] }}
                     >
-                      {DIFF_LABEL[concept.difficulty]}
+                      {localize(DIFF_LABEL[concept.difficulty], locale)}
                     </span>
                   </div>
                 </div>
@@ -206,7 +245,7 @@ function ConceptDrawer({
                 {/* Related concepts */}
                 {concept.related.length > 0 && (
                   <div>
-                    <span className="eyebrow block mb-3">Related concepts</span>
+                    <span className="eyebrow block mb-3">{localize(PAGE_COPY.related, locale)}</span>
                     <div className="flex flex-wrap gap-2">
                       {concept.related.map(id => {
                         const rel = CONCEPTS.find(c => c.id === id);
@@ -216,7 +255,7 @@ function ConceptDrawer({
                             onClick={() => onNavigate(id)}
                             className="font-mono text-[11px] px-2.5 py-1.5 rounded-sm border border-hairline text-fg-2 bg-night hover:border-violet/40 hover:text-violet-bright transition-colors"
                           >
-                            {rel.icon} {rel.shortTerm ?? rel.term}
+                            {rel.icon} {rel.shortTerm ?? localize(rel.term, locale)}
                           </button>
                         ) : null;
                       })}
@@ -233,7 +272,7 @@ function ConceptDrawer({
                     className="mt-6 inline-flex items-center gap-1.5 font-mono text-[11px] tracking-[0.08em] uppercase text-cyan-ice/70 hover:text-cyan-ice transition-colors"
                   >
                     <ExternalLink size={11} />
-                    Learn more
+                    {localize(PAGE_COPY.learnMore, locale)}
                   </a>
                 )}
               </div>
@@ -249,14 +288,14 @@ function ConceptDrawer({
                       boxShadow: `0 0 8px ${DIFF_HEX[concept.difficulty]}`,
                     }}
                   />
-                  {DIFF_LABEL[concept.difficulty]}
+                  {localize(DIFF_LABEL[concept.difficulty], locale)}
                   <span className="text-fg-4">·</span>
                   <span style={{ color: CAT_META[concept.category].hex }}>
-                    {CAT_META[concept.category].label}
+                    {localize(CAT_META[concept.category].label, locale)}
                   </span>
                   <span className="text-fg-4">·</span>
                   <time dateTime={concept.addedAt} className="text-fg-4 normal-case tracking-normal">
-                    Added {new Date(concept.addedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    {localize(PAGE_COPY.added, locale)} {new Date(concept.addedAt).toLocaleDateString(dateLocale, { day: "numeric", month: "short", year: "numeric" })}
                   </time>
                 </span>
 
@@ -266,7 +305,7 @@ function ConceptDrawer({
                     id="cd-title"
                     className="font-serif font-normal text-[clamp(26px,3.5vw,44px)] leading-[1.06] tracking-[-0.015em] text-fg-1"
                   >
-                    {concept.term}
+                    {localize(concept.term, locale)}
                   </h2>
                   {concept.shortTerm && (
                     <span
@@ -287,23 +326,23 @@ function ConceptDrawer({
                   className="font-serif italic text-[18px] md:text-[20px] leading-[1.45] text-fg-2 mb-7 border-l-2 pl-5"
                   style={{ borderColor: CAT_META[concept.category].hex }}
                 >
-                  {concept.tagline}
+                  {localize(concept.tagline, locale)}
                 </p>
 
                 {/* Body */}
                 <div className="sample-output mb-8">
                   <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {concept.body}
+                    {localize(concept.body, locale)}
                   </ReactMarkdown>
                 </div>
 
                 {/* Analogy */}
                 <div className="rounded-xl border border-violet/20 bg-violet/[0.05] px-5 py-4">
                   <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 block mb-2">
-                    ⬡ Analogy
+                    ⬡ {localize(PAGE_COPY.analogy, locale)}
                   </span>
                   <p className="font-serif text-[16px] leading-[1.6] text-fg-2 italic">
-                    {concept.analogy}
+                    {localize(concept.analogy, locale)}
                   </p>
                 </div>
               </div>
@@ -312,7 +351,7 @@ function ConceptDrawer({
               <button
                 onClick={onClose}
                 className="expanded-card__close"
-                aria-label="Close"
+                aria-label={localize(PAGE_COPY.close, locale)}
               >
                 <X size={16} />
               </button>
@@ -327,10 +366,10 @@ function ConceptDrawer({
                   rel="noopener noreferrer"
                   className="btn"
                 >
-                  <ExternalLink size={14} /> Learn more
+                  <ExternalLink size={14} /> {localize(PAGE_COPY.learnMore, locale)}
                 </a>
               )}
-              <button className="btn btn-ghost" onClick={onClose}>Close</button>
+              <button className="btn btn-ghost" onClick={onClose}>{localize(PAGE_COPY.close, locale)}</button>
             </div>
           </motion.div>
         </>
@@ -342,6 +381,7 @@ function ConceptDrawer({
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ConceptsPage() {
+  const { locale } = useLanguage();
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
   const [expanded, setExpanded]         = useState<Concept | null>(null);
 
@@ -375,11 +415,11 @@ export default function ConceptsPage() {
           href={`${BASE_PATH}/`}
           className="flex items-center gap-2 font-mono text-[11px] tracking-[0.1em] uppercase text-fg-3 hover:text-fg-1 transition-colors"
         >
-          <ArrowLeft size={14} /> librAIry
+          <ArrowLeft size={14} /> {localize(PAGE_COPY.back, locale)}
         </a>
         <div className="flex-1" />
         <span className="font-mono text-[11px] text-fg-4 tracking-[0.06em]">
-          {CONCEPTS.length} concepts
+          {CONCEPTS.length} {localize(PAGE_COPY.count, locale)}
         </span>
       </div>
 
@@ -400,9 +440,9 @@ export default function ConceptsPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 max-w-2xl mx-auto"
         >
-          <p className="eyebrow violet mb-4">Concepts & Definitions</p>
+          <p className="eyebrow violet mb-4">{localize(PAGE_COPY.eyebrow, locale)}</p>
           <h1 className="font-serif font-light text-[clamp(36px,6vw,80px)] leading-[1.03] tracking-[-0.02em] text-fg-1 mb-5">
-            AI, decod
+            {localize(PAGE_COPY.titleA, locale)}
             <em
               className="italic"
               style={{
@@ -412,12 +452,12 @@ export default function ConceptsPage() {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              ed
+              {localize(PAGE_COPY.titleB, locale)}
             </em>
-            .
+            {localize(PAGE_COPY.titleSuffix, locale)}
           </h1>
           <p className="font-sans text-[16px] leading-[1.65] text-fg-3 max-w-md mx-auto">
-            Plain-English definitions for every AI term you&rsquo;ll encounter — from tokens to agents, APIs to MCP.
+            {localize(PAGE_COPY.subtitle, locale)}
           </p>
         </motion.div>
       </div>
@@ -434,7 +474,7 @@ export default function ConceptsPage() {
                 : "border-hairline text-fg-3 hover:border-violet/30 hover:text-fg-2",
             ].join(" ")}
           >
-            All · {CONCEPTS.length}
+            {localize(PAGE_COPY.all, locale)} · {CONCEPTS.length}
           </button>
           {(["fundamentals", "models", "tools", "protocols"] as ConceptCategory[]).map(cat => {
             const meta    = CAT_META[cat];
@@ -453,7 +493,7 @@ export default function ConceptsPage() {
                     : {}
                 }
               >
-                {meta.label} · {totalByCategory[cat]}
+                {localize(meta.label, locale)} · {totalByCategory[cat]}
               </button>
             );
           })}
@@ -485,18 +525,18 @@ export default function ConceptsPage() {
           <div className="text-3xl">⬡</div>
           <div className="flex-1">
             <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-violet-bright mb-1">
-              Add a concept
+              {localize(PAGE_COPY.addEyebrow, locale)}
             </p>
             <p className="font-sans text-[13px] text-fg-3 leading-[1.5]">
-              Every concept follows a fixed schema in{" "}
+              {localize(PAGE_COPY.addBody, locale)}{" "}
               <code className="font-mono text-[12px] text-cyan-ice bg-night px-1.5 py-0.5 rounded">
                 src/lib/concepts.ts
               </code>
-              . Add an entry to the{" "}
+              . {localize(PAGE_COPY.addBody2, locale)}{" "}
               <code className="font-mono text-[12px] text-cyan-ice bg-night px-1.5 py-0.5 rounded">
                 CONCEPTS
               </code>{" "}
-              array with: <em>id, term, category, tagline, body, analogy, icon, difficulty, related</em>.
+              {localize(PAGE_COPY.addBody3, locale)}
             </p>
           </div>
         </motion.div>
