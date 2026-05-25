@@ -11,6 +11,8 @@ import {
   type ClaudeCapability,
 } from "@/lib/claudeData";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -26,6 +28,90 @@ const SPEED_ICON: Record<ClaudeModel["speed"], string> = {
   "most capable":   "🧠",
 };
 
+const SPEED_LABEL: Record<ClaudeModel["speed"], { en: string; "pt-BR": string }> = {
+  fastest:        l("fastest",      "mais rápido"),
+  balanced:       l("balanced",     "equilibrado"),
+  "most capable": l("most capable", "mais capaz"),
+};
+
+const COPY = {
+  back:            l("Back to Sintra",          "Voltar para o Sintra"),
+  eyebrowAnthropic: l("Anthropic",              "Anthropic"),
+  heroSub:         l("The AI built to be safe, honest, and helpful.", "A IA feita para ser segura, honesta e útil."),
+  // Quick stats
+  stat1Label:      l("3 models",                "3 modelos"),
+  stat1Note:       l("Haiku · Sonnet · Opus",   "Haiku · Sonnet · Opus"),
+  stat2Label:      l("200K context",            "200K de contexto"),
+  stat2Note:       l("Across all tiers",        "Em todos os tiers"),
+  stat3Label:      l("Since 2021",              "Desde 2021"),
+  stat3Note:       l("Built by Anthropic",      "Feito pela Anthropic"),
+  // Model family section
+  eyebrowFamily:   l("Model Family",            "Família de Modelos"),
+  familyTitle:     l("Three tiers, one context window", "Três tiers, uma janela de contexto"),
+  familyDesc:      l(
+    "Every Claude model shares a 200K token context window. Choose your tier by the cost-performance trade-off your application demands.",
+    "Todo modelo Claude compartilha uma janela de contexto de 200K tokens. Escolha o tier pelo trade-off custo-performance que sua aplicação exige.",
+  ),
+  ctxLabel:        l("Context",                 "Contexto"),
+  speedLabel:      l("Speed",                   "Velocidade"),
+  inputLabel:      l("Input",                   "Entrada"),
+  outputLabel:     l("Output",                  "Saída"),
+  bestForLabel:    l("Best for",                "Melhor para"),
+  keyCapabilities: l("Key capabilities",        "Capacidades principais"),
+  pricesNote:      l(
+    "* Prices per 1M tokens, approximate as of 2025. Verify current rates at anthropic.com/pricing.",
+    "* Preços por 1M de tokens, aproximados em 2025. Confirme as taxas atuais em anthropic.com/pricing.",
+  ),
+  // Claude Code section
+  claudeCodeTagline: l("Anthropic",             "Anthropic"),
+  claudeCodeIntro:   l(
+    "An agentic coding CLI that lives in your terminal. Claude Code reads and edits files, runs shell commands, manages git, and executes multi-step software engineering tasks autonomously — without leaving your workflow.",
+    "Uma CLI de programação agêntica que vive no seu terminal. O Claude Code lê e edita arquivos, executa comandos shell, gerencia git e completa tarefas de engenharia em múltiplos passos de forma autônoma — sem sair do seu fluxo.",
+  ),
+  feat1Title: l("Remote Control",                              "Remote Control"),
+  feat1Desc:  l(
+    "Monitor and guide Claude Code sessions from the web or iOS app via code.claude.com.",
+    "Monitore e guie sessões do Claude Code pela web ou pelo app iOS via code.claude.com.",
+  ),
+  feat2Title: l("VS Code & JetBrains integration",             "Integração com VS Code e JetBrains"),
+  feat2Desc:  l(
+    "Embedded Claude Code panel inside your editor — run tasks, view diffs, and accept changes inline.",
+    "Painel do Claude Code embarcado no seu editor — rode tarefas, veja diffs e aceite mudanças inline.",
+  ),
+  feat3Title: l("MCP server support",                          "Suporte a servidores MCP"),
+  feat3Desc:  l(
+    "Connect any Model Context Protocol server to give Claude Code access to external APIs, databases, and tools.",
+    "Conecte qualquer servidor MCP para dar ao Claude Code acesso a APIs, bancos de dados e ferramentas externas.",
+  ),
+  feat4Title: l("Multi-agent workflows",                       "Fluxos multi-agente"),
+  feat4Desc:  l(
+    "Orchestrate parallel sub-agents for large-scale tasks: one agent per PR, feature, or test suite.",
+    "Orquestre sub-agentes paralelos para tarefas em larga escala: um agente por PR, feature ou suite de testes.",
+  ),
+  learnMoreClaudeCode: l("Learn more about Claude Code",       "Saiba mais sobre o Claude Code"),
+  installLabel:   l("Install",                                  "Instalar"),
+  apiLabel:       l("API · TypeScript SDK",                     "API · SDK TypeScript"),
+  chip1:          l("Open source CLI",                          "CLI open source"),
+  chip2:          l("Python & TS SDKs",                         "SDKs Python & TS"),
+  chip3:          l("Streaming support",                        "Suporte a streaming"),
+  chip4:          l("MCP native",                               "MCP nativo"),
+  // Products section
+  eyebrowProducts:  l("Products",                  "Produtos"),
+  productsTitle:    l("Every way to access Claude","Todas as formas de acessar o Claude"),
+  productVisit:     l("Visit",                     "Visitar"),
+  // Capabilities section
+  eyebrowCapabilities: l("Capabilities",            "Capacidades"),
+  capabilitiesTitle: l("What Claude can do",        "O que o Claude consegue fazer"),
+  capabilitiesDesc:  l(
+    "Core technical capabilities available across the API — from vision and tool use to extended thinking and the Model Context Protocol.",
+    "Capacidades técnicas centrais disponíveis na API — de visão e tool use a Extended Thinking e Model Context Protocol.",
+  ),
+  capabilityDocs: l("Docs", "Docs"),
+  // Links section
+  eyebrowQuickLinks: l("Quick links",              "Links rápidos"),
+  quickLinksTitle:   l("Resources & references",   "Recursos & referências"),
+};
+
 const itemVariant = {
   hidden: { opacity: 0, y: 22 },
   show: (i: number) => ({
@@ -38,6 +124,7 @@ const itemVariant = {
 // ─── Model Card ───────────────────────────────────────────────────────────────
 
 function ModelCard({ model, index }: { model: ClaudeModel; index: number }) {
+  const { locale } = useLanguage();
   return (
     <motion.div
       custom={index}
@@ -62,7 +149,7 @@ function ModelCard({ model, index }: { model: ClaudeModel; index: number }) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
           <h3 className="font-serif text-[22px] font-normal text-fg-1 leading-[1.1]">{model.name}</h3>
-          <p className="font-sans text-[12px] text-fg-3 mt-1 leading-[1.4]">{model.tagline}</p>
+          <p className="font-sans text-[12px] text-fg-3 mt-1 leading-[1.4]">{localize(model.tagline, locale)}</p>
         </div>
         <span
           className="font-mono text-[9px] tracking-[0.14em] uppercase px-2.5 py-1 rounded-full border shrink-0 mt-1"
@@ -75,38 +162,38 @@ function ModelCard({ model, index }: { model: ClaudeModel; index: number }) {
       {/* Stats row */}
       <div className="grid grid-cols-2 gap-2 mb-5">
         <div className="rounded-lg border border-hairline/60 bg-white/[0.025] px-3 py-2">
-          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">Context</p>
+          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">{localize(COPY.ctxLabel, locale)}</p>
           <p className="font-mono text-[13px] font-medium text-fg-1">{model.contextWindow}</p>
         </div>
         <div className="rounded-lg border border-hairline/60 bg-white/[0.025] px-3 py-2">
-          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">Speed</p>
+          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">{localize(COPY.speedLabel, locale)}</p>
           <p className="font-mono text-[12px] text-fg-2">
-            {SPEED_ICON[model.speed]} {model.speed}
+            {SPEED_ICON[model.speed]} {localize(SPEED_LABEL[model.speed], locale)}
           </p>
         </div>
         <div className="rounded-lg border border-hairline/60 bg-white/[0.025] px-3 py-2">
-          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">Input</p>
+          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">{localize(COPY.inputLabel, locale)}</p>
           <p className="font-mono text-[12px] font-medium" style={{ color: model.color }}>
             {model.inputPrice}
           </p>
         </div>
         <div className="rounded-lg border border-hairline/60 bg-white/[0.025] px-3 py-2">
-          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">Output</p>
+          <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-0.5">{localize(COPY.outputLabel, locale)}</p>
           <p className="font-mono text-[12px] text-fg-3">{model.outputPrice}</p>
         </div>
       </div>
 
       {/* Best for */}
       <div className="mb-4">
-        <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-2">Best for</p>
+        <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-2">{localize(COPY.bestForLabel, locale)}</p>
         <div className="flex flex-wrap gap-1.5">
-          {model.bestFor.map(tag => (
+          {model.bestFor.map((tag, i) => (
             <span
-              key={tag}
+              key={i}
               className="font-mono text-[9px] px-2 py-0.5 rounded-full border"
               style={{ color: model.color, borderColor: model.color + "33", background: model.color + "0c" }}
             >
-              {tag}
+              {localize(tag, locale)}
             </span>
           ))}
         </div>
@@ -114,12 +201,12 @@ function ModelCard({ model, index }: { model: ClaudeModel; index: number }) {
 
       {/* Features */}
       <div className="mt-auto">
-        <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-2">Key capabilities</p>
+        <p className="font-mono text-[9px] tracking-[0.12em] uppercase text-fg-4 mb-2">{localize(COPY.keyCapabilities, locale)}</p>
         <ul className="flex flex-col gap-1.5">
-          {model.features.map(f => (
-            <li key={f} className="flex items-start gap-2">
+          {model.features.map((f, i) => (
+            <li key={i} className="flex items-start gap-2">
               <CheckCircle2 size={11} className="shrink-0 mt-[3px]" style={{ color: model.color }} />
-              <span className="font-sans text-[12px] text-fg-2 leading-[1.45]">{f}</span>
+              <span className="font-sans text-[12px] text-fg-2 leading-[1.45]">{localize(f, locale)}</span>
             </li>
           ))}
         </ul>
@@ -131,6 +218,7 @@ function ModelCard({ model, index }: { model: ClaudeModel; index: number }) {
 // ─── Capability Card ──────────────────────────────────────────────────────────
 
 function CapabilityCard({ cap, index }: { cap: ClaudeCapability; index: number }) {
+  const { locale } = useLanguage();
   const inner = (
     <motion.div
       custom={index}
@@ -143,15 +231,15 @@ function CapabilityCard({ cap, index }: { cap: ClaudeCapability; index: number }
       <div className="flex items-center gap-3">
         <span className="text-2xl">{cap.icon}</span>
         <div className="flex-1 min-w-0">
-          <p className="font-serif text-[16px] text-fg-1 leading-none">{cap.name}</p>
+          <p className="font-serif text-[16px] text-fg-1 leading-none">{localize(cap.name, locale)}</p>
           {cap.link && (
             <p className="font-mono text-[9px] tracking-[0.08em] text-violet-bright mt-0.5 flex items-center gap-1">
-              Docs <ExternalLink size={8} />
+              {localize(COPY.capabilityDocs, locale)} <ExternalLink size={8} />
             </p>
           )}
         </div>
       </div>
-      <p className="font-sans text-[12px] text-fg-3 leading-[1.55]">{cap.desc}</p>
+      <p className="font-sans text-[12px] text-fg-3 leading-[1.55]">{localize(cap.desc, locale)}</p>
     </motion.div>
   );
 
@@ -197,6 +285,7 @@ function LinkPill({ label, url, category }: { label: string; url: string; catego
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function ClaudePage() {
+  const { locale } = useLanguage();
   return (
     <div className="min-h-screen bg-abyss text-fg-1">
 
@@ -219,7 +308,7 @@ export default function ClaudePage() {
             className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-fg-3 hover:text-violet-bright transition-colors group"
           >
             <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back to Sintra
+            {localize(COPY.back, locale)}
           </a>
         </div>
 
@@ -232,7 +321,7 @@ export default function ClaudePage() {
         >
           <div className="inline-flex gap-3.5 items-center mb-6">
             <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-            <span className="eyebrow violet">Anthropic</span>
+            <span className="eyebrow violet">{localize(COPY.eyebrowAnthropic, locale)}</span>
           </div>
 
           <h1 className="font-serif font-light text-[clamp(48px,7vw,96px)] leading-[1.02] tracking-[-0.025em] text-fg-1 mb-5">
@@ -240,15 +329,15 @@ export default function ClaudePage() {
           </h1>
 
           <p className="font-sans text-[18px] text-fg-2 max-w-xl leading-[1.55] mb-8">
-            The AI built to be safe, honest, and helpful.
+            {localize(COPY.heroSub, locale)}
           </p>
 
           {/* Quick stats */}
           <div className="flex flex-wrap items-center gap-8">
             {[
-              { label: "3 models",      note: "Haiku · Sonnet · Opus" },
-              { label: "200K context",  note: "Across all tiers" },
-              { label: "Since 2021",    note: "Built by Anthropic" },
+              { label: localize(COPY.stat1Label, locale), note: localize(COPY.stat1Note, locale) },
+              { label: localize(COPY.stat2Label, locale), note: localize(COPY.stat2Note, locale) },
+              { label: localize(COPY.stat3Label, locale), note: localize(COPY.stat3Note, locale) },
             ].map(stat => (
               <div key={stat.label} className="flex flex-col gap-0.5">
                 <span className="font-serif text-[22px] text-fg-1 leading-none">{stat.label}</span>
@@ -269,14 +358,13 @@ export default function ClaudePage() {
           >
             <div className="inline-flex gap-3.5 items-center mb-4">
               <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-              <span className="eyebrow violet">Model Family</span>
+              <span className="eyebrow violet">{localize(COPY.eyebrowFamily, locale)}</span>
             </div>
             <h2 className="font-serif font-light text-[clamp(28px,4vw,48px)] leading-[1.06] tracking-[-0.02em] text-fg-1 mb-3">
-              Three tiers, one context window
+              {localize(COPY.familyTitle, locale)}
             </h2>
             <p className="font-sans text-[15px] text-fg-3 max-w-lg leading-[1.6]">
-              Every Claude model shares a 200K token context window. Choose your tier by the
-              cost-performance trade-off your application demands.
+              {localize(COPY.familyDesc, locale)}
             </p>
           </motion.div>
 
@@ -287,7 +375,7 @@ export default function ClaudePage() {
           </div>
 
           <p className="font-mono text-[9px] text-fg-4 mt-4">
-            * Prices per 1M tokens, approximate as of 2025. Verify current rates at anthropic.com/pricing.
+            {localize(COPY.pricesNote, locale)}
           </p>
         </section>
 
@@ -316,15 +404,13 @@ export default function ClaudePage() {
                       🖥️
                     </div>
                     <div>
-                      <p className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-70" style={{ color: "#8FE3D2" }}>Anthropic</p>
+                      <p className="font-mono text-[9px] tracking-[0.14em] uppercase opacity-70" style={{ color: "#8FE3D2" }}>{localize(COPY.claudeCodeTagline, locale)}</p>
                       <p className="font-serif text-[20px] leading-none text-fg-1">Claude Code</p>
                     </div>
                   </div>
 
                   <p className="font-sans text-[15px] text-fg-2 leading-[1.6] mb-6">
-                    An agentic coding CLI that lives in your terminal. Claude Code reads and
-                    edits files, runs shell commands, manages git, and executes multi-step
-                    software engineering tasks autonomously — without leaving your workflow.
+                    {localize(COPY.claudeCodeIntro, locale)}
                   </p>
 
                   {/* Feature list */}
@@ -332,27 +418,27 @@ export default function ClaudePage() {
                     {[
                       {
                         icon: <Cpu size={14} />,
-                        title: "Remote Control",
-                        desc: "Monitor and guide Claude Code sessions from the web or iOS app via code.claude.com.",
-                        link: "https://code.claude.com/docs/en/remote-control",
+                        title: localize(COPY.feat1Title, locale),
+                        desc:  localize(COPY.feat1Desc,  locale),
+                        link:  "https://code.claude.com/docs/en/remote-control",
                       },
                       {
                         icon: <GitBranch size={14} />,
-                        title: "VS Code & JetBrains integration",
-                        desc: "Embedded Claude Code panel inside your editor — run tasks, view diffs, and accept changes inline.",
-                        link: null as string | null,
+                        title: localize(COPY.feat2Title, locale),
+                        desc:  localize(COPY.feat2Desc,  locale),
+                        link:  null as string | null,
                       },
                       {
                         icon: <Zap size={14} />,
-                        title: "MCP server support",
-                        desc: "Connect any Model Context Protocol server to give Claude Code access to external APIs, databases, and tools.",
-                        link: null as string | null,
+                        title: localize(COPY.feat3Title, locale),
+                        desc:  localize(COPY.feat3Desc,  locale),
+                        link:  null as string | null,
                       },
                       {
                         icon: <Terminal size={14} />,
-                        title: "Multi-agent workflows",
-                        desc: "Orchestrate parallel sub-agents for large-scale tasks: one agent per PR, feature, or test suite.",
-                        link: null as string | null,
+                        title: localize(COPY.feat4Title, locale),
+                        desc:  localize(COPY.feat4Desc,  locale),
+                        link:  null as string | null,
                       },
                     ].map(f => (
                       <li key={f.title} className="flex items-start gap-3">
@@ -384,7 +470,7 @@ export default function ClaudePage() {
                     className="inline-flex items-center gap-2 font-mono text-[12px] tracking-[0.06em] px-5 py-2.5 rounded-full border transition-all hover:scale-[1.02]"
                     style={{ color: "#8FE3D2", borderColor: "#8FE3D240", background: "#8FE3D20e" }}
                   >
-                    Learn more about Claude Code
+                    {localize(COPY.learnMoreClaudeCode, locale)}
                     <ExternalLink size={11} />
                   </a>
                 </div>
@@ -393,7 +479,7 @@ export default function ClaudePage() {
                 <div className="flex flex-col gap-4">
                   {/* Install block */}
                   <div>
-                    <p className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-4 mb-1.5">Install</p>
+                    <p className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-4 mb-1.5">{localize(COPY.installLabel, locale)}</p>
                     <div className="rounded-xl border border-hairline/60 bg-void overflow-hidden">
                       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline/40 bg-white/[0.02]">
                         <div className="flex gap-1.5">
@@ -418,7 +504,7 @@ export default function ClaudePage() {
 
                   {/* API usage block */}
                   <div>
-                    <p className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-4 mb-1.5">API · TypeScript SDK</p>
+                    <p className="font-mono text-[9px] tracking-[0.14em] uppercase text-fg-4 mb-1.5">{localize(COPY.apiLabel, locale)}</p>
                     <div className="rounded-xl border border-hairline/60 bg-void overflow-hidden">
                       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-hairline/40 bg-white/[0.02]">
                         <div className="flex gap-1.5">
@@ -449,7 +535,12 @@ const msg = await client.messages.create({
 
                   {/* Chips */}
                   <div className="flex flex-wrap gap-2">
-                    {["Open source CLI", "Python & TS SDKs", "Streaming support", "MCP native"].map(chip => (
+                    {[
+                      localize(COPY.chip1, locale),
+                      localize(COPY.chip2, locale),
+                      localize(COPY.chip3, locale),
+                      localize(COPY.chip4, locale),
+                    ].map(chip => (
                       <span key={chip}
                         className="font-mono text-[10px] tracking-[0.06em] px-3 py-1 rounded-full border"
                         style={{ borderColor: "#8FE3D220", color: "#8FE3D2b0", background: "#8FE3D20a" }}>
@@ -475,10 +566,10 @@ const msg = await client.messages.create({
           >
             <div className="inline-flex gap-3.5 items-center mb-4">
               <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-              <span className="eyebrow violet">Products</span>
+              <span className="eyebrow violet">{localize(COPY.eyebrowProducts, locale)}</span>
             </div>
             <h2 className="font-serif font-light text-[clamp(26px,4vw,44px)] leading-[1.06] tracking-[-0.02em] text-fg-1">
-              Every way to access Claude
+              {localize(COPY.productsTitle, locale)}
             </h2>
           </motion.div>
 
@@ -507,22 +598,22 @@ const msg = await client.messages.create({
 
                 <p className="font-serif text-[17px] text-fg-1 leading-none mb-1.5">{product.name}</p>
                 <p className="font-mono text-[9px] tracking-[0.10em] uppercase mb-3" style={{ color: product.color }}>
-                  {product.tagline}
+                  {localize(product.tagline, locale)}
                 </p>
-                <p className="font-sans text-[12px] text-fg-3 leading-[1.5] mb-4 flex-1">{product.description}</p>
+                <p className="font-sans text-[12px] text-fg-3 leading-[1.5] mb-4 flex-1">{localize(product.description, locale)}</p>
 
                 {/* Highlights */}
                 <ul className="flex flex-col gap-1 pt-4 border-t border-hairline/40">
-                  {product.highlights.map(h => (
-                    <li key={h} className="flex items-start gap-1.5">
+                  {product.highlights.map((h, i) => (
+                    <li key={i} className="flex items-start gap-1.5">
                       <span className="mt-[5px] w-1 h-1 rounded-full shrink-0" style={{ background: product.color }} />
-                      <span className="font-sans text-[11px] text-fg-3 leading-[1.4]">{h}</span>
+                      <span className="font-sans text-[11px] text-fg-3 leading-[1.4]">{localize(h, locale)}</span>
                     </li>
                   ))}
                 </ul>
 
                 <div className="flex items-center gap-1 mt-4 font-mono text-[10px] transition-colors" style={{ color: product.color }}>
-                  <span className="opacity-70 group-hover:opacity-100 transition-opacity">Visit</span>
+                  <span className="opacity-70 group-hover:opacity-100 transition-opacity">{localize(COPY.productVisit, locale)}</span>
                   <ExternalLink size={9} className="opacity-60 group-hover:opacity-100 transition-opacity" />
                 </div>
               </motion.a>
@@ -541,14 +632,13 @@ const msg = await client.messages.create({
           >
             <div className="inline-flex gap-3.5 items-center mb-4">
               <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-              <span className="eyebrow violet">Capabilities</span>
+              <span className="eyebrow violet">{localize(COPY.eyebrowCapabilities, locale)}</span>
             </div>
             <h2 className="font-serif font-light text-[clamp(26px,4vw,44px)] leading-[1.06] tracking-[-0.02em] text-fg-1 mb-3">
-              What Claude can do
+              {localize(COPY.capabilitiesTitle, locale)}
             </h2>
             <p className="font-sans text-[15px] text-fg-3 max-w-lg leading-[1.6]">
-              Core technical capabilities available across the API — from vision and tool use
-              to extended thinking and the Model Context Protocol.
+              {localize(COPY.capabilitiesDesc, locale)}
             </p>
           </motion.div>
 
@@ -571,9 +661,9 @@ const msg = await client.messages.create({
               <div>
                 <div className="inline-flex gap-3.5 items-center mb-2">
                   <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-                  <span className="eyebrow violet">Quick links</span>
+                  <span className="eyebrow violet">{localize(COPY.eyebrowQuickLinks, locale)}</span>
                 </div>
-                <p className="font-serif text-[22px] font-normal text-fg-1 leading-none">Resources &amp; references</p>
+                <p className="font-serif text-[22px] font-normal text-fg-1 leading-none">{localize(COPY.quickLinksTitle, locale)}</p>
               </div>
               <a
                 href="https://anthropic.com"
@@ -588,7 +678,7 @@ const msg = await client.messages.create({
 
             <div className="flex flex-wrap gap-2.5">
               {CLAUDE_LINKS.map(link => (
-                <LinkPill key={link.url} label={link.label} url={link.url} category={link.category} />
+                <LinkPill key={link.url} label={localize(link.label, locale)} url={link.url} category={link.category} />
               ))}
             </div>
           </motion.div>
