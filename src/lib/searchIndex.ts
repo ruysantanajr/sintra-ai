@@ -98,11 +98,20 @@ export const SEARCH_INDEX: SearchDocument[] = [
   ...LEARNING_PATHS.map(p => ({
     id: `path-${p.id}`,
     kind: "path" as EntityKind,
-    title: p.title,
-    summary: p.tagline,
-    tags: [p.level, p.audience],
+    title: p.title.en,
+    summary: p.tagline.en,
+    tags: [p.level, p.audience.en],
     href: `${BASE_PATH}/learn/`,
-    body: [p.title, p.tagline, p.level, p.audience, ...p.steps.map(s => `${s.label} ${s.desc}`)].join(" "),
+    body: [
+      p.title.en, p.title["pt-BR"],
+      p.tagline.en, p.tagline["pt-BR"],
+      p.level,
+      p.audience.en, p.audience["pt-BR"],
+      ...p.steps.flatMap(s => [
+        s.label.en, s.label["pt-BR"],
+        s.desc.en, s.desc["pt-BR"],
+      ]),
+    ].join(" "),
   })),
   ...RESOURCES.map(r => ({
     id: `resource-${r.id}`,
