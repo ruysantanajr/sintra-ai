@@ -53,10 +53,17 @@ export const SEARCH_INDEX: SearchDocument[] = [
     id: `tool-${t.id}`,
     kind: "tool" as EntityKind,
     title: t.name,
-    summary: t.tagline,
+    summary: t.tagline.en,
     tags: t.tags,
     href: `${BASE_PATH}/tools/`,
-    body: [t.name, t.tagline, t.description, t.provider, t.category, t.highlight, ...t.tags].join(" "),
+    body: [
+      t.name,
+      t.tagline.en, t.tagline["pt-BR"],
+      t.description.en, t.description["pt-BR"],
+      t.provider, t.category,
+      t.highlight.en, t.highlight["pt-BR"],
+      ...t.tags,
+    ].join(" "),
   })),
   ...CONCEPTS.map(c => {
     const termEn = c.term.en;

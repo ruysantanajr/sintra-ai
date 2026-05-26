@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ExternalLink, Search } from "lucide-react";
 import { AI_TOOLS, TOOL_CATEGORIES, type AITool, type ToolCategory } from "@/lib/toolsData";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
 
 const PRICING_COLOR: Record<string, string> = {
   free:       "#10b981",
@@ -13,14 +15,35 @@ const PRICING_COLOR: Record<string, string> = {
   enterprise: "#e8c089",
 };
 
-const PRICING_LABEL: Record<string, string> = {
-  free:       "Free",
-  freemium:   "Freemium",
-  paid:       "Paid",
-  enterprise: "Enterprise",
+const PRICING_LABEL = {
+  free:       l("Free",       "Grátis"),
+  freemium:   l("Freemium",   "Freemium"),
+  paid:       l("Paid",       "Pago"),
+  enterprise: l("Enterprise", "Corporativo"),
+};
+
+const COPY = {
+  back:           l("Back to Sintra",          "Voltar para o Sintra"),
+  eyebrow:        l("AI Tools Universe",       "Universo de ferramentas de IA"),
+  titleA:         l("Every AI tool,",          "Toda ferramenta de IA,"),
+  titleB:         l("mapped.",                 "mapeada."),
+  subtitle:       l(
+    "A curated directory of the best AI tools across every category — with honest pricing, real descriptions, and direct links.",
+    "Um diretório curado das melhores ferramentas de IA em todas as categorias — com preço honesto, descrições reais e links diretos.",
+  ),
+  curated:        l("tools curated",           "ferramentas curadas"),
+  categoriesLabel:l("categories",              "categorias"),
+  searchPh:       l("Search tools…",           "Buscar ferramentas…"),
+  allPricing:     l("All pricing",             "Todos os preços"),
+  results:        l("results",                 "resultados"),
+  all:            l("All",                     "Todas"),
+  betaBadge:      l("Beta",                    "Beta"),
+  noTools:        l("No tools found",          "Nenhuma ferramenta encontrada"),
+  clearFilters:   l("Clear filters",           "Limpar filtros"),
 };
 
 function ToolCard({ tool }: { tool: AITool }) {
+  const { locale } = useLanguage();
   const cat = TOOL_CATEGORIES.find(c => c.id === tool.category);
   return (
     <a
@@ -35,7 +58,7 @@ function ToolCard({ tool }: { tool: AITool }) {
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <h3 className="font-serif text-[16px] text-fg-1 leading-none">{tool.name}</h3>
             {tool.status === "beta" && (
-              <span className="font-mono text-[8px] px-1.5 py-0.5 rounded-full border border-amber-500/40 text-amber-400 bg-amber-500/10 uppercase tracking-[0.08em]">Beta</span>
+              <span className="font-mono text-[8px] px-1.5 py-0.5 rounded-full border border-amber-500/40 text-amber-400 bg-amber-500/10 uppercase tracking-[0.08em]">{localize(COPY.betaBadge, locale)}</span>
             )}
           </div>
           <p className="font-sans text-[12px] text-fg-4">{tool.provider}</p>
@@ -43,30 +66,31 @@ function ToolCard({ tool }: { tool: AITool }) {
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="font-mono text-[9px] px-2 py-0.5 rounded-full border uppercase tracking-[0.08em]"
             style={{ color: PRICING_COLOR[tool.pricing], borderColor: PRICING_COLOR[tool.pricing] + "44", background: PRICING_COLOR[tool.pricing] + "12" }}>
-            {PRICING_LABEL[tool.pricing]}
+            {localize(PRICING_LABEL[tool.pricing], locale)}
           </span>
           <ExternalLink size={11} className="text-fg-4 group-hover:text-violet-bright transition-colors" />
         </div>
       </div>
 
       {/* Tagline */}
-      <p className="font-sans text-[13px] text-fg-2 leading-[1.5]">{tool.tagline}</p>
+      <p className="font-sans text-[13px] text-fg-2 leading-[1.5]">{localize(tool.tagline, locale)}</p>
 
       {/* Highlight */}
-      <p className="font-sans text-[12px] text-fg-3 leading-[1.4] line-clamp-2">{tool.highlight}</p>
+      <p className="font-sans text-[12px] text-fg-3 leading-[1.4] line-clamp-2">{localize(tool.highlight, locale)}</p>
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 border-t border-hairline/50 mt-auto">
         <span className="font-mono text-[10px] text-fg-4">
-          {cat?.icon} {cat?.label}
+          {cat?.icon} {cat ? localize(cat.label, locale) : ""}
         </span>
-        <span className="font-mono text-[10px] text-fg-4">{tool.priceNote}</span>
+        <span className="font-mono text-[10px] text-fg-4">{localize(tool.priceNote, locale)}</span>
       </div>
     </a>
   );
 }
 
 export default function ToolsDirectoryPage() {
+  const { locale } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
   const [activePricing, setActivePricing]   = useState<string>("all");
   const [search, setSearch]                  = useState("");
@@ -77,11 +101,12 @@ export default function ToolsDirectoryPage() {
       if (activePricing !== "all" && t.pricing !== activePricing) return false;
       if (search) {
         const q = search.toLowerCase();
-        if (!t.name.toLowerCase().includes(q) && !t.tagline.toLowerCase().includes(q) && !t.provider.toLowerCase().includes(q)) return false;
+        const tagline = localize(t.tagline, locale).toLowerCase();
+        if (!t.name.toLowerCase().includes(q) && !tagline.includes(q) && !t.provider.toLowerCase().includes(q)) return false;
       }
       return true;
     });
-  }, [activeCategory, activePricing, search]);
+  }, [activeCategory, activePricing, search, locale]);
 
   return (
     <div className="min-h-screen bg-abyss text-fg-1">
@@ -99,7 +124,7 @@ export default function ToolsDirectoryPage() {
           <a href={`${BASE_PATH}/`}
             className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-fg-3 hover:text-violet-bright transition-colors group">
             <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back to Sintra
+            {localize(COPY.back, locale)}
           </a>
         </div>
 
@@ -109,25 +134,25 @@ export default function ToolsDirectoryPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
           <div className="inline-flex gap-3.5 items-center mb-6">
             <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-            <span className="eyebrow violet">AI Tools Universe</span>
+            <span className="eyebrow violet">{localize(COPY.eyebrow, locale)}</span>
           </div>
           <h1 className="font-serif font-light text-[clamp(40px,6vw,88px)] leading-[1.04] tracking-[-0.025em] text-fg-1 mb-5">
-            Every AI tool,{" "}
+            {localize(COPY.titleA, locale)}{" "}
             <em className="italic" style={{
               backgroundImage: "linear-gradient(180deg, #F4F2EA 0%, #9F8CFF 100%)",
               WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
-            }}>mapped.</em>
+            }}>{localize(COPY.titleB, locale)}</em>
           </h1>
           <p className="font-sans text-[17px] text-fg-2 max-w-xl leading-[1.55]">
-            A curated directory of the best AI tools across every category — with honest pricing, real descriptions, and direct links.
+            {localize(COPY.subtitle, locale)}
           </p>
           <div className="flex items-center gap-4 mt-8 font-mono text-[11px] text-fg-3 tracking-[0.06em]">
             <span className="inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              {AI_TOOLS.length} tools curated
+              {AI_TOOLS.length} {localize(COPY.curated, locale)}
             </span>
             <span className="text-fg-4">·</span>
-            <span>{TOOL_CATEGORIES.length} categories</span>
+            <span>{TOOL_CATEGORIES.length} {localize(COPY.categoriesLabel, locale)}</span>
           </div>
         </motion.header>
 
@@ -141,7 +166,7 @@ export default function ToolsDirectoryPage() {
                 type="search"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Search tools…"
+                placeholder={localize(COPY.searchPh, locale)}
                 className="w-full bg-white/[0.04] border border-hairline rounded-lg pl-8 pr-3 py-1.5 font-mono text-[12px] text-fg-1 placeholder:text-fg-4 outline-none focus:border-violet/60 transition-colors"
               />
             </div>
@@ -156,13 +181,13 @@ export default function ToolsDirectoryPage() {
                     borderColor: activePricing === p ? "#9F8CFF88" : "#ffffff18",
                     color:       activePricing === p ? "#B6A6FF"   : "#6b6a8a",
                   }}>
-                  {p === "all" ? "All pricing" : PRICING_LABEL[p]}
+                  {p === "all" ? localize(COPY.allPricing, locale) : localize(PRICING_LABEL[p], locale)}
                 </button>
               ))}
             </div>
 
             {filtered.length !== AI_TOOLS.length && (
-              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} results</span>
+              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} {localize(COPY.results, locale)}</span>
             )}
           </div>
         </div>
@@ -178,13 +203,13 @@ export default function ToolsDirectoryPage() {
             }}
           >
             <span className="text-xl">🌐</span>
-            <span className="font-mono text-[10px] tracking-[0.06em] whitespace-nowrap" style={{ color: activeCategory === "all" ? "#B6A6FF" : "#6b6a8a" }}>All</span>
+            <span className="font-mono text-[10px] tracking-[0.06em] whitespace-nowrap" style={{ color: activeCategory === "all" ? "#B6A6FF" : "#6b6a8a" }}>{localize(COPY.all, locale)}</span>
           </button>
           {TOOL_CATEGORIES.map(cat => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              title={cat.desc}
+              title={localize(cat.desc, locale)}
               className="flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-3 rounded-xl border transition-all"
               style={{
                 background:  activeCategory === cat.id ? "#9F8CFF22" : "transparent",
@@ -192,7 +217,7 @@ export default function ToolsDirectoryPage() {
               }}
             >
               <span className="text-xl">{cat.icon}</span>
-              <span className="font-mono text-[10px] tracking-[0.06em] whitespace-nowrap" style={{ color: activeCategory === cat.id ? "#B6A6FF" : "#6b6a8a" }}>{cat.label}</span>
+              <span className="font-mono text-[10px] tracking-[0.06em] whitespace-nowrap" style={{ color: activeCategory === cat.id ? "#B6A6FF" : "#6b6a8a" }}>{localize(cat.label, locale)}</span>
             </button>
           ))}
         </div>
@@ -201,9 +226,9 @@ export default function ToolsDirectoryPage() {
         <div className="py-10 mb-20">
           {filtered.length === 0 ? (
             <div className="text-center py-24">
-              <p className="font-serif text-[24px] text-fg-3 mb-3">No tools found</p>
+              <p className="font-serif text-[24px] text-fg-3 mb-3">{localize(COPY.noTools, locale)}</p>
               <button onClick={() => { setSearch(""); setActiveCategory("all"); setActivePricing("all"); }}
-                className="font-mono text-[12px] text-violet-bright hover:underline">Clear filters</button>
+                className="font-mono text-[12px] text-violet-bright hover:underline">{localize(COPY.clearFilters, locale)}</button>
             </div>
           ) : (
             <AnimatePresence mode="wait">
