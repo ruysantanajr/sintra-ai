@@ -5,14 +5,35 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { NEWS_ITEMS, NEWS_TAGS, type NewsItem } from "@/lib/newsData";
 import { BASE_PATH } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize, l } from "@/lib/localized";
 
 const SIG_STYLE = {
-  landmark: { label: "Landmark",  bg: "#9F8CFF22", border: "#9F8CFF66", text: "#B6A6FF" },
-  major:    { label: "Major",     bg: "#5EEAD422", border: "#5EEAD466", text: "#5EEAD4" },
-  notable:  { label: "Notable",   bg: "#ffffff0a", border: "#ffffff22", text: "#8b8aad"  },
+  landmark: { label: l("Landmark", "Marco"),    bg: "#9F8CFF22", border: "#9F8CFF66", text: "#B6A6FF" },
+  major:    { label: l("Major",    "Importante"), bg: "#5EEAD422", border: "#5EEAD466", text: "#5EEAD4" },
+  notable:  { label: l("Notable",  "Notável"),   bg: "#ffffff0a", border: "#ffffff22", text: "#8b8aad"  },
+};
+
+const COPY = {
+  back:         l("Back to Sintra",                "Voltar para o Sintra"),
+  eyebrow:      l("AI Intelligence",                "Inteligência sobre IA"),
+  titleA:       l("The AI",                         "O resumo"),
+  titleB:       l("digest.",                        "de IA."),
+  subtitle: l(
+    "Landmark releases, model launches, and paradigm shifts — curated for signal, not noise.",
+    "Lançamentos marcantes, releases de modelos e mudanças de paradigma — curados a sinal, não ruído.",
+  ),
+  documented:   l("events documented",              "eventos documentados"),
+  rangeLabel:   l("2023 – present",                 "2023 – presente"),
+  allFilter:    l("All",                            "Todos"),
+  allProviders: l("All providers",                  "Todos os provedores"),
+  events:       l("events",                         "eventos"),
+  noMatch:      l("No events match this filter.",  "Nenhum evento corresponde a esse filtro."),
+  readSource:   l("Read source",                    "Ler fonte"),
 };
 
 function NewsCard({ item }: { item: NewsItem }) {
+  const { locale } = useLanguage();
   const sig = SIG_STYLE[item.significance];
   return (
     <motion.article
@@ -24,10 +45,10 @@ function NewsCard({ item }: { item: NewsItem }) {
     >
       {/* Left: date + significance */}
       <div className="w-[96px] shrink-0 pt-0.5">
-        <p className="font-mono text-[11px] text-fg-4 mb-2">{item.date}</p>
+        <p className="font-mono text-[11px] text-fg-4 mb-2">{localize(item.date, locale)}</p>
         <span className="inline-flex font-mono text-[9px] tracking-[0.10em] uppercase px-2 py-0.5 rounded-full border"
           style={{ background: sig.bg, borderColor: sig.border, color: sig.text }}>
-          {sig.label}
+          {localize(sig.label, locale)}
         </span>
       </div>
 
@@ -43,11 +64,11 @@ function NewsCard({ item }: { item: NewsItem }) {
 
         {/* Title */}
         <h3 className="font-serif text-[18px] md:text-[22px] leading-[1.2] tracking-[-0.01em] text-fg-1 mb-3">
-          {item.title}
+          {localize(item.title, locale)}
         </h3>
 
         {/* Summary */}
-        <p className="font-sans text-[14px] leading-[1.65] text-fg-2 mb-4">{item.summary}</p>
+        <p className="font-sans text-[14px] leading-[1.65] text-fg-2 mb-4">{localize(item.summary, locale)}</p>
 
         {/* Footer: tags + source link */}
         <div className="flex flex-wrap items-center gap-2">
@@ -65,7 +86,7 @@ function NewsCard({ item }: { item: NewsItem }) {
               rel="noopener noreferrer"
               className="shrink-0 inline-flex items-center gap-1.5 font-mono text-[11px] font-medium px-3 py-1.5 rounded-md bg-violet/10 border border-violet/30 text-violet-bright hover:bg-violet/20 hover:border-violet/60 transition-all duration-150"
             >
-              Read source <ExternalLink size={11} />
+              {localize(COPY.readSource, locale)} <ExternalLink size={11} />
             </a>
           )}
         </div>
@@ -75,6 +96,7 @@ function NewsCard({ item }: { item: NewsItem }) {
 }
 
 export default function AINewsPage() {
+  const { locale } = useLanguage();
   const [activeSig, setActiveSig]     = useState<string>("all");
   const [activeTag, setActiveTag]     = useState<string>("all");
   const [activeProvider, setProvider] = useState<string>("all");
@@ -117,7 +139,7 @@ export default function AINewsPage() {
           <a href={`${BASE_PATH}/`}
             className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase text-fg-3 hover:text-violet-bright transition-colors group">
             <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back to Sintra
+            {localize(COPY.back, locale)}
           </a>
         </div>
 
@@ -127,25 +149,25 @@ export default function AINewsPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
           <div className="inline-flex gap-3.5 items-center mb-6">
             <span className="w-9 h-px bg-gradient-to-r from-transparent to-violet-bright" />
-            <span className="eyebrow violet">AI Intelligence</span>
+            <span className="eyebrow violet">{localize(COPY.eyebrow, locale)}</span>
           </div>
           <h1 className="font-serif font-light text-[clamp(40px,6vw,80px)] leading-[1.04] tracking-[-0.025em] text-fg-1 mb-5">
-            The AI{" "}
+            {localize(COPY.titleA, locale)}{" "}
             <em className="italic" style={{
               backgroundImage: "linear-gradient(180deg, #F4F2EA 0%, #9F8CFF 100%)",
               WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent",
-            }}>digest.</em>
+            }}>{localize(COPY.titleB, locale)}</em>
           </h1>
           <p className="font-sans text-[17px] text-fg-2 max-w-xl leading-[1.55]">
-            Landmark releases, model launches, and paradigm shifts — curated for signal, not noise.
+            {localize(COPY.subtitle, locale)}
           </p>
           <div className="flex items-center gap-4 mt-6 font-mono text-[11px] text-fg-3 tracking-[0.06em]">
             <span className="inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-bright" />
-              {NEWS_ITEMS.length} events documented
+              {NEWS_ITEMS.length} {localize(COPY.documented, locale)}
             </span>
             <span className="text-fg-4">·</span>
-            <span>2023 – present</span>
+            <span>{localize(COPY.rangeLabel, locale)}</span>
           </div>
         </motion.header>
 
@@ -162,7 +184,7 @@ export default function AINewsPage() {
                     borderColor: activeSig === s ? "#9F8CFF88" : "#ffffff18",
                     color:       activeSig === s ? "#B6A6FF"   : "#6b6a8a",
                   }}>
-                  {s === "all" ? "All" : SIG_STYLE[s].label}
+                  {s === "all" ? localize(COPY.allFilter, locale) : localize(SIG_STYLE[s].label, locale)}
                 </button>
               ))}
             </div>
@@ -173,12 +195,12 @@ export default function AINewsPage() {
               onChange={e => setProvider(e.target.value)}
               className="font-mono text-[11px] bg-white/[0.04] border border-hairline rounded-lg px-3 py-1.5 text-fg-2 outline-none focus:border-violet/60 transition-colors"
             >
-              <option value="all">All providers</option>
+              <option value="all">{localize(COPY.allProviders, locale)}</option>
               {providers.map((p: string) => <option key={p} value={p}>{p}</option>)}
             </select>
 
             {filtered.length !== NEWS_ITEMS.length && (
-              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} events</span>
+              <span className="font-mono text-[11px] text-fg-4 ml-auto">{filtered.length} {localize(COPY.events, locale)}</span>
             )}
           </div>
         </div>
@@ -187,7 +209,7 @@ export default function AINewsPage() {
         <div className="pt-6 pb-24">
           {grouped.length === 0 ? (
             <div className="text-center py-24">
-              <p className="font-serif text-[22px] text-fg-3">No events match this filter.</p>
+              <p className="font-serif text-[22px] text-fg-3">{localize(COPY.noMatch, locale)}</p>
             </div>
           ) : (
             grouped.map(([year, items]) => (
@@ -195,7 +217,7 @@ export default function AINewsPage() {
                 <div className="flex items-center gap-4 py-5">
                   <span className="font-mono text-[13px] font-medium text-fg-3 tracking-[0.08em]">{year}</span>
                   <div className="flex-1 h-px bg-violet/[0.12]" />
-                  <span className="font-mono text-[11px] text-fg-4">{items.length} events</span>
+                  <span className="font-mono text-[11px] text-fg-4">{items.length} {localize(COPY.events, locale)}</span>
                 </div>
                 {items.map(item => <NewsCard key={item.id} item={item} />)}
               </div>

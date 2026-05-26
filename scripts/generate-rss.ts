@@ -18,8 +18,8 @@ const items = [...AI_NEWS]
   .slice(0, 50)
   .map(n => `
   <item>
-    <title><![CDATA[${n.title}]]></title>
-    <description><![CDATA[${n.summary}]]></description>
+    <title><![CDATA[${n.title.en}]]></title>
+    <description><![CDATA[${n.summary.en}]]></description>
     <link>${n.url || `${SITE_URL}/news/`}</link>
     <guid isPermaLink="${n.url ? "true" : "false"}">${n.url || `${SITE_URL}/news/#${n.id}`}</guid>
     <pubDate>${dateNumToRFC822(n.dateNum)}</pubDate>

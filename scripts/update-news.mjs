@@ -17,7 +17,8 @@ const client = new Anthropic();
 // Compute search window: start from latest item date in DB or 14 days ago, whichever is more recent
 const source = readFileSync(DATA_FILE, "utf8");
 const existingIds = new Set([...source.matchAll(/id:\s*"([^"]+)"/g)].map((m) => m[1]));
-const existingTitles = [...source.matchAll(/title:\s*"([^"]+)"/g)].map((m) => m[1]).slice(-20);
+// title shape is now `title: { en: "…", "pt-BR": "…" }` — pick the EN copy.
+const existingTitles = [...source.matchAll(/en:\s+"([^"]+)"/g)].map((m) => m[1]).slice(-20);
 const dateNums = [...source.matchAll(/dateNum:\s*(\d+)/g)].map((m) => parseInt(m[1]));
 const latestDateNum = Math.max(...dateNums);
 const latestYear = Math.floor(latestDateNum / 100);
@@ -94,17 +95,27 @@ function escapeStr(s) {
     .replace(/\r/g, "");
 }
 
+// Localized fields default to identical EN/PT-BR copy. A human translator
+// can later edit the "pt-BR" half of each field without changing the EN side.
 function itemToTs(item) {
   const tags = item.tags.map((t) => `"${escapeStr(t)}"`).join(", ");
   const dayLine = item.dateDay ? `\n    dateDay: ${item.dateDay},` : "";
   const urlLine = item.url ? `\n    url: "${escapeStr(item.url)}",` : "";
+  const dateStr = escapeStr(item.date);
+  const titleStr = escapeStr(item.title);
+  const summaryStr = escapeStr(item.summary);
   return `  {
     id: "${escapeStr(item.id)}",
-    date: "${escapeStr(item.date)}",
+    date: { en: "${dateStr}", "pt-BR": "${dateStr}" },
     dateNum: ${item.dateNum},${dayLine}
-    title: "${escapeStr(item.title)}",
-    summary:
-      "${escapeStr(item.summary)}",
+    title: {
+      en:      "${titleStr}",
+      "pt-BR": "${titleStr}",
+    },
+    summary: {
+      en:      "${summaryStr}",
+      "pt-BR": "${summaryStr}",
+    },
     tags: [${tags}],
     significance: "${item.significance}",
     provider: "${escapeStr(item.provider)}",
