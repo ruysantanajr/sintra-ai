@@ -635,6 +635,74 @@ export const MILESTONES: Milestone[] = [
     tags: ["AI Agents", "Computer Use", "Multi-Step Tasks", "$29B Cursor Valuation"],
     links: [{ label: l("AI Agents 2025 ↗", "Agentes de IA 2025 ↗"), url: "https://www.hugo.im/posts/ai-agents-year-review-2025" }],
   },
+  // ── BR-specific milestones (added in PR 9) ──────────────────────────────
+  {
+    id: "sbc-1978", era: "ai1", yearNum: 1978, year: "1978",
+    emoji: "🇧🇷",
+    title: l(
+      "Brazilian Computer Society Founded — Roots of BR AI Research",
+      "Sociedade Brasileira de Computação fundada — raízes da pesquisa em IA no Brasil",
+    ),
+    by: l(
+      "USP, Unicamp, UFRJ founding researchers — Brazil",
+      "Pesquisadores fundadores da USP, Unicamp, UFRJ — Brasil",
+    ),
+    desc: l(
+      "The Sociedade Brasileira de Computação (SBC) was founded in 1978, formalizing the Brazilian academic computing community. By the 1990s the SBC's Special Commission on Artificial Intelligence (CEIA) and the annual ENIA (Encontro Nacional de Inteligência Artificial) became the institutional homes of Brazilian AI research, producing generations of academics who would later seed Maritaca AI, CESAR, and BR-based research groups at global labs.",
+      "A Sociedade Brasileira de Computação (SBC) foi fundada em 1978, formalizando a comunidade acadêmica brasileira de computação. Nos anos 1990 a Comissão Especial de IA (CEIA) e o ENIA (Encontro Nacional de Inteligência Artificial) anuais viraram as casas institucionais da pesquisa brasileira em IA, formando gerações de acadêmicos que depois sementearam Maritaca AI, CESAR e grupos de pesquisa BR em labs globais.",
+    ),
+    significance: l(
+      "Institutional foundation for Brazilian AI research — connected universities and produced the talent pipeline that would later build Maritaca and BR AI startups.",
+      "Base institucional da pesquisa brasileira em IA — conectou universidades e produziu o pipeline de talento que depois construiria a Maritaca e startups de IA brasileiras.",
+    ),
+    tags: ["SBC", "Brasil", "USP", "Unicamp", "UFRJ", "Pesquisa"],
+    links: [{ label: l("SBC ↗", "SBC ↗"), url: "https://www.sbc.org.br" }],
+  },
+  {
+    id: "lgpd-2020", era: "agents", yearNum: 2020.8, year: "Sept 2020",
+    emoji: "⚖️",
+    title: l(
+      "LGPD Takes Effect — Brazil's Foundation for Trustworthy AI",
+      "LGPD entra em vigor — fundação brasileira para IA confiável",
+    ),
+    by: l(
+      "Brazilian Congress / ANPD — Brasília, DF",
+      "Congresso Nacional / ANPD — Brasília, DF",
+    ),
+    desc: l(
+      "The Lei Geral de Proteção de Dados (LGPD) — Brazil's GDPR-inspired data protection law — took effect in September 2020, with administrative sanctions starting in 2021. It made data residency, lawful basis, and algorithmic accountability mandatory considerations for any Brazilian AI deployment. By 2025 the LGPD became the primary reason large Brazilian enterprises (Itaú, Vivo, Bradesco) demanded AI workloads run inside Brazil — directly fueling the Maritaca, CESAR, and São Paulo datacenter expansions.",
+      "A Lei Geral de Proteção de Dados (LGPD) — lei brasileira de proteção de dados inspirada na GDPR — entrou em vigor em setembro de 2020, com sanções administrativas a partir de 2021. Tornou residência de dados, base legal e accountability algorítmica considerações obrigatórias para qualquer deploy de IA no Brasil. Em 2025 a LGPD virou a principal razão pela qual grandes empresas brasileiras (Itaú, Vivo, Bradesco) exigiram que workloads de IA rodassem dentro do Brasil — alimentando diretamente a Maritaca, o CESAR e a expansão dos datacenters em São Paulo.",
+    ),
+    significance: l(
+      "Set the legal floor for AI deployment in Brazil — directly shaping the sovereign-AI thesis that funded Maritaca and brought Microsoft, AWS, and Google to build BR datacenters.",
+      "Definiu o piso legal para deploy de IA no Brasil — moldando diretamente a tese de IA soberana que financiou a Maritaca e trouxe Microsoft, AWS e Google para construir datacenters no BR.",
+    ),
+    tags: ["LGPD", "Brasil", "ANPD", "Privacidade", "Regulação"],
+    links: [{ label: l("ANPD ↗", "ANPD ↗"), url: "https://www.gov.br/anpd" }],
+  },
+  {
+    id: "maritaca-sabia", era: "agents", yearNum: 2024.3, year: "Apr 2024",
+    emoji: "🇧🇷",
+    title: l(
+      "Maritaca AI Releases Sabiá-3 — First Brazilian Frontier LLM",
+      "Maritaca AI lança Sabiá-3 — primeiro LLM brasileiro de fronteira",
+    ),
+    by: l(
+      "Maritaca AI — São Paulo, SP",
+      "Maritaca AI — São Paulo, SP",
+    ),
+    desc: l(
+      "São Paulo startup Maritaca AI (originally a Unicamp research spinoff) released Sabiá-3, an LLM trained from the ground up with Brazilian Portuguese as a first-class language rather than a translation afterthought. Sabiá-3 outperformed GPT-4 on the Brazilian ENEM exam, the OAB bar exam, and the BLUEX vestibular benchmark, becoming the first Brazilian model to top global frontier models on PT-BR tests. The release validated the sovereign-AI thesis for Latin America.",
+      "A startup paulistana Maritaca AI (originalmente um spinoff de pesquisa da Unicamp) lançou o Sabiá-3, LLM treinado desde o zero com português brasileiro como idioma de primeira classe, não tradução. O Sabiá-3 superou o GPT-4 no ENEM, no exame da OAB e no vestibular BLUEX, virando o primeiro modelo brasileiro a encabeçar modelos globais de fronteira em testes PT-BR. O lançamento validou a tese de IA soberana para a América Latina.",
+    ),
+    significance: l(
+      "First time a Brazilian-built LLM topped global frontier models on PT-BR benchmarks — proof that sovereign AI is technically viable in Brazil.",
+      "Primeira vez que um LLM brasileiro encabeçou modelos globais de fronteira em benchmarks PT-BR — prova de que IA soberana é tecnicamente viável no Brasil.",
+    ),
+    tags: ["Maritaca AI", "Brasil", "Sabiá", "ENEM", "OAB", "PT-BR"],
+    links: [{ label: l("Maritaca ↗", "Maritaca ↗"), url: "https://www.maritaca.ai" }],
+  },
+
   {
     id: "frontier2026", era: "agents", yearNum: 2026, year: "2026 (Now)",
     emoji: "🌐",

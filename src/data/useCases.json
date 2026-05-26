@@ -3244,5 +3244,266 @@
     "est_time": "2–4 hours",
     "output_kind": "spec",
     "sample_output": "**Ghost Database Architecture**\n\n**Memory layers:**\n\n| Layer | Store | TTL | Use case |\n|---|---|---|---|\n| Episodic (short-term) | Redis list (sliding window) | Last 20 turns | Recent dialogue context |\n| Semantic (long-term) | ChromaDB / Pinecone | Permanent | Past interactions, docs |\n| Structured facts | PostgreSQL key-value table | Permanent, mutable | User prefs, entity state |\n\n**Structured facts schema:**\n```sql\nCREATE TABLE agent_facts (\n  agent_id TEXT, key TEXT, value JSONB,\n  confidence REAL, updated_at TIMESTAMPTZ,\n  PRIMARY KEY (agent_id, key)\n);\n```\n\n**Retrieval orchestration (pseudocode):**\n```python\ndef build_context(query, agent_id):\n  episodic  = redis.lrange(f'ep:{agent_id}', 0, 19)      # always include\n  semantic  = chroma.query(query, n_results=4)             # top-4 semantic hits\n  facts     = pg.fetch('SELECT key, value FROM agent_facts WHERE agent_id=$1', agent_id)\n  return format_context(episodic, semantic, facts)\n```\n\n**System-prompt injection template:**\n```\n[MEMORY]\nRecent context: {episodic_summary}\nRelevant past knowledge: {semantic_hits}\nKnown facts about user: {facts_json}\n[/MEMORY]\n```\n\n**Write rules:**\n- After every turn → append to episodic Redis list, pop oldest if > 20\n- After task completion → embed summary → upsert to vector DB\n- When agent learns a stable fact (name, preference, goal) → upsert to PostgreSQL facts table"
+  },
+  {
+    "domain": "Finance & FP&A",
+    "section": "Brazilian Tax & Finance",
+    "skill_level": "BEGINNER",
+    "skill_emoji": "🔴",
+    "title": "Brazilian IRPF Filing Helper",
+    "prompt": "\"You are a Brazilian tax assistant. I need to file my IRPF (Imposto de Renda Pessoa Física) declaration for [year]. Help me:\n\n1. List the documents I need to gather (informe de rendimentos, comprovantes médicos, despesas dedutíveis)\n2. Identify whether I should use the simplified or complete model (deduções legais vs. desconto padrão)\n3. Flag the deductible items I may be missing (saúde, educação, dependentes, previdência privada)\n4. Estimate whether I'll owe tax or get a refund based on the data below\n5. Give me a step-by-step checklist for filing on the Receita Federal portal\n\nMy situation:\n- Annual gross income (CLT + PJ + investimentos): [paste]\n- Dependents: [number, ages, relationship]\n- Health expenses paid: [R$]\n- Education expenses paid: [R$]\n- Private pension (PGBL) contributions: [R$]\n\nIMPORTANT: Do not invent figures. If you're uncertain about a deduction limit, ask me to confirm with the Receita Federal documentation.\"",
+    "tags": [
+      "IRPF",
+      "Brasil",
+      "Receita Federal",
+      "1-hora"
+    ],
+    "best_for": "Brazilian taxpayers filing IRPF, contadores autônomos, expats in Brazil",
+    "outcome": "A documentos-checklist, a recommendation between simplified vs. complete models, an estimated refund/payable amount, and a step-by-step filing guide for the Receita Federal portal.",
+    "inputs": [
+      {
+        "label": "year"
+      },
+      {
+        "label": "paste"
+      },
+      {
+        "label": "number, ages, relationship"
+      },
+      {
+        "label": "R$"
+      },
+      {
+        "label": "R$"
+      },
+      {
+        "label": "R$"
+      }
+    ],
+    "tools": [
+      "MariTalk",
+      "Claude",
+      "ChatGPT"
+    ],
+    "est_time": "1 hour",
+    "output_kind": "plan",
+    "sample_output": "**Documentos a reunir**\n1. Informe de rendimentos do empregador (CLT) ou notas fiscais (PJ)\n2. Informes bancários (rendimentos de aplicações)\n3. Recibos médicos/odontológicos com CPF + CRM\n4. Comprovantes de mensalidade escolar\n5. Extrato de PGBL (até 12% da renda tributável)\n\n**Modelo recomendado**\nCom base nos dados informados (R$ 12.000 em saúde + R$ 8.400 em educação), o **modelo completo** é mais vantajoso — economiza ~R$ 4.200 vs. desconto padrão.\n\n**Estimativa**\n- Imposto devido: R$ 8.400\n- Imposto pago na fonte: R$ 12.100\n- Restituição prevista: ~R$ 3.700\n\n**Checklist no portal**\n☐ Baixar e instalar o programa IRPF 2026 (Receita Federal)\n☐ Importar declaração do ano anterior\n☐ Lançar rendimentos (Ficha Rendimentos Tributáveis)\n☐ Lançar deduções (Saúde, Educação, Dependentes)\n☐ Conferir resumo e enviar\n☐ Guardar o recibo de entrega",
+    "i18n_ptBR": {
+      "title": "Assistente de declaração do IRPF",
+      "prompt": "\"Você é um assistente fiscal brasileiro. Preciso entregar minha declaração de IRPF (Imposto de Renda Pessoa Física) para o ano [ano]. Me ajude a:\n\n1. Listar os documentos que preciso reunir (informe de rendimentos, comprovantes médicos, despesas dedutíveis)\n2. Identificar se devo usar o modelo simplificado ou completo (deduções legais vs. desconto padrão)\n3. Sinalizar itens dedutíveis que posso estar esquecendo (saúde, educação, dependentes, previdência privada)\n4. Estimar se vou pagar imposto ou ter restituição com base nos dados abaixo\n5. Me dar um checklist passo a passo para enviar no portal da Receita Federal\n\nMinha situação:\n- Renda bruta anual (CLT + PJ + investimentos): [cole]\n- Dependentes: [quantidade, idades, parentesco]\n- Despesas com saúde: [R$]\n- Despesas com educação: [R$]\n- Contribuições à previdência privada (PGBL): [R$]\n\nIMPORTANTE: não invente valores. Se tiver dúvida sobre um limite de dedução, me peça para confirmar na documentação da Receita Federal.\"",
+      "outcome": "Um checklist de documentos, recomendação entre modelo simplificado e completo, estimativa de restituição/imposto a pagar e um guia passo a passo para entrega no portal da Receita Federal.",
+      "best_for": "Contribuintes que entregam IRPF, contadores autônomos, expatriados no Brasil",
+      "sample_output": "**Documentos a reunir**\n1. Informe de rendimentos do empregador (CLT) ou notas fiscais (PJ)\n2. Informes bancários (rendimentos de aplicações)\n3. Recibos médicos/odontológicos com CPF + CRM\n4. Comprovantes de mensalidade escolar\n5. Extrato de PGBL (até 12% da renda tributável)\n\n**Modelo recomendado**\nCom base nos dados informados (R$ 12.000 em saúde + R$ 8.400 em educação), o **modelo completo** é mais vantajoso — economiza ~R$ 4.200 vs. desconto padrão.\n\n**Estimativa**\n- Imposto devido: R$ 8.400\n- Imposto pago na fonte: R$ 12.100\n- Restituição prevista: ~R$ 3.700\n\n**Checklist no portal**\n☐ Baixar e instalar o programa IRPF 2026 (Receita Federal)\n☐ Importar declaração do ano anterior\n☐ Lançar rendimentos (Ficha Rendimentos Tributáveis)\n☐ Lançar deduções (Saúde, Educação, Dependentes)\n☐ Conferir resumo e enviar\n☐ Guardar o recibo de entrega",
+      "inputs": [
+        {
+          "label": "ano"
+        },
+        {
+          "label": "cole"
+        },
+        {
+          "label": "quantidade, idades, parentesco"
+        },
+        {
+          "label": "R$"
+        },
+        {
+          "label": "R$"
+        },
+        {
+          "label": "R$"
+        }
+      ]
+    }
+  },
+  {
+    "domain": "Communication & Writing",
+    "section": "Brazilian Customer Service",
+    "skill_level": "INTERMEDIATE",
+    "skill_emoji": "🟡",
+    "title": "WhatsApp Business Customer Service Replies (BR)",
+    "prompt": "\"You write Brazilian Portuguese customer-service replies for a [type of business] on WhatsApp Business. Brazilian customer expectations: warm and personal (call the customer pelo nome), under 4 sentences, no formal stiff register, and Pix is the default payment expectation. Respond to the message below following the brand's tone:\n\nBrand tone: [describe — casual, formal, descontraído, técnico?]\n\nCustomer message: [paste]\n\nReply rules:\n- Open with the customer's first name + a warm greeting (no 'Prezado(a)')\n- Address the request directly — Brazilians are time-sensitive on WhatsApp\n- If a payment is needed, offer Pix as the default\n- End with a soft CTA (Posso te ajudar com mais alguma coisa?)\n- 4 sentences max — anything longer feels rude on WhatsApp BR\n\nProduce 3 variants so I can pick the best fit.\"",
+    "tags": [
+      "WhatsApp",
+      "Brasil",
+      "atendimento",
+      "PT-BR"
+    ],
+    "best_for": "Small business owners, atendentes, gestores de SAC em PMEs brasileiras",
+    "outcome": "Three drafted WhatsApp replies in fluent Brazilian Portuguese, 4 sentences each, opening with the customer's first name and offering Pix when relevant — ready to paste into WhatsApp Business.",
+    "inputs": [
+      {
+        "label": "type of business"
+      },
+      {
+        "label": "describe — casual, formal, descontraído, técnico?"
+      },
+      {
+        "label": "paste"
+      }
+    ],
+    "tools": [
+      "ChatGPT",
+      "MariTalk",
+      "Claude"
+    ],
+    "est_time": "15 min",
+    "output_kind": "templates",
+    "sample_output": "**Variação 1 — calorosa**\nOi Maria! Tudo certo. Seu pedido #4892 saiu agora pra entrega e chega ainda hoje até as 18h 🚚 Se quiser pagar o frete da próxima compra antecipado, te mando o Pix. Posso te ajudar com mais alguma coisa?\n\n**Variação 2 — direta**\nMaria, vi aqui — pedido #4892 já saiu pra entrega, previsão até 18h hoje. Frete dessa vez é por nossa conta. Qualquer coisa, é só chamar 😊\n\n**Variação 3 — proativa**\nOi Maria, obrigado pelo contato! Seu pedido saiu pra entrega há 20 min, chega hoje 🎯 Aproveito pra avisar que liberamos R$ 30 de desconto pra próxima compra via Pix. Quer que eu te envie o cupom?",
+    "i18n_ptBR": {
+      "title": "Respostas de atendimento no WhatsApp Business",
+      "prompt": "\"Você escreve respostas de atendimento ao cliente em português brasileiro para um(a) [tipo de negócio] no WhatsApp Business. Expectativa do cliente BR: caloroso e pessoal (chamar pelo nome), até 4 frases, sem registro formal engessado, e Pix como meio de pagamento padrão. Responda à mensagem abaixo seguindo o tom da marca:\n\nTom da marca: [descreva — casual, formal, descontraído, técnico?]\n\nMensagem do cliente: [cole]\n\nRegras da resposta:\n- Abra com o primeiro nome do cliente + cumprimento caloroso (sem 'Prezado(a)')\n- Vá direto ao que o cliente pediu — brasileiro tem pressa no WhatsApp\n- Se for pagamento, ofereça Pix como padrão\n- Termine com um CTA leve (Posso te ajudar com mais alguma coisa?)\n- Máximo 4 frases — qualquer coisa maior soa grosseira no WhatsApp BR\n\nProduza 3 variações pra eu escolher a melhor.\"",
+      "outcome": "Três respostas de WhatsApp em português brasileiro fluente, com até 4 frases cada, abrindo com o primeiro nome do cliente e oferecendo Pix quando faz sentido — prontas para colar no WhatsApp Business.",
+      "best_for": "Donos de PMEs, atendentes, gestores de SAC em negócios brasileiros",
+      "sample_output": "**Variação 1 — calorosa**\nOi Maria! Tudo certo. Seu pedido #4892 saiu agora pra entrega e chega ainda hoje até as 18h 🚚 Se quiser pagar o frete da próxima compra antecipado, te mando o Pix. Posso te ajudar com mais alguma coisa?\n\n**Variação 2 — direta**\nMaria, vi aqui — pedido #4892 já saiu pra entrega, previsão até 18h hoje. Frete dessa vez é por nossa conta. Qualquer coisa, é só chamar 😊\n\n**Variação 3 — proativa**\nOi Maria, obrigado pelo contato! Seu pedido saiu pra entrega há 20 min, chega hoje 🎯 Aproveito pra avisar que liberamos R$ 30 de desconto pra próxima compra via Pix. Quer que eu te envie o cupom?",
+      "inputs": [
+        {
+          "label": "tipo de negócio"
+        },
+        {
+          "label": "descreva — casual, formal, descontraído, técnico?"
+        },
+        {
+          "label": "cole"
+        }
+      ]
+    }
+  },
+  {
+    "domain": "Communication & Writing",
+    "section": "Brazilian Social Media",
+    "skill_level": "BEGINNER",
+    "skill_emoji": "🔴",
+    "title": "Instagram Brazilian Audience Caption Pack",
+    "prompt": "\"Write 5 Instagram captions in Brazilian Portuguese for a post about [topic], aimed at a Brazilian audience. Each caption should:\n\n- Use natural BR slang where appropriate (sem forçar gringo-style)\n- Hook in the first line — Brazilian feeds are scroll-heavy\n- Be 80–150 characters (Instagram BR feeds favor shorter copy)\n- End with a Brazilian-style CTA (Salva esse post · Compartilha com quem precisa · Comenta aí)\n- Include 6–8 hashtags mixing high-volume (#brasil #saopaulo) with niche tags\n\nBrand voice: [descreva — sério, divertido, motivacional, técnico, irônico?]\n\nProduce all 5 variants, then for each one, suggest the best post format (Reels, carrossel, foto única, stories).\"",
+    "tags": [
+      "Instagram",
+      "Brasil",
+      "redes sociais",
+      "marketing"
+    ],
+    "best_for": "Brazilian small businesses, infoprodutores, social media managers",
+    "outcome": "Five ready-to-post Instagram captions in Brazilian Portuguese with natural slang, optimized character counts, BR-style CTAs, hashtag mixes, and a recommended post format for each.",
+    "inputs": [
+      {
+        "label": "topic"
+      },
+      {
+        "label": "descreva — sério, divertido, motivacional, técnico, irônico?"
+      }
+    ],
+    "tools": [
+      "MariTalk",
+      "ChatGPT",
+      "Claude"
+    ],
+    "est_time": "20 min",
+    "output_kind": "templates",
+    "sample_output": "**Caption 1** (118 chars) — recomendado: **Reels**\nA gente passa anos achando que produtividade é fazer mais. Não é. É escolher melhor. Salva esse post pra lembrar 🔖\n#produtividade #foco #brasil #empreendedorismo #autonomos #freelancer #saopaulo #carreira\n\n**Caption 2** (94 chars) — recomendado: **Carrossel** (5 slides)\nNinguém te conta isso quando você começa a empreender 👇 Comenta aí qual te pegou de surpresa.\n#empreendedorismo #pme #brasil #negocios #liderança #mei #carreira\n\n**Caption 3** (132 chars) — recomendado: **Reels com áudio em alta**\nHoras na frente do laptop ≠ resultado. O dia que entendi isso, mudou tudo. Compartilha com quem tá precisando ouvir hoje ❤️\n#produtividade #foco #brasil #freelancer #autonomos #empreendedorismo #saude\n\n**Caption 4** (101 chars) — recomendado: **Foto única**\nPlay no Reels antes de dormir. Faça xixi. Tente de novo amanhã.\n#humor #brasil #vidareal #produtividade #autoconhecimento #saopaulo\n\n**Caption 5** (88 chars) — recomendado: **Stories** (com enquete)\n3 erros que cometi em 2025 e não vou repetir em 2026. Qual é o seu? Comenta aí 👇\n#aprendizado #brasil #empreendedorismo #carreira #pme #foco",
+    "i18n_ptBR": {
+      "title": "Pacote de legendas para Instagram BR",
+      "prompt": "\"Escreva 5 legendas para Instagram em português brasileiro para um post sobre [tema], voltado para um público brasileiro. Cada legenda deve:\n\n- Usar gírias brasileiras naturais quando faz sentido (sem forçar estilo gringo)\n- Engatar na primeira linha — feed brasileiro tem muito scroll\n- Ter 80 a 150 caracteres (feeds BR preferem texto curto)\n- Terminar com CTA estilo BR (Salva esse post · Compartilha com quem precisa · Comenta aí)\n- Incluir 6 a 8 hashtags misturando volume alto (#brasil #saopaulo) com tags de nicho\n\nVoz da marca: [descreva — sério, divertido, motivacional, técnico, irônico?]\n\nGere as 5 variações e, para cada uma, sugira o melhor formato de post (Reels, carrossel, foto única, stories).\"",
+      "outcome": "Cinco legendas prontas para postar no Instagram em português brasileiro com gírias naturais, contagem otimizada de caracteres, CTAs no estilo brasileiro, mix de hashtags e um formato recomendado para cada.",
+      "best_for": "Pequenos negócios brasileiros, infoprodutores, social media managers",
+      "sample_output": "**Caption 1** (118 chars) — recomendado: **Reels**\nA gente passa anos achando que produtividade é fazer mais. Não é. É escolher melhor. Salva esse post pra lembrar 🔖\n#produtividade #foco #brasil #empreendedorismo #autonomos #freelancer #saopaulo #carreira\n\n**Caption 2** (94 chars) — recomendado: **Carrossel** (5 slides)\nNinguém te conta isso quando você começa a empreender 👇 Comenta aí qual te pegou de surpresa.\n#empreendedorismo #pme #brasil #negocios #liderança #mei #carreira\n\n**Caption 3** (132 chars) — recomendado: **Reels com áudio em alta**\nHoras na frente do laptop ≠ resultado. O dia que entendi isso, mudou tudo. Compartilha com quem tá precisando ouvir hoje ❤️\n#produtividade #foco #brasil #freelancer #autonomos #empreendedorismo #saude\n\n**Caption 4** (101 chars) — recomendado: **Foto única**\nPlay no Reels antes de dormir. Faça xixi. Tente de novo amanhã.\n#humor #brasil #vidareal #produtividade #autoconhecimento #saopaulo\n\n**Caption 5** (88 chars) — recomendado: **Stories** (com enquete)\n3 erros que cometi em 2025 e não vou repetir em 2026. Qual é o seu? Comenta aí 👇\n#aprendizado #brasil #empreendedorismo #carreira #pme #foco",
+      "inputs": [
+        {
+          "label": "tema"
+        },
+        {
+          "label": "descreva — sério, divertido, motivacional, técnico, irônico?"
+        }
+      ]
+    }
+  },
+  {
+    "domain": "Research & Analysis",
+    "section": "Brazilian Legal & HR",
+    "skill_level": "INTERMEDIATE",
+    "skill_emoji": "🟡",
+    "title": "CLT Termination Cost Calculator",
+    "prompt": "\"You are an HR/finance assistant familiar with Brazilian CLT (Consolidação das Leis do Trabalho) labor rules. Estimate the total termination cost for the employee below — covering all mandatory verbas rescisórias — and explain each line so a non-lawyer can validate.\n\nEmployee data:\n- Termination type: [sem justa causa · com justa causa · pedido de demissão · acordo (Lei 13.467)]\n- Admission date: [DD/MM/YYYY]\n- Termination date: [DD/MM/YYYY]\n- Last gross monthly salary: [R$]\n- Variable comp / commissions (last 12 months avg): [R$]\n- Pending vacation balance (days): [number]\n- Open vacation period elapsed (days into the next acquisition period): [number]\n- FGTS account balance (latest extrato): [R$]\n- Notice period worked or indemnized: [trabalhado / indenizado]\n\nReturn:\n1. Itemized verbas (saldo de salário, aviso prévio, 13º proporcional, férias vencidas + 1/3, férias proporcionais + 1/3, FGTS + multa 40%/20%)\n2. Total rescision value\n3. Cash flow for the employer (verbas + multas + INSS patronal estimates)\n4. Flags for any non-obvious risks (e.g., 'férias vencidas dobradas' if past the 12-month acquired period limit)\n\nIMPORTANT: This is an estimate — confirm with a contador/RH before processing in folha.\"",
+    "tags": [
+      "CLT",
+      "Brasil",
+      "RH",
+      "rescisão",
+      "trabalhista"
+    ],
+    "best_for": "HR managers, business owners, contadores, finance teams in Brazilian companies",
+    "outcome": "An itemized breakdown of all mandatory verbas rescisórias under Brazilian CLT — saldo de salário, aviso prévio, 13º, férias, FGTS + multa — plus total cash flow and a risk-flag list.",
+    "inputs": [
+      {
+        "label": "sem justa causa · com justa causa · pedido de demissão · acordo (Lei 13.467)"
+      },
+      {
+        "label": "DD/MM/YYYY"
+      },
+      {
+        "label": "DD/MM/YYYY"
+      },
+      {
+        "label": "R$"
+      },
+      {
+        "label": "R$"
+      },
+      {
+        "label": "number"
+      },
+      {
+        "label": "number"
+      },
+      {
+        "label": "R$"
+      },
+      {
+        "label": "trabalhado / indenizado"
+      }
+    ],
+    "tools": [
+      "MariTalk",
+      "Claude",
+      "ChatGPT"
+    ],
+    "est_time": "30 min",
+    "output_kind": "table",
+    "sample_output": "**Cenário: rescisão sem justa causa — empregado admitido em 01/03/2022, demitido em 15/05/2026, salário R$ 6.000.**\n\n| Verba | Cálculo | Valor (R$) |\n|---|---|---|\n| Saldo de salário | 15 dias × (6.000 / 30) | 3.000,00 |\n| Aviso prévio indenizado | 30 dias + 3 dias × 4 anos = 42 dias | 8.400,00 |\n| 13º proporcional | 5/12 × 6.000 | 2.500,00 |\n| Férias vencidas + 1/3 | 6.000 + 2.000 | 8.000,00 |\n| Férias proporcionais + 1/3 | 5/12 × (6.000 + 2.000) | 3.333,33 |\n| FGTS do mês + 13º + aviso | ~ R$ 1.456,00 | 1.456,00 |\n| **Multa 40% sobre saldo FGTS** | 40% × R$ 24.000 (extrato) | **9.600,00** |\n| **TOTAL VERBAS RESCISÓRIAS** | | **R$ 36.289,33** |\n\n**Fluxo de caixa para a empresa**\n- Pagamento direto ao empregado: R$ 25.233,33\n- Recolhimento FGTS + multa (GRRF): R$ 11.056,00\n\n**⚠️ Riscos a verificar**\n- Confira no eSocial se há horas extras habituais — entram no cálculo médio do aviso prévio\n- Se houver insalubridade/periculosidade, somar ao salário-base antes do cálculo\n- Reflexos sobre 13º e férias se houver comissões variáveis recorrentes\n\n*Estimativa — confirme com contador/RH antes de processar na folha.*",
+    "i18n_ptBR": {
+      "title": "Calculadora de custo de rescisão (CLT)",
+      "prompt": "\"Você é um assistente de RH/financeiro familiarizado com as regras da CLT (Consolidação das Leis do Trabalho) brasileira. Estime o custo total de rescisão para o(a) colaborador(a) abaixo — cobrindo todas as verbas rescisórias obrigatórias — e explique cada linha para que alguém sem formação jurídica consiga validar.\n\nDados do colaborador:\n- Tipo de rescisão: [sem justa causa · com justa causa · pedido de demissão · acordo (Lei 13.467)]\n- Data de admissão: [DD/MM/AAAA]\n- Data de rescisão: [DD/MM/AAAA]\n- Último salário bruto mensal: [R$]\n- Variável / comissões (média dos últimos 12 meses): [R$]\n- Saldo de férias vencidas (dias): [número]\n- Período aquisitivo em curso (dias contados do novo período): [número]\n- Saldo da conta FGTS (extrato mais recente): [R$]\n- Aviso prévio: [trabalhado / indenizado]\n\nDevolva:\n1. Verbas detalhadas (saldo de salário, aviso prévio, 13º proporcional, férias vencidas + 1/3, férias proporcionais + 1/3, FGTS + multa 40%/20%)\n2. Valor total da rescisão\n3. Fluxo de caixa para o empregador (verbas + multas + INSS patronal estimado)\n4. Sinalizadores de riscos não óbvios (ex.: 'férias vencidas dobradas' se já passou do limite do período aquisitivo de 12 meses)\n\nIMPORTANTE: é uma estimativa — confirme com contador/RH antes de processar na folha.\"",
+      "outcome": "Detalhamento item-a-item de todas as verbas rescisórias obrigatórias da CLT brasileira — saldo de salário, aviso prévio, 13º, férias, FGTS + multa — mais fluxo de caixa total e uma lista de riscos a verificar.",
+      "best_for": "Gerentes de RH, donos de negócio, contadores, times financeiros em empresas brasileiras",
+      "sample_output": "**Cenário: rescisão sem justa causa — empregado admitido em 01/03/2022, demitido em 15/05/2026, salário R$ 6.000.**\n\n| Verba | Cálculo | Valor (R$) |\n|---|---|---|\n| Saldo de salário | 15 dias × (6.000 / 30) | 3.000,00 |\n| Aviso prévio indenizado | 30 dias + 3 dias × 4 anos = 42 dias | 8.400,00 |\n| 13º proporcional | 5/12 × 6.000 | 2.500,00 |\n| Férias vencidas + 1/3 | 6.000 + 2.000 | 8.000,00 |\n| Férias proporcionais + 1/3 | 5/12 × (6.000 + 2.000) | 3.333,33 |\n| FGTS do mês + 13º + aviso | ~ R$ 1.456,00 | 1.456,00 |\n| **Multa 40% sobre saldo FGTS** | 40% × R$ 24.000 (extrato) | **9.600,00** |\n| **TOTAL VERBAS RESCISÓRIAS** | | **R$ 36.289,33** |\n\n**Fluxo de caixa para a empresa**\n- Pagamento direto ao empregado: R$ 25.233,33\n- Recolhimento FGTS + multa (GRRF): R$ 11.056,00\n\n**⚠️ Riscos a verificar**\n- Confira no eSocial se há horas extras habituais — entram no cálculo médio do aviso prévio\n- Se houver insalubridade/periculosidade, somar ao salário-base antes do cálculo\n- Reflexos sobre 13º e férias se houver comissões variáveis recorrentes\n\n*Estimativa — confirme com contador/RH antes de processar na folha.*",
+      "inputs": [
+        {
+          "label": "sem justa causa · com justa causa · pedido de demissão · acordo (Lei 13.467)"
+        },
+        {
+          "label": "DD/MM/AAAA"
+        },
+        {
+          "label": "DD/MM/AAAA"
+        },
+        {
+          "label": "R$"
+        },
+        {
+          "label": "R$"
+        },
+        {
+          "label": "número"
+        },
+        {
+          "label": "número"
+        },
+        {
+          "label": "R$"
+        },
+        {
+          "label": "trabalhado / indenizado"
+        }
+      ]
+    }
   }
 ]

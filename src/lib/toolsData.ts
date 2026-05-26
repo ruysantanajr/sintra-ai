@@ -1450,6 +1450,111 @@ export const AI_TOOLS: AITool[] = [
       "Navega em sites de forma autônoma e completa tarefas web multi-passo em seu nome.",
     ),
   },
+  // ─── BR-specific tools ──────────────────────────────────────────────────
+  {
+    id: "maritalk",
+    name: "MariTalk",
+    tagline: l(
+      "Brazilian AI assistant trained natively in Portuguese by Maritaca AI",
+      "Assistente brasileiro de IA treinado nativamente em português pela Maritaca AI",
+    ),
+    description: l(
+      "MariTalk is the consumer chat interface from Maritaca AI, powered by the Sabiá family of models trained from scratch with Brazilian Portuguese as a first-class language. It outperforms global frontier models on PT-BR benchmarks (ENEM, OAB exam, BLUEX) and has native awareness of Brazilian topics — CLT, Pix, SUS, ANVISA, IRPF, gov.br. Pricing in BRL and data residency in Brazil make it the preferred option for LGPD-sensitive use cases.",
+      "O MariTalk é a interface de chat da Maritaca AI, movida pela família Sabiá de modelos treinados desde o zero com português brasileiro como idioma de primeira classe. Supera modelos globais de fronteira em benchmarks PT-BR (ENEM, OAB, BLUEX) e tem consciência nativa de temas brasileiros — CLT, Pix, SUS, ANVISA, IRPF, gov.br. Cobrança em BRL e residência de dados no Brasil tornam essa a opção preferida para casos sensíveis à LGPD.",
+    ),
+    category: "chat",
+    pricing: "freemium",
+    priceNote: l(
+      "Free tier (Sabiá-2) · API from R$ 5/M input tokens for Sabiá-3",
+      "Plano grátis (Sabiá-2) · API a partir de R$ 5/M de tokens de entrada no Sabiá-3",
+    ),
+    url: "https://chat.maritaca.ai",
+    provider: "Maritaca AI",
+    tags: ["Brasil", "português", "LGPD", "Sabiá", "soberano"],
+    status: "available",
+    highlight: l(
+      "Top scores on ENEM, OAB exam and BLUEX — outperforms GPT-4 on Brazilian text.",
+      "Top em ENEM, OAB e BLUEX — supera o GPT-4 em texto brasileiro.",
+    ),
+  },
+  {
+    id: "magalu-lu",
+    name: "Magalu Lu (AI)",
+    tagline: l(
+      "Magazine Luiza's AI-powered virtual assistant for retail and customer service",
+      "Assistente virtual da Magazine Luiza com IA para varejo e atendimento",
+    ),
+    description: l(
+      "Lu is Magazine Luiza's longstanding virtual influencer and now an AI-powered retail assistant, handling millions of customer service conversations across WhatsApp, Instagram, and the Magalu app. The current generation uses LLM-based dialogue to recommend products, track orders, handle returns, and answer questions about pricing and availability — across thousands of SKUs in real time. A reference for AI-driven customer experience in Brazilian e-commerce.",
+      "A Lu é a influenciadora virtual histórica do Magazine Luiza e agora uma assistente de varejo com IA, atendendo milhões de conversas de clientes no WhatsApp, Instagram e no app Magalu. A geração atual usa diálogo baseado em LLM para recomendar produtos, rastrear pedidos, processar trocas e responder sobre preço e disponibilidade — em milhares de SKUs em tempo real. Referência de CX com IA no e-commerce brasileiro.",
+    ),
+    category: "chat",
+    pricing: "free",
+    priceNote: l(
+      "Free for Magalu shoppers via app, WhatsApp, and web",
+      "Grátis para clientes Magalu via app, WhatsApp e web",
+    ),
+    url: "https://www.magazineluiza.com.br/lu",
+    provider: "Magazine Luiza",
+    tags: ["varejo", "Brasil", "WhatsApp", "customer service", "e-commerce"],
+    status: "available",
+    highlight: l(
+      "AI-driven retail conversations across WhatsApp, Instagram and the Magalu app.",
+      "Conversas de varejo com IA por WhatsApp, Instagram e o app Magalu.",
+    ),
+  },
+  {
+    id: "cortex-globo",
+    name: "Cortex (Globo)",
+    tagline: l(
+      "Brazilian B2B platform pairing market intelligence data with AI assistants",
+      "Plataforma B2B brasileira combinando dados de inteligência de mercado com assistentes de IA",
+    ),
+    description: l(
+      "Cortex (acquired by Globoplay's parent group) is a Brazilian B2B intelligence platform that pairs deep market data — corporate, media, sales, and reputational signals — with AI assistants for sales, marketing, and risk teams. The Cortex Brain assistant lets users ask plain-Portuguese questions about market positioning, competitor activity, and account scoring across more than 25 million CNPJs in Brazil. Used by Itaú, Vivo, Localiza, B3, and government agencies.",
+      "A Cortex (adquirida pelo grupo controlador do Globoplay) é uma plataforma B2B brasileira de inteligência que combina dados profundos de mercado — corporativos, de mídia, vendas e sinais reputacionais — com assistentes de IA para times de vendas, marketing e risco. O assistente Cortex Brain permite perguntar em português sobre posicionamento de mercado, atividade de concorrentes e scoring de contas em mais de 25 milhões de CNPJs no Brasil. Usado por Itaú, Vivo, Localiza, B3 e órgãos do governo.",
+    ),
+    category: "research",
+    pricing: "enterprise",
+    priceNote: l(
+      "Enterprise pricing in BRL · contact for quote",
+      "Preço corporativo em BRL · cotação sob consulta",
+    ),
+    url: "https://www.cortex-intelligence.com",
+    provider: "Cortex Intelligence",
+    tags: ["B2B", "Brasil", "inteligência de mercado", "CNPJ", "vendas"],
+    status: "available",
+    highlight: l(
+      "Plain-PT queries over 25M+ Brazilian CNPJs with sales and risk-scoring overlays.",
+      "Consultas em português sobre 25M+ de CNPJs brasileiros, com scoring de vendas e risco.",
+    ),
+  },
+  {
+    id: "alana-ai",
+    name: "Alana AI",
+    tagline: l(
+      "Brazilian conversational AI platform for enterprise customer service",
+      "Plataforma brasileira de IA conversacional para atendimento corporativo",
+    ),
+    description: l(
+      "Alana AI is a São Paulo-based conversational AI platform specializing in enterprise-grade chatbots and voicebots tuned for Brazilian Portuguese. Used by Bradesco, Vivo, Magalu, and other large BR enterprises to automate customer service, lead qualification, and back-office workflows across WhatsApp Business, voice (PABX), web chat, and email. Native integrations with Salesforce, Zendesk, Genesys, and the major Brazilian CRMs.",
+      "A Alana AI é uma plataforma brasileira (São Paulo) de IA conversacional especializada em chatbots e voicebots de nível corporativo, otimizados para o português brasileiro. Usada por Bradesco, Vivo, Magalu e outras grandes empresas BR para automatizar atendimento, qualificação de leads e fluxos de back-office no WhatsApp Business, voz (PABX), chat web e e-mail. Integrações nativas com Salesforce, Zendesk, Genesys e os principais CRMs brasileiros.",
+    ),
+    category: "productivity",
+    pricing: "enterprise",
+    priceNote: l(
+      "Enterprise pricing in BRL · contact for quote",
+      "Preço corporativo em BRL · cotação sob consulta",
+    ),
+    url: "https://alana.ai",
+    provider: "Alana AI",
+    tags: ["chatbot", "Brasil", "WhatsApp", "voicebot", "atendimento"],
+    status: "available",
+    highlight: l(
+      "WhatsApp + voice + web chat automation in Brazilian Portuguese for large BR enterprises.",
+      "Automação de WhatsApp + voz + chat web em português brasileiro para grandes empresas BR.",
+    ),
+  },
   {
     id: "mem",
     name: "Mem",

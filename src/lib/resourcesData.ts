@@ -576,6 +576,55 @@ export const RESOURCES: ResourceLink[] = [
       "Artigos aprofundados de pesquisadores explicando conceitos complexos de ML e avanços recentes",
     ),
   },
+  // ─── BR-specific resources (added in PR 9) ──────────────────────────────
+  {
+    id: "data-hackers",
+    name: "Data Hackers",
+    tagline: l(
+      "Largest Brazilian data and AI community",
+      "Maior comunidade brasileira de dados e IA",
+    ),
+    url: "https://datahackers.com.br",
+    category: "communities",
+    tags: ["Brasil", "comunidade", "dados", "português"],
+    free: true,
+    highlight: l(
+      "100K+ Brazilian data/AI professionals, weekly podcast, annual survey, Discord, and São Paulo meetups",
+      "100 mil+ profissionais brasileiros de dados/IA, podcast semanal, pesquisa anual, Discord e meetups em São Paulo",
+    ),
+  },
+  {
+    id: "alura-ia",
+    name: "Alura — Imersão IA",
+    tagline: l(
+      "Free intensive AI courses for Brazilian learners, with Google partnership",
+      "Cursos intensivos gratuitos de IA para brasileiros, com parceria Google",
+    ),
+    url: "https://www.alura.com.br/imersao-ia",
+    category: "research",
+    tags: ["Brasil", "cursos", "educação", "Gemini", "português"],
+    free: true,
+    highlight: l(
+      "Free week-long Portuguese-language AI bootcamps — over 600,000 Brazilians enrolled to date",
+      "Bootcamps gratuitos de IA em português, com mais de 600.000 brasileiros inscritos até hoje",
+    ),
+  },
+  {
+    id: "maritaca-api-resource",
+    name: "Maritaca AI API",
+    tagline: l(
+      "Portuguese-native LLM API with Brazilian data residency and BRL pricing",
+      "API de LLM nativo em português com residência de dados no Brasil e cobrança em BRL",
+    ),
+    url: "https://www.maritaca.ai/desenvolvedores",
+    category: "apis",
+    tags: ["Brasil", "Sabiá", "LGPD", "português"],
+    free: false,
+    highlight: l(
+      "Sabiá-3 outperforms GPT-4 on ENEM/OAB benchmarks · OpenAI-compatible REST · LGPD-friendly",
+      "Sabiá-3 supera o GPT-4 em ENEM/OAB · REST compatível com OpenAI · LGPD-friendly",
+    ),
+  },
   {
     id: "anthropic-research",
     name: "Anthropic Research",

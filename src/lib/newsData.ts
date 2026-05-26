@@ -1075,6 +1075,111 @@ export const AI_NEWS: NewsItem[] = [
     providerColor: "#4285f4",
     url: "https://www.techradar.com/news/live/google-io-2026-live",
   },
+  // ── BR market — added in PR 9 (BR-specific content) ─────────────────────
+  {
+    id: "maritaca-sabia-3",
+    date: l("Apr 2024", "Abr 2024"),
+    dateNum: 202404,
+    title: l(
+      "Maritaca AI Releases Sabiá-3 — Brazil's First Frontier-Class LLM",
+      "Maritaca AI lança Sabiá-3 — primeiro LLM brasileiro de fronteira",
+    ),
+    summary: l(
+      "São Paulo-based Maritaca AI launched Sabiá-3, an LLM trained from the ground up with Brazilian Portuguese as a first-class language. Sabiá-3 outperformed GPT-4 on the Brazilian ENEM exam and the OAB bar exam, and matched or exceeded GPT-4 on the BLUEX vestibular benchmark. The release marked the first time a Brazilian-built model topped global frontier models on PT-BR benchmarks, opening serious sovereign-AI conversations across the Brazilian public and financial sectors.",
+      "A Maritaca AI, com sede em São Paulo, lançou o Sabiá-3, LLM treinado desde o zero com o português brasileiro como idioma de primeira classe. O Sabiá-3 superou o GPT-4 no ENEM e no exame da OAB, e empatou ou superou o GPT-4 no vestibular BLUEX. O lançamento foi a primeira vez que um modelo brasileiro encabeçou benchmarks PT-BR contra modelos globais de fronteira, abrindo conversas sérias sobre IA soberana nos setores público e financeiro brasileiros.",
+    ),
+    tags: ["Maritaca AI", "Brasil", "Sabiá", "ENEM", "OAB", "PT-BR"],
+    significance: "major",
+    provider: "Maritaca AI",
+    providerColor: "#10b981",
+    url: "https://www.maritaca.ai/sabia",
+  },
+  {
+    id: "microsoft-datacenter-sp",
+    date: l("Jun 2025", "Jun 2025"),
+    dateNum: 202506,
+    title: l(
+      "Microsoft Commits R$ 14.7B to Brazilian AI Datacenter Expansion",
+      "Microsoft compromete R$ 14,7 bilhões em expansão de datacenters de IA no Brasil",
+    ),
+    summary: l(
+      "Microsoft announced its largest-ever Brazilian investment — R$ 14.7 billion (US$ 2.7B) over three years — to expand Azure datacenter capacity in São Paulo, train 5 million Brazilians in AI skills, and bring frontier AI workloads to LGPD-compliant Brazilian infrastructure. The announcement reframed Brazil as a top-tier AI hosting market for Latin America. AWS and Google followed within months with their own multi-billion-real investments to host frontier models inside Brazil.",
+      "A Microsoft anunciou o maior investimento da história no Brasil — R$ 14,7 bilhões (US$ 2,7 bi) em três anos — para expandir a capacidade de datacenters Azure em São Paulo, treinar 5 milhões de brasileiros em IA e trazer workloads de IA de fronteira para infraestrutura brasileira em conformidade com a LGPD. O anúncio recolocou o Brasil como mercado top de hospedagem de IA para a América Latina. AWS e Google seguiram em meses com investimentos próprios em bilhões de reais para hospedar modelos de fronteira dentro do Brasil.",
+    ),
+    tags: ["Microsoft", "Brasil", "Datacenter", "Azure", "Investimento", "LGPD"],
+    significance: "major",
+    provider: "Microsoft",
+    providerColor: "#0078d4",
+  },
+  {
+    id: "pl-2338-marco-civil-ia",
+    date: l("Sep 2025", "Set 2025"),
+    dateNum: 202509,
+    title: l(
+      "Brazil's Senate Approves PL 2338 — Marco Civil da IA",
+      "Senado aprova PL 2338 — Marco Civil da IA brasileiro",
+    ),
+    summary: l(
+      "The Brazilian Senate approved PL 2338/2023, the Marco Civil da Inteligência Artificial, establishing a national regulatory framework for AI based on risk categories (proibido, alto, médio, baixo), mandatory algorithmic impact assessments for high-risk systems, copyright protections for training-data sources, and oversight by the ANPD (Autoridade Nacional de Proteção de Dados). The text inherits much of the EU AI Act's structure while adding LGPD-aligned data residency provisions. Implementation begins in 2026.",
+      "O Senado Federal aprovou o PL 2338/2023, o Marco Civil da Inteligência Artificial, estabelecendo um marco regulatório nacional para IA baseado em categorias de risco (proibido, alto, médio, baixo), avaliações de impacto algorítmico obrigatórias para sistemas de alto risco, proteções de direitos autorais sobre fontes de dados de treino e fiscalização pela ANPD (Autoridade Nacional de Proteção de Dados). O texto herda muito da estrutura do EU AI Act adicionando provisões de residência de dados alinhadas à LGPD. A implementação começa em 2026.",
+    ),
+    tags: ["Brasil", "Regulação", "Marco Civil IA", "ANPD", "LGPD", "PL 2338"],
+    significance: "landmark",
+    provider: "Google",
+    providerColor: "#4285f4",
+  },
+  {
+    id: "itau-claude-bedrock",
+    date: l("Nov 2025", "Nov 2025"),
+    dateNum: 202511,
+    title: l(
+      "Itaú Unibanco Adopts Claude on AWS Bedrock for Internal AI Platform",
+      "Itaú Unibanco adota Claude via AWS Bedrock como plataforma interna de IA",
+    ),
+    summary: l(
+      "Itaú Unibanco — Latin America's largest bank — disclosed it has standardized on Claude (via AWS Bedrock in the São Paulo region) as the primary LLM for its internal AI platform, replacing a heterogeneous mix of GPT-4 and homegrown models. The deployment serves 100,000+ Itaú employees and powers a coding-assistant rollout to its tech organization, fraud-investigation copilots, and customer-service drafting tools. Data residency in Brazil (SP region) and LGPD compliance were cited as the deciding factors.",
+      "O Itaú Unibanco — maior banco da América Latina — comunicou que padronizou o Claude (via AWS Bedrock na região de São Paulo) como LLM principal de sua plataforma interna de IA, substituindo uma combinação heterogênea de GPT-4 e modelos próprios. O deploy atende 100.000+ colaboradores do Itaú e move um rollout de assistente de código para a área de tecnologia, copilots de investigação de fraude e ferramentas de redação no atendimento. Residência de dados no Brasil (região SP) e compliance com a LGPD foram citados como fatores decisivos.",
+    ),
+    tags: ["Itaú", "Brasil", "Claude", "AWS Bedrock", "Bancos", "LGPD"],
+    significance: "major",
+    provider: "Anthropic",
+    providerColor: "#d97706",
+  },
+  {
+    id: "maritaca-bndes-funding",
+    date: l("Feb 2026", "Fev 2026"),
+    dateNum: 202602,
+    title: l(
+      "Maritaca AI Raises R$ 300M Led by BNDES for Sovereign AI Push",
+      "Maritaca AI capta R$ 300 milhões liderados pelo BNDES para impulsionar IA soberana",
+    ),
+    summary: l(
+      "Maritaca AI closed an R$ 300 million (US$ 60M) Series B led by BNDESPar — the equity arm of Brazil's federal development bank — alongside Itaú and Vale-backed funds. The round explicitly funds a sovereign-AI strategy: training larger Sabiá models inside Brazil on TPU/GPU clusters in São Paulo, building a Portuguese-first developer ecosystem, and serving federal government workloads that cannot legally cross borders. It is the largest Brazilian AI funding round to date.",
+      "A Maritaca AI fechou um Série B de R$ 300 milhões (US$ 60 mi) liderado pela BNDESPar — braço de equity do banco federal de desenvolvimento — junto com fundos apoiados pelo Itaú e pela Vale. A rodada financia explicitamente uma estratégia de IA soberana: treinar modelos Sabiá maiores dentro do Brasil em clusters TPU/GPU em São Paulo, construir um ecossistema de devs Portuguese-first e atender workloads do governo federal que não podem cruzar fronteiras. É a maior rodada de IA brasileira até hoje.",
+    ),
+    tags: ["Maritaca AI", "Brasil", "BNDES", "Sabiá", "Investimento", "Soberania"],
+    significance: "major",
+    provider: "Maritaca AI",
+    providerColor: "#10b981",
+  },
+  {
+    id: "gov-br-ia-piloto",
+    date: l("Apr 2026", "Abr 2026"),
+    dateNum: 202604,
+    title: l(
+      "gov.br Launches AI-Powered Citizen Service Pilot Across 8 Federal Agencies",
+      "gov.br lança piloto de atendimento ao cidadão com IA em 8 órgãos federais",
+    ),
+    summary: l(
+      "The Brazilian federal government launched an AI-assisted citizen service pilot on gov.br, deploying a Maritaca-powered assistant across eight federal agencies including Receita Federal (tax filings), INSS (social security), Detran (vehicles), and Bolsa Família. Citizens can ask plain-Portuguese questions about benefits, deadlines, document requirements, and case status, with the assistant escalating to human attendants for ambiguous cases. The pilot processed 4.2 million inquiries in the first month with a 78% self-service resolution rate.",
+      "O governo federal brasileiro lançou um piloto de atendimento ao cidadão com IA no gov.br, implantando um assistente movido pela Maritaca em oito órgãos federais — incluindo Receita Federal (declarações), INSS (previdência), Detran (veículos) e Bolsa Família. Cidadãos podem perguntar em português sobre benefícios, prazos, documentos exigidos e status do processo, com o assistente escalando para atendentes humanos em casos ambíguos. O piloto processou 4,2 milhões de consultas no primeiro mês com 78% de resolução em autoatendimento.",
+    ),
+    tags: ["gov.br", "Brasil", "Governo", "Maritaca", "Atendimento", "Setor Público"],
+    significance: "major",
+    provider: "Google",
+    providerColor: "#4285f4",
+  },
+
   {
     id: "anthropic-dreaming-agents",
     date: l("May 2026", "Mai 2026"),
