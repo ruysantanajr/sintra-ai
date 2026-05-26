@@ -80,11 +80,17 @@ export const SEARCH_INDEX: SearchDocument[] = [
   ...AI_NEWS.map(n => ({
     id: `news-${n.id}`,
     kind: "news" as EntityKind,
-    title: n.title,
-    summary: n.summary,
+    title: n.title.en,
+    summary: n.summary.en,
     tags: n.tags,
     href: `${BASE_PATH}/news/`,
-    body: [n.title, n.summary, n.provider, n.date, n.significance, ...n.tags].join(" "),
+    body: [
+      n.title.en, n.title["pt-BR"],
+      n.summary.en, n.summary["pt-BR"],
+      n.provider, n.date.en, n.date["pt-BR"],
+      n.significance,
+      ...n.tags,
+    ].join(" "),
   })),
   ...AI_LABS.map(lab => ({
     id: `lab-${lab.id}`,
