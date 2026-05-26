@@ -9,6 +9,7 @@ import { CAROUSEL_ITEMS } from "./CategoryCarousel3D";
 import UseCaseCard from "./UseCaseCard";
 import ExpandedCard from "./ExpandedCard";
 import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 const CategoryCarousel3D = dynamic(() => import("./CategoryCarousel3D"), { ssr: false });
 
@@ -33,11 +34,12 @@ const CAT_ACCENT: Record<string, string> = {
 };
 
 function SearchResultRow({ item, onOpen }: { item: UseCase; onOpen: (item: UseCase) => void }) {
+  const { locale } = useLanguage();
   const [copied, setCopied] = useState(false);
   const catColor = CAT_ACCENT[item.category] || "#9F8CFF";
   const quickCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard?.writeText(item.prompt);
+    navigator.clipboard?.writeText(localize(item.prompt, locale));
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
@@ -51,10 +53,10 @@ function SearchResultRow({ item, onOpen }: { item: UseCase; onOpen: (item: UseCa
           <span className="font-mono text-[9px] text-fg-4 capitalize">{item.difficulty}</span>
         </div>
         <h3 className="font-serif text-[17px] leading-[1.18] text-fg-1 mb-1.5 group-hover:text-violet-bright transition-colors">
-          {item.title}
+          {localize(item.title, locale)}
         </h3>
         <p className="font-sans text-[12.5px] text-fg-3 leading-[1.5] line-clamp-2">
-          {item.outcome || item.desc}
+          {localize(item.outcome, locale) || localize(item.desc, locale)}
         </p>
       </div>
       <div className="flex flex-col gap-2 shrink-0 pt-0.5 items-end">

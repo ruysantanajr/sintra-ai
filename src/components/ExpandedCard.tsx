@@ -9,6 +9,7 @@ import { UseCase, DIFF_COLOR } from "@/lib/data";
 import CardVisual from "./CardVisual";
 import OutputKindIcon, { outputKindLabel } from "./OutputKindIcon";
 import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 interface Props {
   item: UseCase | null;
@@ -31,7 +32,7 @@ const CAT_ACCENT: Record<string, string> = {
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 export default function ExpandedCard({ item, onClose, items }: Props) {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [currentItem, setCurrentItem] = useState<UseCase | null>(item);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -94,7 +95,7 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
 
   const copy = () => {
     if (!shown) return;
-    navigator.clipboard?.writeText(shown.prompt);
+    navigator.clipboard?.writeText(localize(shown.prompt, locale));
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
@@ -165,11 +166,14 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
                   <div className="mb-6">
                     <span className="eyebrow block mb-2.5">{t.expanded_inputs}</span>
                     <div className="flex flex-wrap gap-2">
-                      {shown.inputs.map(inp => (
-                        <span key={inp.label} className="font-mono text-[12px] px-2.5 py-1.5 rounded-sm bg-steel border border-hairline text-cyan-ice">
-                          [{inp.label}]
-                        </span>
-                      ))}
+                      {shown.inputs.map((inp, i) => {
+                        const label = localize(inp.label, locale);
+                        return (
+                          <span key={i} className="font-mono text-[12px] px-2.5 py-1.5 rounded-sm bg-steel border border-hairline text-cyan-ice">
+                            [{label}]
+                          </span>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -185,7 +189,7 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
                       {copied ? <><Check size={11} /> {t.expanded_copied}</> : <><Copy size={11} /> {t.expanded_copy}</>}
                     </button>
                   </div>
-                  <div className="prompt-block">{shown.prompt}</div>
+                  <div className="prompt-block">{localize(shown.prompt, locale)}</div>
                 </div>
               </div>
 
@@ -212,14 +216,14 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
                   id="ec-title"
                   className="font-serif font-normal text-[clamp(26px,3.5vw,44px)] leading-[1.06] tracking-[-0.015em] text-fg-1 mb-5"
                 >
-                  {shown.title}
+                  {localize(shown.title, locale)}
                 </h2>
 
                 {/* Outcome callout */}
-                {shown.outcome && (
+                {localize(shown.outcome, locale) && (
                   <p className="font-serif italic text-[18px] md:text-[20px] leading-[1.45] text-fg-2 mb-7 border-l-2 pl-5"
                     style={{ borderColor: CAT_ACCENT[shown.category] || "#9F8CFF" }}>
-                    {shown.outcome}
+                    {localize(shown.outcome, locale)}
                   </p>
                 )}
 
@@ -229,17 +233,17 @@ export default function ExpandedCard({ item, onClose, items }: Props) {
                   <div>
                     <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-fg-4 block mb-1">Suggested model</span>
                     <span className="font-serif text-[15px] text-fg-1 font-medium">{shown.best_llm}</span>
-                    <p className="font-sans text-[13px] text-fg-3 mt-0.5 leading-[1.45]">{shown.llm_reason}</p>
+                    <p className="font-sans text-[13px] text-fg-3 mt-0.5 leading-[1.45]">{localize(shown.llm_reason, locale)}</p>
                   </div>
                 </div>
 
                 {/* Expected output */}
-                {shown.sample_output && (
+                {localize(shown.sample_output, locale) && (
                   <div>
                     <span className="eyebrow block mb-3">{t.expanded_sample}</span>
                     <div className="sample-output">
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {shown.sample_output}
+                        {localize(shown.sample_output, locale)}
                       </ReactMarkdown>
                     </div>
                   </div>

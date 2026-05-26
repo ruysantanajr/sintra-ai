@@ -42,11 +42,20 @@ export const SEARCH_INDEX: SearchDocument[] = [
   ...USE_CASES.map(u => ({
     id: `use_case-${u.id}`,
     kind: "use_case" as EntityKind,
-    title: u.title,
-    summary: u.desc || u.outcome,
+    title: u.title.en,
+    summary: u.desc.en || u.outcome.en,
     tags: u.tags,
     href: `${BASE_PATH}/#explore`,
-    body: [u.title, u.desc, u.outcome, u.prompt, u.best_llm, ...u.tags, ...u.tools, ...u.inputs.map(i => i.label)].join(" "),
+    body: [
+      u.title.en, u.title["pt-BR"],
+      u.desc.en, u.desc["pt-BR"],
+      u.outcome.en, u.outcome["pt-BR"],
+      u.prompt.en, u.prompt["pt-BR"],
+      u.best_llm,
+      ...u.tags,
+      ...u.tools,
+      ...u.inputs.flatMap(i => [i.label.en, i.label["pt-BR"]]),
+    ].join(" "),
     useCaseId: u.id,
   })),
   ...AI_TOOLS.map(t => ({

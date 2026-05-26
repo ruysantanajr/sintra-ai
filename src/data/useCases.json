@@ -30,7 +30,21 @@
     ],
     "est_time": "1 hour",
     "output_kind": "visual",
-    "sample_output": "**Top 3 trends**\n1. Revenue grew 14% YoY, accelerating in Q3 (+22% vs. +9% Q1)\n2. EMEA outpaced APAC for the first time in 18 months\n3. Promo months (Mar, Sep) drove 31% of annual revenue\n\n**Charts to build**\n- Line: monthly revenue vs. prior year (12 + 12 points)\n- Stacked bar: revenue by region per quarter\n- Scatter: promo spend vs. incremental revenue\n\n**Unusual pattern:** August dip of −7% breaks the seasonal pattern. Worth asking ops.\n\n**Investigate**\n- Is the August dip a stocking issue or genuine demand?\n- Does the EMEA acceleration hold without the FX tailwind?"
+    "sample_output": "**Top 3 trends**\n1. Revenue grew 14% YoY, accelerating in Q3 (+22% vs. +9% Q1)\n2. EMEA outpaced APAC for the first time in 18 months\n3. Promo months (Mar, Sep) drove 31% of annual revenue\n\n**Charts to build**\n- Line: monthly revenue vs. prior year (12 + 12 points)\n- Stacked bar: revenue by region per quarter\n- Scatter: promo spend vs. incremental revenue\n\n**Unusual pattern:** August dip of −7% breaks the seasonal pattern. Worth asking ops.\n\n**Investigate**\n- Is the August dip a stocking issue or genuine demand?\n- Does the EMEA acceleration hold without the FX tailwind?",
+    "i18n_ptBR": {
+      "title": "Insights rápidos a partir de planilhas",
+      "prompt": "\"Tenho uma planilha com [descreva: ex., vendas mensais por 12 meses].\nMe ajude a:\n1. Identificar as 3 principais tendências\n2. Criar 3 gráficos simples para o meu gestor\n3. Explicar qualquer padrão atípico em linguagem clara\n4. Sugerir 2 perguntas para eu investigar a fundo\n\nDados: [cole ou descreva]\"",
+      "outcome": "Um resumo em linguagem clara das três principais tendências, especificações de três gráficos para colar no Excel e duas perguntas de follow-up para o negócio.",
+      "best_for": "Analistas iniciantes, datasets pequenos, resumos rápidos",
+      "inputs": [
+        {
+          "label": "descreva: ex., vendas mensais por 12 meses"
+        },
+        {
+          "label": "cole ou descreva"
+        }
+      ]
+    }
   },
   {
     "domain": "Finance & FP&A",
@@ -187,7 +201,21 @@
     ],
     "est_time": "30 min",
     "output_kind": "templates",
-    "sample_output": "**Themes** (n=87 verbatims)\n- Onboarding friction (34%)\n- Slow support response (22%)\n- Missing integrations (18%)\n- Pricing clarity (15%)\n- Performance lag (11%)\n\n**Top complaints**\n1. \"Couldn't find where to start\" — 28 mentions\n2. \"Waited 3+ days for a reply\" — 19 mentions\n3. \"Doesn't connect to Slack\" — 14 mentions\n\n**Quick wins**\n- Add a guided first-run checklist (kills #1)\n- Auto-acknowledge tickets within 5 min (softens #2)\n- Build the Slack integration (clears #3)"
+    "sample_output": "**Themes** (n=87 verbatims)\n- Onboarding friction (34%)\n- Slow support response (22%)\n- Missing integrations (18%)\n- Pricing clarity (15%)\n- Performance lag (11%)\n\n**Top complaints**\n1. \"Couldn't find where to start\" — 28 mentions\n2. \"Waited 3+ days for a reply\" — 19 mentions\n3. \"Doesn't connect to Slack\" — 14 mentions\n\n**Quick wins**\n- Add a guided first-run checklist (kills #1)\n- Auto-acknowledge tickets within 5 min (softens #2)\n- Build the Slack integration (clears #3)",
+    "i18n_ptBR": {
+      "title": "Resumo de feedback de clientes",
+      "prompt": "\"Preciso analisar feedback de clientes vindos de [pesquisas/avaliações/ligações].\n\nMe ajude a:\n1. Resumir os temas principais em linguagem clara\n2. Identificar as 5 reclamações mais comuns\n3. Sugerir 3 quick wins\n4. Criar um template simples de acompanhamento\n\nAmostras de feedback: [cole 5-10 exemplos]\"",
+      "outcome": "Cinco temas agrupados, as cinco principais reclamações com frequência, três quick wins e um template de acompanhamento — gerados a partir dos seus verbatims.",
+      "best_for": "Analistas iniciantes de FP&A, apoio ao fechamento mensal",
+      "inputs": [
+        {
+          "label": "pesquisas/avaliações/ligações"
+        },
+        {
+          "label": "cole 5-10 exemplos"
+        }
+      ]
+    }
   },
   {
     "domain": "Research & Analysis",
@@ -382,7 +410,10 @@
     ],
     "est_time": "1 hour",
     "output_kind": "visual",
-    "sample_output": "**Templates**\n1. **Acknowledgement** — \"Got it, [name]. Looking into it now — back to you within 2 hours.\"\n2. **Asking for more info** — \"Quick thing to unblock me: could you send [X, Y]?\"\n3. **Known issue** — \"Yep, known one — fix is going out [date]. Workaround: [...]\"\n4. **Escalation** — \"Pulling in [team]. Owner is [name]. Updates in this thread.\"\n5. **Resolution** — \"[Fix] is live. Anything else from this ticket?\"\n\n**Flowchart** (login issue): Reset password? → Y: send link / N: 2FA enrolled? → Y: code working? → escalate."
+    "sample_output": "**Templates**\n1. **Acknowledgement** — \"Got it, [name]. Looking into it now — back to you within 2 hours.\"\n2. **Asking for more info** — \"Quick thing to unblock me: could you send [X, Y]?\"\n3. **Known issue** — \"Yep, known one — fix is going out [date]. Workaround: [...]\"\n4. **Escalation** — \"Pulling in [team]. Owner is [name]. Updates in this thread.\"\n5. **Resolution** — \"[Fix] is live. Anything else from this ticket?\"\n\n**Flowchart** (login issue): Reset password? → Y: send link / N: 2FA enrolled? → Y: code working? → escalate.",
+    "i18n_ptBR": {
+      "title": "Templates de resposta"
+    }
   },
   {
     "domain": "Personal Productivity",
@@ -420,7 +451,10 @@
     ],
     "est_time": "Half day",
     "output_kind": "templates",
-    "sample_output": "**Decision tree (login)**\n```\nIssue → Account locked?\n├─ Y → Unlock + send reset → Resolved\n└─ N → 2FA enrolled?\n    ├─ Y → Codes working? → escalate L2 if no\n    └─ N → Enrol + verify → Resolved\n```\n\n**KPIs:** FCR (target 78%), AHT (≤6 min), CSAT (≥4.4/5), repeat-contact rate (≤8%).\n\n**QA checklist (per ticket)**\n- [ ] Asked the diagnostic Q first\n- [ ] Verified identity\n- [ ] Logged root cause code\n- [ ] Sent confirmation summary"
+    "sample_output": "**Decision tree (login)**\n```\nIssue → Account locked?\n├─ Y → Unlock + send reset → Resolved\n└─ N → 2FA enrolled?\n    ├─ Y → Codes working? → escalate L2 if no\n    └─ N → Enrol + verify → Resolved\n```\n\n**KPIs:** FCR (target 78%), AHT (≤6 min), CSAT (≥4.4/5), repeat-contact rate (≤8%).\n\n**QA checklist (per ticket)**\n- [ ] Asked the diagnostic Q first\n- [ ] Verified identity\n- [ ] Logged root cause code\n- [ ] Sent confirmation summary",
+    "i18n_ptBR": {
+      "title": "Resolução no primeiro contato"
+    }
   },
   {
     "domain": "Personal Productivity",
@@ -457,7 +491,10 @@
     ],
     "est_time": "Multi-week",
     "output_kind": "spec",
-    "sample_output": "**Architecture**\n```\nTicket → Classifier (BERT, 12 classes)\n       → KB retriever (embeddings + reranker)\n       → Drafter (LLM, brand-tuned)\n       → Human-in-loop (L1 review for low-confidence)\n       → Send / Escalate\n```\n\n**Training data:** ~5k labelled tickets minimum; 80/10/10 split; include 200 hard negatives.\n\n**Rollout:** shadow-mode (4 wk) → suggest-only (8 wk) → auto-send tier-1 (gated by confidence ≥0.92)."
+    "sample_output": "**Architecture**\n```\nTicket → Classifier (BERT, 12 classes)\n       → KB retriever (embeddings + reranker)\n       → Drafter (LLM, brand-tuned)\n       → Human-in-loop (L1 review for low-confidence)\n       → Send / Escalate\n```\n\n**Training data:** ~5k labelled tickets minimum; 80/10/10 split; include 200 hard negatives.\n\n**Rollout:** shadow-mode (4 wk) → suggest-only (8 wk) → auto-send tier-1 (gated by confidence ≥0.92).",
+    "i18n_ptBR": {
+      "title": "Assistente de suporte com IA"
+    }
   },
   {
     "domain": "Finance & FP&A",
@@ -492,7 +529,10 @@
     ],
     "est_time": "1 hour",
     "output_kind": "templates",
-    "sample_output": "**Top 5 variances (Oct vs. budget)**\n| Account | Var | Driver |\n|---|---|---|\n| Subscription rev | +$340k | Renewal pull-forward, treat as timing |\n| Cloud infra | +$190k | Workload spike from new feature — investigate |\n| T&E | −$60k | Conf budget unspent — flag for reforecast |\n| Stock comp | +$110k | New hires — already accrued, noise |\n| Hosting | +$45k | Egress overage — review architecture |\n\n**Action vs noise:** rows 2 and 5 need follow-up; the rest are timing/accrual noise.\n\n**Manager email:** drafted, ~120 words, ready to copy."
+    "sample_output": "**Top 5 variances (Oct vs. budget)**\n| Account | Var | Driver |\n|---|---|---|\n| Subscription rev | +$340k | Renewal pull-forward, treat as timing |\n| Cloud infra | +$190k | Workload spike from new feature — investigate |\n| T&E | −$60k | Conf budget unspent — flag for reforecast |\n| Stock comp | +$110k | New hires — already accrued, noise |\n| Hosting | +$45k | Egress overage — review architecture |\n\n**Action vs noise:** rows 2 and 5 need follow-up; the rest are timing/accrual noise.\n\n**Manager email:** drafted, ~120 words, ready to copy.",
+    "i18n_ptBR": {
+      "title": "Análise de variação com apoio de IA"
+    }
   },
   {
     "domain": "Finance & FP&A",
@@ -521,7 +561,10 @@
     ],
     "est_time": "1 hour",
     "output_kind": "table",
-    "sample_output": "**Executive summary**\n- Revenue $42.1M, +6.2% YoY, in line with budget\n- GM% 68.1%, +120bps vs. prior year — pricing actions holding\n- Opex tracking $0.4M favourable; hiring lag in R&D\n- Operating income $12.6M; FX headwind of −$0.3M absorbed\n\n**Revenue narrative**\n> Subscription revenue grew 9% YoY, offsetting a 4% decline in services. New-logo ARR up 14%, but expansion softened to 11% (vs. 16% prior quarter), consistent with the broader macro slowdown observed by peers.\n\n**Red flag:** R&D under-hire risks Q1 product timeline."
+    "sample_output": "**Executive summary**\n- Revenue $42.1M, +6.2% YoY, in line with budget\n- GM% 68.1%, +120bps vs. prior year — pricing actions holding\n- Opex tracking $0.4M favourable; hiring lag in R&D\n- Operating income $12.6M; FX headwind of −$0.3M absorbed\n\n**Revenue narrative**\n> Subscription revenue grew 9% YoY, offsetting a 4% decline in services. New-logo ARR up 14%, but expansion softened to 11% (vs. 16% prior quarter), consistent with the broader macro slowdown observed by peers.\n\n**Red flag:** R&D under-hire risks Q1 product timeline.",
+    "i18n_ptBR": {
+      "title": "Redação automatizada de comentários"
+    }
   },
   {
     "domain": "Finance & FP&A",
@@ -1093,7 +1136,10 @@
     ],
     "est_time": "1 hour",
     "output_kind": "templates",
-    "sample_output": "**Prioritisation (Eisenhower + energy)**\n1. Urgent + important + high-energy first hour\n2. Important not urgent → schedule into deep-work blocks\n3. Urgent not important → batch into a 30-min slot\n4. Neither → delete, don't defer\n\n**Daily template**\n- 09:00–10:30 — Deep work block 1 (Slack off, phone away)\n- 10:30–11:00 — Email / Slack triage\n- 11:00–12:30 — Deep work block 2\n- Afternoon: meetings + lighter work\n\n**Habits:** (1) inbox-zero by 17:00, (2) one weekly review, (3) 50-min focus, 10-min reset.\n\n**Mac tools:** Things 3, Cron, Raycast."
+    "sample_output": "**Prioritisation (Eisenhower + energy)**\n1. Urgent + important + high-energy first hour\n2. Important not urgent → schedule into deep-work blocks\n3. Urgent not important → batch into a 30-min slot\n4. Neither → delete, don't defer\n\n**Daily template**\n- 09:00–10:30 — Deep work block 1 (Slack off, phone away)\n- 10:30–11:00 — Email / Slack triage\n- 11:00–12:30 — Deep work block 2\n- Afternoon: meetings + lighter work\n\n**Habits:** (1) inbox-zero by 17:00, (2) one weekly review, (3) 50-min focus, 10-min reset.\n\n**Mac tools:** Things 3, Cron, Raycast.",
+    "i18n_ptBR": {
+      "title": "Saindo da sobrecarga"
+    }
   },
   {
     "domain": "Personal Productivity",
@@ -3047,16 +3093,34 @@
     "skill_level": "ADVANCED",
     "title": "Build a Personal Finance AI Agent",
     "prompt": "I want to build a local AI agent that connects to my bank accounts via [bank API or CSV export], stores transactions in a local SQLite database, and runs a daily summary that categorises spending, flags anomalies, and suggests actions. Design the full agent architecture: data ingestion pipeline, categorisation prompt, anomaly-detection logic, and the daily briefing prompt template. Include Python pseudocode for the main loop and the schema for the local DB.",
-    "tags": ["personal-finance", "ai-agent", "automation", "plaid", "sqlite", "budgeting"],
+    "tags": [
+      "personal-finance",
+      "ai-agent",
+      "automation",
+      "plaid",
+      "sqlite",
+      "budgeting"
+    ],
     "best_for": "Developers who want AI-driven personal finance automation without relying on third-party apps",
     "source": "Wes Roth — \"AI just BROKE the ENTIRE INDUSTRY...\"",
     "outcome": "Full architecture for a self-hosted personal finance AI agent with ingestion pipeline, DB schema, categorisation logic, anomaly detection, and daily briefing template.",
     "inputs": [
-      { "label": "bank API or CSV export" },
-      { "label": "spending categories" },
-      { "label": "monthly budget targets" }
+      {
+        "label": "bank API or CSV export"
+      },
+      {
+        "label": "spending categories"
+      },
+      {
+        "label": "monthly budget targets"
+      }
     ],
-    "tools": ["Claude API", "Plaid API", "Python", "SQLite"],
+    "tools": [
+      "Claude API",
+      "Plaid API",
+      "Python",
+      "SQLite"
+    ],
     "est_time": "3–5 hours",
     "output_kind": "spec",
     "sample_output": "**Agent Architecture: Personal Finance AI**\n\n**DB Schema (SQLite):**\n```sql\nCREATE TABLE transactions (\n  id TEXT PRIMARY KEY,\n  date TEXT, amount REAL, merchant TEXT,\n  category TEXT, raw_category TEXT, flagged INTEGER DEFAULT 0\n);\nCREATE TABLE daily_summaries (date TEXT PRIMARY KEY, json TEXT);\n```\n\n**Ingestion pipeline:**\n1. Pull transactions via Plaid /transactions/sync (or parse CSV)\n2. Upsert into SQLite (dedup by transaction id)\n3. For each uncategorised row, call Claude with merchant name + amount → returns category\n\n**Categorisation prompt:**\n```\nClassify this transaction into one of: [Food, Transport, Housing, Subscriptions, Shopping, Health, Entertainment, Other].\nMerchant: {merchant}  Amount: ${amount}\nReturn only the category name.\n```\n\n**Anomaly detection logic:**\n- Flag if amount > 2× rolling 30-day average for that category\n- Flag if merchant appears for the first time and amount > $50\n\n**Daily briefing prompt:**\n```\nGiven these transactions from {date}: {json}\nAnd monthly budget targets: {targets}\nWrite a 5-bullet morning briefing covering: total spend, top category, biggest single charge, any flagged anomalies, and one actionable suggestion.\n```"
@@ -3067,18 +3131,38 @@
     "skill_level": "ADVANCED",
     "title": "Tax Strategy Finder (CPA-Level Automation)",
     "prompt": "Act as a senior CPA and tax strategist. I will give you my [income sources], [filing status], [major expenses], and [investment portfolio]. Identify the top 5 tax optimisation strategies available to me, explain the mechanism of each deduction or deferral, estimate the potential savings, flag any risks or thresholds I need to stay under, and give me a prioritised action checklist for this tax year. Reference relevant IRS code sections or equivalent for [country].",
-    "tags": ["tax", "tax-strategy", "cpa", "deductions", "financial-planning", "irs"],
+    "tags": [
+      "tax",
+      "tax-strategy",
+      "cpa",
+      "deductions",
+      "financial-planning",
+      "irs"
+    ],
     "best_for": "Self-employed professionals, investors, and business owners looking to reduce tax liability",
     "source": "Wes Roth — \"AI just BROKE the ENTIRE INDUSTRY...\"",
     "outcome": "Ranked list of tax strategies with mechanisms, estimated savings, risk flags, and a concrete action checklist for the current tax year.",
     "inputs": [
-      { "label": "income sources (salary, freelance, dividends, etc.)" },
-      { "label": "filing status (single, MFJ, etc.)" },
-      { "label": "major expenses (home office, vehicle, health, education)" },
-      { "label": "investment portfolio (taxable, IRA, 401k balances)" },
-      { "label": "country" }
+      {
+        "label": "income sources (salary, freelance, dividends, etc.)"
+      },
+      {
+        "label": "filing status (single, MFJ, etc.)"
+      },
+      {
+        "label": "major expenses (home office, vehicle, health, education)"
+      },
+      {
+        "label": "investment portfolio (taxable, IRA, 401k balances)"
+      },
+      {
+        "label": "country"
+      }
     ],
-    "tools": ["Claude", "ChatGPT"],
+    "tools": [
+      "Claude",
+      "ChatGPT"
+    ],
     "est_time": "30 minutes",
     "output_kind": "analysis",
     "sample_output": "**Top 5 Tax Strategies for Your Profile**\n\n**1. Max Solo 401(k) — estimated savings: $14,280**\nAs a self-employed person you can contribute up to $66,000 (2024). The employer contribution side (25% of net self-employment income) is deductible on Schedule 1. *IRC §401(a).* Action: open a Solo 401(k) by Dec 31; fund by tax deadline.\n\n**2. Home Office Deduction (Simplified Method) — ~$1,500**\n$5/sq ft × up to 300 sq ft. No depreciation recapture risk. *IRC §280A.* Action: measure dedicated workspace, document with photos.\n\n**3. SEP-IRA vs Solo 401(k) comparison**\nSEP-IRA simpler to open, but Solo 401(k) allows employee deferrals — better if income < $200k.\n\n**4. Qualified Business Income (QBI) Deduction — up to 20% of net income**\nAvailable for pass-through entities below $182,050 (single). *IRC §199A.* Risk: phase-out applies to specified service trades.\n\n**5. Tax-Loss Harvesting on taxable portfolio**\nRealise ~$8k in unrealised losses to offset gains. Beware 30-day wash-sale rule. *IRC §1091.*\n\n**Action checklist:**\n- [ ] Open Solo 401(k) before Dec 31\n- [ ] Calculate exact home office sq footage\n- [ ] Review taxable account for harvesting candidates\n- [ ] Confirm QBI eligibility with your business type"
@@ -3089,16 +3173,32 @@
     "skill_level": "INTERMEDIATE",
     "title": "AI Health Data Tracker & Interpreter",
     "prompt": "I will paste the results from my recent [blood work / health metrics]. Interpret each value, flag anything outside the optimal range (not just the lab reference range), explain what each flagged value might indicate, suggest 3 lifestyle or dietary adjustments I could discuss with my doctor, and format the output as a clear summary table followed by the action points. Do not diagnose — focus on pattern recognition and evidence-based context.",
-    "tags": ["health", "blood-work", "biometrics", "wellness", "personal-data", "tracking"],
+    "tags": [
+      "health",
+      "blood-work",
+      "biometrics",
+      "wellness",
+      "personal-data",
+      "tracking"
+    ],
     "best_for": "Health-conscious individuals who want to understand their lab results and prepare smarter doctor conversations",
     "source": "Wes Roth — \"AI just BROKE the ENTIRE INDUSTRY...\"",
     "outcome": "Clear interpretation of health metrics with optimal vs. reference range comparison, pattern flags, lifestyle suggestions, and a ready-to-use doctor conversation summary.",
     "inputs": [
-      { "label": "blood work or health metrics (paste raw values)" },
-      { "label": "age and biological sex" },
-      { "label": "known conditions or medications (optional)" }
+      {
+        "label": "blood work or health metrics (paste raw values)"
+      },
+      {
+        "label": "age and biological sex"
+      },
+      {
+        "label": "known conditions or medications (optional)"
+      }
     ],
-    "tools": ["Claude", "ChatGPT"],
+    "tools": [
+      "Claude",
+      "ChatGPT"
+    ],
     "est_time": "10 minutes",
     "output_kind": "analysis",
     "sample_output": "**Health Metrics Summary**\n\n| Marker | Your Value | Lab Range | Optimal Range | Status |\n|---|---|---|---|---|\n| LDL Cholesterol | 142 mg/dL | <160 | <100 | ⚠️ Elevated |\n| HbA1c | 5.8% | <5.7 pre-diabetic | <5.4 | ⚠️ Borderline |\n| Vitamin D | 24 ng/mL | 20–50 | 40–60 | ⚠️ Sub-optimal |\n| Ferritin | 68 ng/mL | 12–300 | 50–150 | ✅ Good |\n| TSH | 2.1 mIU/L | 0.4–4.0 | 0.5–2.5 | ✅ Good |\n\n**Flagged patterns:**\n- LDL + borderline HbA1c together suggest early metabolic stress worth monitoring.\n- Low-normal Vitamin D may be contributing to fatigue.\n\n**Lifestyle adjustments to discuss with your doctor:**\n1. Mediterranean-style diet to address LDL and glycaemic trends simultaneously.\n2. Vitamin D3 + K2 supplementation (2,000–4,000 IU/day) — confirm dose with doctor.\n3. 150 min/week moderate cardio — independently improves all three flagged markers.\n\n*This is pattern recognition, not medical advice. Bring this table to your next appointment.*"
@@ -3109,16 +3209,38 @@
     "skill_level": "EXPERT",
     "title": "Ghost Database for AI Agents",
     "prompt": "Design a persistent memory and knowledge layer — a 'ghost database' — for a long-running AI agent system built with [framework/stack]. The system must support: short-term episodic memory (recent conversation turns), long-term semantic memory (vector search over past interactions and documents), structured fact storage (key-value entities the agent can update), and a retrieval strategy that selects the right memory type at inference time. Provide the full schema, the retrieval orchestration logic, a sample system-prompt injection template, and guidance on when to write vs. read from each store.",
-    "tags": ["ai-agent", "memory", "vector-db", "architecture", "rag", "persistent-state", "llm-ops"],
+    "tags": [
+      "ai-agent",
+      "memory",
+      "vector-db",
+      "architecture",
+      "rag",
+      "persistent-state",
+      "llm-ops"
+    ],
     "best_for": "AI engineers building autonomous agents that need reliable long-term memory and context management",
     "source": "Wes Roth — \"AI just BROKE the ENTIRE INDUSTRY...\"",
     "outcome": "Complete ghost-database architecture spec with schemas for all three memory types, retrieval orchestration pseudocode, system-prompt injection template, and write/read decision rules.",
     "inputs": [
-      { "label": "framework/stack (LangChain, custom Python, etc.)" },
-      { "label": "agent's primary domain or task" },
-      { "label": "expected conversation volume (light / heavy)" }
+      {
+        "label": "framework/stack (LangChain, custom Python, etc.)"
+      },
+      {
+        "label": "agent's primary domain or task"
+      },
+      {
+        "label": "expected conversation volume (light / heavy)"
+      }
     ],
-    "tools": ["Claude API", "OpenAI API", "Chroma", "Pinecone", "Redis", "PostgreSQL", "Python"],
+    "tools": [
+      "Claude API",
+      "OpenAI API",
+      "Chroma",
+      "Pinecone",
+      "Redis",
+      "PostgreSQL",
+      "Python"
+    ],
     "est_time": "2–4 hours",
     "output_kind": "spec",
     "sample_output": "**Ghost Database Architecture**\n\n**Memory layers:**\n\n| Layer | Store | TTL | Use case |\n|---|---|---|---|\n| Episodic (short-term) | Redis list (sliding window) | Last 20 turns | Recent dialogue context |\n| Semantic (long-term) | ChromaDB / Pinecone | Permanent | Past interactions, docs |\n| Structured facts | PostgreSQL key-value table | Permanent, mutable | User prefs, entity state |\n\n**Structured facts schema:**\n```sql\nCREATE TABLE agent_facts (\n  agent_id TEXT, key TEXT, value JSONB,\n  confidence REAL, updated_at TIMESTAMPTZ,\n  PRIMARY KEY (agent_id, key)\n);\n```\n\n**Retrieval orchestration (pseudocode):**\n```python\ndef build_context(query, agent_id):\n  episodic  = redis.lrange(f'ep:{agent_id}', 0, 19)      # always include\n  semantic  = chroma.query(query, n_results=4)             # top-4 semantic hits\n  facts     = pg.fetch('SELECT key, value FROM agent_facts WHERE agent_id=$1', agent_id)\n  return format_context(episodic, semantic, facts)\n```\n\n**System-prompt injection template:**\n```\n[MEMORY]\nRecent context: {episodic_summary}\nRelevant past knowledge: {semantic_hits}\nKnown facts about user: {facts_json}\n[/MEMORY]\n```\n\n**Write rules:**\n- After every turn → append to episodic Redis list, pop oldest if > 20\n- After task completion → embed summary → upsert to vector DB\n- When agent learns a stable fact (name, preference, goal) → upsert to PostgreSQL facts table"

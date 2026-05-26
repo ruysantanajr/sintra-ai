@@ -5,6 +5,8 @@ import { X, Copy, Check, Trash2, Bookmark, BookmarkX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSavedPrompts } from "@/context/SavedPromptsContext";
 import { USE_CASES } from "@/lib/data";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
 
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function SavedPanel({ open, onClose }: Props) {
+  const { locale } = useLanguage();
   const { saved, toggle, clear } = useSavedPrompts();
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
@@ -102,7 +105,7 @@ export default function SavedPanel({ open, onClose }: Props) {
                     className="rounded-xl border border-hairline bg-white/[0.025] hover:bg-white/[0.04] transition-colors p-4"
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="font-serif text-[14px] text-fg-1 leading-snug">{item.title}</h3>
+                      <h3 className="font-serif text-[14px] text-fg-1 leading-snug">{localize(item.title, locale)}</h3>
                       <button
                         onClick={() => toggle(item.id)}
                         className="shrink-0 text-violet/60 hover:text-red-400 transition-colors mt-0.5"
@@ -113,13 +116,13 @@ export default function SavedPanel({ open, onClose }: Props) {
                       </button>
                     </div>
                     <p className="font-sans text-[11px] text-fg-4 mb-3 line-clamp-2 leading-relaxed">
-                      {item.outcome || item.desc}
+                      {localize(item.outcome, locale) || localize(item.desc, locale)}
                     </p>
                     <div className="prompt-block text-[11px] leading-relaxed line-clamp-3 mb-3">
-                      {item.prompt}
+                      {localize(item.prompt, locale)}
                     </div>
                     <button
-                      onClick={() => copyPrompt(item.id, item.prompt)}
+                      onClick={() => copyPrompt(item.id, localize(item.prompt, locale))}
                       className="inline-flex items-center gap-1.5 font-mono text-[11px] px-3 py-1.5 rounded-lg bg-violet/15 border border-violet/30 text-violet-bright hover:bg-violet/25 transition-all"
                     >
                       {copiedId === item.id
