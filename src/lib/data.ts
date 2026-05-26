@@ -1,4 +1,6 @@
 import rawData from "@/data/useCases.json";
+import { l, type LocalizedString } from "./localized";
+import type { Locale } from "./i18n";
 
 export type Category =
   | "all"
@@ -30,28 +32,45 @@ export type OutputKind =
   | "plan";
 
 export interface PromptInput {
-  label: string;
+  label: LocalizedString;
 }
 
 export interface UseCase {
   id: number;
-  title: string;
-  desc: string;
+  title: LocalizedString;
+  desc: LocalizedString;
   category: Exclude<Category, "all">;
   difficulty: Exclude<Difficulty, "all">;
   tags: string[];
-  prompt: string;
+  prompt: LocalizedString;
   source?: string;
 
   // Enriched fields
-  outcome: string;
+  outcome: LocalizedString;
   inputs: PromptInput[];
   tools: string[];
   est_time: string;
   output_kind: OutputKind;
-  sample_output: string;
+  sample_output: LocalizedString;
   best_llm: string;
-  llm_reason: string;
+  llm_reason: LocalizedString;
+}
+
+/** Shape of optional PT-BR overrides in useCases.json items. */
+interface UseCasePtOverlay {
+  title?: string;
+  prompt?: string;
+  outcome?: string;
+  sample_output?: string;
+  best_for?: string;
+  llm_reason?: string;
+  inputs?: { label: string }[];
+}
+
+/** Picks an English source value and an optional PT-BR override, returns a LocalizedString. */
+function loc(en: string | undefined, pt: string | undefined): LocalizedString {
+  const enVal = en ?? "";
+  return l(enVal, pt && pt.length > 0 ? pt : enVal);
 }
 
 // Verified 2026-05 — model quality shifts quarterly; treat recommendations as starting points
@@ -129,23 +148,33 @@ export const USE_CASES: UseCase[] = (rawData as any[]).map((item, idx) => {
   const cat   = DOMAIN_MAP[item.domain] ?? "productivity";
   const skill = (item.skill_level as string).toLowerCase();
   const llmRec = LLM_MAP[cat]?.[skill] ?? { model: "Claude Sonnet 4.5", reason: "Best overall balance of capability and speed" };
+  const pt: UseCasePtOverlay = item.i18n_ptBR ?? {};
+
+  const enDesc = item.best_for || item.outcome || "";
+  const ptDesc = pt.best_for || pt.outcome;
+
+  const rawInputs: { label: string }[] = item.inputs || [];
+  const ptInputs = pt.inputs ?? [];
+
   return {
     id: idx + 1,
-    title: item.title,
-    desc: item.best_for || item.outcome || "",
+    title: loc(item.title, pt.title),
+    desc: loc(enDesc, ptDesc),
     category: cat,
     difficulty: skill as UseCase["difficulty"],
     tags: (item.tags as string[]).slice(0, 4),
-    prompt: item.prompt,
+    prompt: loc(item.prompt, pt.prompt),
     source: item.source,
-    outcome: item.outcome || "",
-    inputs: item.inputs || [],
+    outcome: loc(item.outcome, pt.outcome),
+    inputs: rawInputs.map((inp, i) => ({
+      label: loc(inp.label, ptInputs[i]?.label),
+    })),
     tools: item.tools || [],
     est_time: item.est_time || "",
     output_kind: (item.output_kind as OutputKind) || "analysis",
-    sample_output: item.sample_output || "",
+    sample_output: loc(item.sample_output || "", pt.sample_output),
     best_llm:   item.best_llm   ?? llmRec.model,
-    llm_reason: item.llm_reason ?? llmRec.reason,
+    llm_reason: loc(item.llm_reason ?? llmRec.reason, pt.llm_reason),
   };
 });
 
@@ -199,18 +228,24 @@ export const DISC_COUNTS: Record<string, number> = Object.fromEntries(
 /** Single source of truth for all use-case search — used by global search and panel search. */
 export function matchesUseCase(item: UseCase, query: string): boolean {
   const q = query.toLowerCase();
-  return [
-    item.title,
-    item.desc,
-    item.outcome,
-    item.prompt,
+  const fields = [
+    item.title.en, item.title["pt-BR"],
+    item.desc.en, item.desc["pt-BR"],
+    item.outcome.en, item.outcome["pt-BR"],
+    item.prompt.en, item.prompt["pt-BR"],
     item.source ?? "",
     item.best_llm,
-    item.llm_reason,
+    item.llm_reason.en, item.llm_reason["pt-BR"],
     ...item.tools,
     ...item.tags,
-    ...item.inputs.map(i => i.label),
-  ].some(v => v.toLowerCase().includes(q));
+    ...item.inputs.flatMap(i => [i.label.en, i.label["pt-BR"]]),
+  ];
+  return fields.some(v => v.toLowerCase().includes(q));
+}
+
+/** Convenience: pick the locale-correct title for use in lists/sort. */
+export function useCaseTitle(item: UseCase, locale: Locale): string {
+  return item.title[locale] || item.title.en;
 }
 
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";

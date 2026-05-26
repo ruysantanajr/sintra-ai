@@ -20,6 +20,17 @@ const VALID_DOMAINS = [
   "Software Development", "Creative AI", "Design & Creative", "Game Development",
 ];
 
+/** Optional pt-BR overlay — any subset of the localizable text fields. */
+const PtOverlay = z.object({
+  title:         z.string().optional(),
+  prompt:        z.string().optional(),
+  outcome:       z.string().optional(),
+  sample_output: z.string().optional(),
+  best_for:      z.string().optional(),
+  llm_reason:    z.string().optional(),
+  inputs:        z.array(z.object({ label: z.string() })).optional(),
+}).strict();
+
 const UseCaseSchema = z.object({
   title:        z.string().min(1, "title must not be empty"),
   prompt:       z.string().min(10, "prompt must be at least 10 chars"),
@@ -38,6 +49,7 @@ const UseCaseSchema = z.object({
   best_for:     z.string().optional(),
   section:      z.string().optional(),
   skill_emoji:  z.string().optional(),
+  i18n_ptBR:    PtOverlay.optional(),
 });
 
 const raw = JSON.parse(readFileSync(DATA_FILE, "utf8"));

@@ -28,7 +28,7 @@ export default function UniversalSearch({ query, onClose }: Props) {
   const copyPrompt = (doc: SearchDocument) => {
     const uc = USE_CASES.find(u => u.id === doc.useCaseId);
     if (!uc) return;
-    navigator.clipboard?.writeText(uc.prompt);
+    navigator.clipboard?.writeText(uc.prompt.en);
     setCopiedId(doc.id);
     setTimeout(() => setCopiedId(null), 1600);
   };

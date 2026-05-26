@@ -6,6 +6,8 @@ import { UseCase, DIFF_COLOR } from "@/lib/data";
 import OutputKindIcon, { outputKindLabel } from "./OutputKindIcon";
 import CardVisual from "./CardVisual";
 import { useSavedPrompts } from "@/context/SavedPromptsContext";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 const CAT_ACCENT: Record<string, string> = {
   "quick-wins":     "#F4D06F",
@@ -27,11 +29,14 @@ interface Props {
 }
 
 export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = false }: Props) {
+  const { locale } = useLanguage();
   const diffColor = DIFF_COLOR[item.difficulty];
   const catColor  = CAT_ACCENT[item.category] || "#9F8CFF";
   const ref = useRef<HTMLButtonElement>(null);
   const [copied, setCopied] = useState(false);
   const { isSaved, toggle } = useSavedPrompts();
+  const title = localize(item.title, locale);
+  const outcomeOrDesc = localize(item.outcome, locale) || localize(item.desc, locale);
 
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const el = ref.current;
@@ -54,7 +59,7 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
 
   const quickCopy = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard?.writeText(item.prompt);
+    navigator.clipboard?.writeText(localize(item.prompt, locale));
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
@@ -64,7 +69,7 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
       ref={ref}
       className={`card group focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-bright focus-visible:-outline-offset-[3px]${isFeatured ? " card--featured" : ""}`}
       onClick={() => onOpen(item)}
-      aria-label={`Open use case: ${item.title}`}
+      aria-label={`Open use case: ${title}`}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{ "--cat-color": catColor } as React.CSSProperties}
@@ -130,12 +135,12 @@ export default function UseCaseCard({ item, onOpen, onTagFilter, isFeatured = fa
 
       {/* Title */}
       <h3 className={`font-serif font-normal leading-[1.15] tracking-[-0.01em] text-fg-1 m-0 text-left transition-colors duration-140 group-hover:text-violet-bright${isFeatured ? " text-[28px]" : " text-[22px]"}`}>
-        {item.title}
+        {title}
       </h3>
 
       {/* Outcome */}
       <p className={`font-sans text-[13.5px] leading-[1.55] text-fg-2 m-0 text-left${isFeatured ? "" : " line-clamp-3"}`}>
-        {item.outcome || item.desc}
+        {outcomeOrDesc}
       </p>
 
       {/* Meta row: output kind · tools */}

@@ -7,6 +7,8 @@ import remarkGfm from "remark-gfm";
 import { UseCase, DIFF_COLOR } from "@/lib/data";
 import { useFocusTrap, useKeyShortcut } from "@/lib/hooks";
 import OutputKindIcon, { outputKindLabel } from "./OutputKindIcon";
+import { useLanguage } from "@/context/LanguageContext";
+import { localize } from "@/lib/localized";
 
 interface Props {
   item: UseCase;
@@ -14,9 +16,14 @@ interface Props {
 }
 
 export default function UseCaseModal({ item, onClose }: Props) {
+  const { locale } = useLanguage();
   const [copied, setCopied] = useState(false);
   const color = DIFF_COLOR[item.difficulty];
   const trapRef = useFocusTrap<HTMLDivElement>(true);
+  const title = localize(item.title, locale);
+  const outcomeText = localize(item.outcome, locale);
+  const promptText = localize(item.prompt, locale);
+  const sampleText = localize(item.sample_output, locale);
 
   useKeyShortcut(["Escape"], onClose);
 
@@ -26,7 +33,7 @@ export default function UseCaseModal({ item, onClose }: Props) {
   }, []);
 
   const copy = () => {
-    navigator.clipboard?.writeText(item.prompt);
+    navigator.clipboard?.writeText(promptText);
     setCopied(true);
     setTimeout(() => setCopied(false), 1600);
   };
@@ -74,13 +81,13 @@ export default function UseCaseModal({ item, onClose }: Props) {
           id="modal-title"
           className="font-serif font-normal text-[28px] md:text-[38px] leading-[1.08] tracking-[-0.015em] text-fg-1 mb-4"
         >
-          {item.title}
+          {title}
         </h2>
 
         {/* Outcome — the "what you'd get" headline */}
-        {item.outcome && (
+        {outcomeText && (
           <p className="font-serif italic text-[19px] md:text-[21px] leading-[1.45] text-fg-2 mb-8 border-l-2 border-violet/40 pl-5">
-            {item.outcome}
+            {outcomeText}
           </p>
         )}
 
@@ -109,14 +116,17 @@ export default function UseCaseModal({ item, onClose }: Props) {
           <div className="mb-8">
             <span className="eyebrow block mb-3">What you'll need</span>
             <div className="flex flex-wrap gap-2">
-              {item.inputs.map(inp => (
-                <span
-                  key={inp.label}
-                  className="font-mono text-[12px] px-2.5 py-1.5 rounded-sm bg-steel border border-hairline text-cyan-ice"
-                >
-                  [{inp.label}]
-                </span>
-              ))}
+              {item.inputs.map((inp, i) => {
+                const label = localize(inp.label, locale);
+                return (
+                  <span
+                    key={i}
+                    className="font-mono text-[12px] px-2.5 py-1.5 rounded-sm bg-steel border border-hairline text-cyan-ice"
+                  >
+                    [{label}]
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
@@ -132,16 +142,16 @@ export default function UseCaseModal({ item, onClose }: Props) {
               {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
             </button>
           </div>
-          <div className="prompt-block">{item.prompt}</div>
+          <div className="prompt-block">{promptText}</div>
         </div>
 
         {/* Sample output — what the model would actually generate */}
-        {item.sample_output && (
+        {sampleText && (
           <div className="mb-8">
             <span className="eyebrow block mb-3">What you&rsquo;d get back</span>
             <div className="sample-output">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {item.sample_output}
+                {sampleText}
               </ReactMarkdown>
             </div>
           </div>
