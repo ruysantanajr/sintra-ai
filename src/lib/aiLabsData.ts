@@ -842,6 +842,127 @@ export const AI_LABS: AILab[] = [
       l("Document processing pipelines with Textract and Bedrock", "Pipelines de processamento de documentos com Textract e Bedrock"),
     ],
   },
+
+  // ─── BR-specific labs ─────────────────────────────────────────────────────
+  {
+    id: "maritaca-ai",
+    name: "Maritaca AI",
+    tagline: l(
+      "Brazilian AI lab building Portuguese-native frontier models",
+      "Lab brasileiro de IA construindo modelos de fronteira nativos em português",
+    ),
+    emoji: "🇧🇷",
+    color: "#10b981",
+    type: "frontier",
+    founded: "2023",
+    hq: "São Paulo, Brasil",
+    website: "https://www.maritaca.ai",
+    focus: [
+      l("Portuguese-native LLMs", "LLMs nativos em português"),
+      l("Sovereign AI", "IA soberana"),
+      l("Brazilian context", "Contexto brasileiro"),
+      l("Long context", "Contexto longo"),
+    ],
+    description: l(
+      "Maritaca AI is the leading Brazilian AI lab, building large language models trained from the ground up with Portuguese as a first-class language rather than a translation afterthought. Spun out of Unicamp research, the Sabiá family of models outperforms global frontier models on Brazilian Portuguese benchmarks (ENEM, OAB exam, BLUEX), legal text, and Brazil-specific cultural knowledge. The company offers MariTalk as a consumer chat interface and an enterprise API used by major Brazilian banks, telcos, and government agencies.",
+      "A Maritaca AI é o principal lab brasileiro de IA, construindo LLMs treinados desde o zero com o português como idioma de primeira classe, em vez de uma tradução posterior. Originada de pesquisa da Unicamp, a família Sabiá supera modelos globais de fronteira em benchmarks de português brasileiro (ENEM, OAB, BLUEX), texto jurídico e conhecimento cultural BR. A empresa oferece o MariTalk como chat para consumidores e uma API corporativa usada por grandes bancos, telcos e órgãos do governo brasileiro.",
+    ),
+    models: [
+      {
+        name: "Sabiá-3",
+        type: "text",
+        contextWindow: "128K tokens",
+        inputPrice: "R$ 5 / M tokens",
+        outputPrice: "R$ 15 / M tokens",
+        freeAccess: false,
+        highlight: l(
+          "Tops PT-BR benchmarks (ENEM, OAB) — outperforms GPT-4 on Brazilian text",
+          "Top em benchmarks PT-BR (ENEM, OAB) — supera o GPT-4 em texto brasileiro",
+        ),
+        speed: "medium",
+      },
+      {
+        name: "Sabiá-2 Medium",
+        type: "text",
+        contextWindow: "32K tokens",
+        freeAccess: true,
+        highlight: l(
+          "Free tier on MariTalk for everyday Portuguese tasks",
+          "Plano gratuito no MariTalk para tarefas do dia a dia em português",
+        ),
+        speed: "fast",
+      },
+    ],
+    products: [
+      "MariTalk",
+      "Maritaca API",
+      "Sabiá (Llama-derived family)",
+    ],
+    api: {
+      available: true,
+      endpoint: "chat.maritaca.ai/api",
+      sdks: ["Python", "TypeScript"],
+    },
+    strengths: [
+      l("Native Brazilian Portuguese training (not translation)", "Treinamento nativo em português brasileiro (não tradução)"),
+      l("Top scores on ENEM, OAB exam, and BLUEX benchmarks", "Top scores em ENEM, OAB e BLUEX"),
+      l("Brazil-aware: Pix, CLT, SUS, IRPF, ANVISA, regulamentação BR", "Consciente do Brasil: Pix, CLT, SUS, IRPF, ANVISA e regulação BR"),
+      l("Data residency in Brazil (LGPD-friendly)", "Residência de dados no Brasil (LGPD-friendly)"),
+      l("Pricing in BRL, no FX exposure for Brazilian customers", "Cobrança em BRL, sem exposição cambial para clientes brasileiros"),
+    ],
+    useCases: [
+      l("Customer support in Brazilian Portuguese for banks, telcos, varejo", "Atendimento ao cliente em português brasileiro para bancos, telcos, varejo"),
+      l("Legal document analysis (contratos, pareceres, peças judiciais)", "Análise de documentos jurídicos (contratos, pareceres, peças)"),
+      l("Public-sector applications requiring data residency in Brazil", "Aplicações do setor público que exigem residência de dados no Brasil"),
+      l("Educational tooling for ENEM, vestibular, concursos públicos", "Tooling educacional para ENEM, vestibular, concursos públicos"),
+      l("Government compliance (LGPD, transparência ativa)", "Compliance com o governo (LGPD, transparência ativa)"),
+    ],
+  },
+  {
+    id: "cesar",
+    name: "CESAR",
+    tagline: l(
+      "Brazilian innovation center applying AI to industry and public sector",
+      "Centro de inovação brasileiro aplicando IA à indústria e ao setor público",
+    ),
+    emoji: "🔬",
+    color: "#7c3aed",
+    type: "specialized",
+    founded: "1996",
+    hq: "Recife, PE / São Paulo, SP",
+    website: "https://www.cesar.org.br",
+    focus: [
+      l("Applied AI research", "Pesquisa aplicada em IA"),
+      l("Public sector", "Setor público"),
+      l("Industry 4.0", "Indústria 4.0"),
+      l("Education", "Educação"),
+    ],
+    description: l(
+      "CESAR (Centro de Estudos e Sistemas Avançados do Recife) is one of Latin America's largest applied innovation centers, with strong AI research, engineering services, and the CESAR School graduate program. Originally part of the Porto Digital ecosystem, CESAR partners with the Brazilian federal government, banks (Itaú, Caixa), oil & gas (Petrobras), and global tech (Samsung Brasil R&D) on AI-driven product development, computer vision in industry, and predictive analytics. CESAR.AI is the dedicated AI services unit.",
+      "O CESAR (Centro de Estudos e Sistemas Avançados do Recife) é um dos maiores centros de inovação aplicada da América Latina, com forte pesquisa em IA, serviços de engenharia e o programa de pós-graduação CESAR School. Originalmente parte do ecossistema do Porto Digital, o CESAR atua com o governo federal brasileiro, bancos (Itaú, Caixa), petróleo e gás (Petrobras) e tech global (P&D da Samsung Brasil) em desenvolvimento de produto com IA, visão computacional na indústria e analytics preditivo. O CESAR.AI é a unidade dedicada de serviços de IA.",
+    ),
+    models: [],
+    products: [
+      "CESAR.AI (serviços)",
+      "CESAR School (pós-graduação)",
+      "Porto Digital (ecossistema)",
+    ],
+    api: { available: false },
+    strengths: [
+      l("Deep ties with Brazilian federal government and public banks", "Laços profundos com governo federal brasileiro e bancos públicos"),
+      l("Applied AI for industry, oil & gas, and manufacturing", "IA aplicada para indústria, óleo & gás e manufatura"),
+      l("CESAR School trains hundreds of AI engineers per year in PE", "CESAR School forma centenas de engenheiros de IA por ano em PE"),
+      l("End-to-end product engineering, not just model research", "Engenharia de produto ponta-a-ponta, não só pesquisa de modelo"),
+      l("Trusted by Samsung, Petrobras, Itaú, Caixa, governo federal", "Confiado por Samsung, Petrobras, Itaú, Caixa e governo federal"),
+    ],
+    useCases: [
+      l("Industrial computer vision (defect detection, safety monitoring)", "Visão computacional industrial (detecção de defeitos, monitoramento de segurança)"),
+      l("Predictive maintenance for oil & gas and manufacturing plants", "Manutenção preditiva para petróleo & gás e indústrias"),
+      l("Government digital services (gov.br, e-CAC, etc.)", "Serviços digitais do governo (gov.br, e-CAC, etc.)"),
+      l("Banking AI for fraud detection and credit scoring (BR market)", "IA bancária para detecção de fraude e crédito (mercado BR)"),
+      l("Custom enterprise AI projects with BR data residency", "Projetos corporativos sob medida com residência de dados no BR"),
+    ],
+  },
 ];
 
 export const LAB_TYPES = [
