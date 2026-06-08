@@ -5,7 +5,7 @@ Crie estas labels no repositorio:
 - `gepeto:pending`: PR aguardando auditoria local do Gepeto.
 - `gepeto:approved`: auditoria aprovada.
 - `gepeto:rejected`: auditoria reprovada.
-- `ready-for-ruy`: PR aprovada pelo Gepeto e pronta para validacao humana.
+- `ready-for-ruy`: trabalho inteiro pronto para validacao humana do Ruy; nao deve ser aplicado automaticamente em toda PR aprovada.
 - `claudinho:fixing`: Claudinho assumiu a correcao.
 
 Sugestao de cores:
