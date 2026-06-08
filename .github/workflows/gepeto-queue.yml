@@ -29,7 +29,7 @@ jobs:
               { name: 'gepeto:pending', color: 'fbca04', description: 'PR aguardando auditoria local do Gepeto' },
               { name: 'gepeto:approved', color: '0e8a16', description: 'Auditoria Gepeto aprovada' },
               { name: 'gepeto:rejected', color: 'b60205', description: 'Auditoria Gepeto reprovada' },
-              { name: 'ready-for-ruy', color: '1d76db', description: 'PR pronta para validacao do Ruy' },
+              { name: 'ready-for-ruy', color: '1d76db', description: 'Trabalho inteiro pronto para validacao do Ruy' },
               { name: 'claudinho:fixing', color: '5319e7', description: 'Claudinho assumiu a correcao' },
             ];
 
