@@ -1,0 +1,63 @@
+name: Gepeto - Marcar Pending
+
+# Coloca toda PR na fila de auditoria do Gepeto (Codex local do Ruy) aplicando
+# a label `gepeto:pending`. Abrir ou dar push numa PR reabre a auditoria:
+# remove `gepeto:approved`/`gepeto:rejected` e (re)aplica `gepeto:pending`.
+# As labels são criadas se não existirem — o workflow é portável p/ qualquer repo.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: gepeto-pending-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  marcar-pending:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Garantir labels e aplicar gepeto:pending
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const issue_number = context.issue.number
+
+            // Labels do fluxo Gepeto — cria as que faltarem (portável p/ repo novo)
+            const defs = [
+              { name: 'gepeto:pending',  color: 'fbca04', description: 'PR aguardando auditoria local do Gepeto' },
+              { name: 'gepeto:approved', color: '0e8a16', description: 'Auditoria Gepeto aprovada' },
+              { name: 'gepeto:rejected', color: 'b60205', description: 'Auditoria Gepeto reprovada' },
+            ]
+            for (const d of defs) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: d.name })
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({ owner, repo, ...d })
+                } else {
+                  throw e
+                }
+              }
+            }
+
+            // Nova abertura/push reabre a auditoria: limpa veredicto anterior
+            for (const name of ['gepeto:approved', 'gepeto:rejected']) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name })
+              } catch (e) {
+                if (e.status !== 404) throw e
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              owner, repo, issue_number,
+              labels: ['gepeto:pending'],
+            })
+            core.info(`gepeto:pending aplicada na PR #${issue_number}`)
