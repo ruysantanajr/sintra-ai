@@ -88,3 +88,14 @@ Do **not** commit `dist/` — deployment is handled separately.
 - `BASE_PATH = "/sintra-ai"` — all internal links must use this prefix.
 - Tailwind classes must be written as literal strings (no dynamic construction).
 - The `.btn` CSS class overrides Tailwind's `hidden` — never combine them on the same element.
+
+## Fluxo Gepeto — padrão (detalhes no `~/.claude/CLAUDE.md` global)
+
+Toda mudança vai por PR. O workflow `.github/workflows/gepeto-pending.yml` aplica
+`gepeto:pending` automaticamente (abrir/atualizar PR). Gepeto (Codex local do Ruy) audita o diff e
+troca a label para `gepeto:approved` ou `gepeto:rejected`.
+
+> **PADRÃO: Gepeto aprovou → Claudinho segue até o fim, sem parar.** Com `gepeto:approved` a PR está
+> liberada: **dar merge, fazer o deploy/produção e partir para a próxima etapa fazem parte do fluxo
+> e NÃO precisam de autorização do Ruy.** Sem gate de handoff, sem label extra. Ruy intervém só se
+> quiser ajustar algo. Se Gepeto reprovar, corrigir na mesma branch e dar push.
