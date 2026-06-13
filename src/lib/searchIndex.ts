@@ -58,15 +58,25 @@ export const SEARCH_INDEX: SearchDocument[] = [
     href: `${BASE_PATH}/tools/`,
     body: [t.name, t.tagline, t.description, t.provider, t.category, t.highlight, ...t.tags].join(" "),
   })),
-  ...CONCEPTS.map(c => ({
-    id: `concept-${c.id}`,
-    kind: "concept" as EntityKind,
-    title: c.term + (c.shortTerm ? ` (${c.shortTerm})` : ""),
-    summary: c.tagline,
-    tags: [c.category, ...c.related].slice(0, 4),
-    href: `${BASE_PATH}/concepts/`,
-    body: [c.term, c.shortTerm ?? "", c.tagline, c.body, c.analogy, c.category, ...c.related].join(" "),
-  })),
+  ...CONCEPTS.map(c => {
+    const termEn = c.term.en;
+    const termPt = c.term["pt-BR"];
+    return {
+      id: `concept-${c.id}`,
+      kind: "concept" as EntityKind,
+      title: termEn + (c.shortTerm ? ` (${c.shortTerm})` : ""),
+      summary: c.tagline.en,
+      tags: [c.category, ...c.related].slice(0, 4),
+      href: `${BASE_PATH}/concepts/`,
+      body: [
+        termEn, termPt, c.shortTerm ?? "",
+        c.tagline.en, c.tagline["pt-BR"],
+        c.body.en, c.body["pt-BR"],
+        c.analogy.en, c.analogy["pt-BR"],
+        c.category, ...c.related,
+      ].join(" "),
+    };
+  }),
   ...AI_NEWS.map(n => ({
     id: `news-${n.id}`,
     kind: "news" as EntityKind,

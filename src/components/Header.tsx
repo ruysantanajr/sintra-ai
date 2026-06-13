@@ -211,7 +211,7 @@ export default function Header({ total }: Props) {
               {t.nav_enter_library}
             </a>
             <span className="font-mono text-[11px] text-fg-3 tracking-[0.06em] mt-6">
-              <b className="text-fg-1 font-medium">{total}</b> {locale === "pt" ? "casos de uso selecionados" : "use cases curated"}
+              <b className="text-fg-1 font-medium">{total}</b> {locale === "pt-BR" ? "casos de uso selecionados" : "use cases curated"}
             </span>
           </nav>
         </div>
