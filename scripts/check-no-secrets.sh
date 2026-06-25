@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# check-no-secrets.sh — logos-ai
-# Guard leve contra segredos acidentais no repositório (gate G6 da régua de
-# maturidade do Dédalo — ver docs/architecture/02-dedalo.md).
+# check-no-secrets.sh
+# Guard leve contra segredos acidentais no repositório.
 #
 # O que faz:
 #   - Inspeciona apenas arquivos VERSIONADOS (ou staged, com --staged).
@@ -14,11 +13,11 @@
 #
 # Uso:
 #   scripts/check-no-secrets.sh            # varre arquivos versionados (CI)
-#   scripts/check-no-secrets.sh --staged   # varre apenas o que está staged (pré-commit)
+#   scripts/check-no-secrets.sh --staged   # varre o conteúdo INDEXADO (pré-commit)
 #
 # Saída: 0 se nada óbvio for detectado; 1 caso contrário.
 #
-# Política de referência: operations/secrets-policy.md
+# Política de referência: ver as invariantes de segredos no CLAUDE.md (§4) deste repo.
 # Falso-positivo? Ajuste a ALLOWLIST explícita e pequena abaixo.
 
 set -uo pipefail
@@ -32,9 +31,6 @@ MODE="tracked"
 ALLOWLIST=(
   ".env.example"
   "scripts/check-no-secrets.sh"
-  "docs/operations/dedalo-change-discipline.md"
-  "operations/secrets-policy.md"
-  "docs/operations/openclaw-inventory.md"
 )
 
 is_allowed() {
@@ -47,6 +43,27 @@ is_allowed() {
     *.example) return 0 ;;
   esac
   return 1
+}
+
+# --- Conteúdo do arquivo na fonte correta ------------------------------------
+# Em modo --staged lemos o BLOB indexado (o que será efetivamente commitado),
+# não o working tree; em modo tracked lemos o working tree do arquivo versionado.
+read_content() {
+  local f="$1"
+  if [ "$MODE" = "staged" ]; then
+    git show ":$f" 2>/dev/null
+  else
+    cat -- "$f" 2>/dev/null
+  fi
+}
+
+content_exists() {
+  local f="$1"
+  if [ "$MODE" = "staged" ]; then
+    git cat-file -e ":$f" 2>/dev/null
+  else
+    [ -f "$f" ]
+  fi
 }
 
 # --- Lista de arquivos a inspecionar -----------------------------------------
@@ -89,11 +106,11 @@ PLACEHOLDER='your[-_]|placeholder|example|changeme|xxxx|<[^>]+>|\$\{|REPLACE|CHA
 # o segredo nos logs do CI. Reportamos apenas arquivo, número da linha e tipo.
 for f in "${FILES[@]}"; do
   [ -z "$f" ] && continue
-  [ -f "$f" ] || continue
   is_allowed "$f" && continue
+  content_exists "$f" || continue
 
   # Padrões inequívocos: coletar só os números de linha (campo 1 de grep -n).
-  hard_lines="$(grep -nEI -e "$HARD_REGEX" "$f" 2>/dev/null | cut -d: -f1 | head -n 5 | paste -sd, -)"
+  hard_lines="$(read_content "$f" | grep -nEI -e "$HARD_REGEX" 2>/dev/null | cut -d: -f1 | head -n 5 | paste -sd, -)"
   if [ -n "$hard_lines" ]; then
     report "padrão de chave privada / access key em: $f (linha(s): $hard_lines)"
   fi
@@ -109,7 +126,7 @@ for f in "${FILES[@]}"; do
         content="${match#*:}"
         printf '%s' "$content" | grep -qiE -e "$PLACEHOLDER" && continue
         report "possível segredo atribuído em: $f (linha: $lineno)"
-      done < <(grep -nEiI -e "$ASSIGN_REGEX" "$f" 2>/dev/null)
+      done < <(read_content "$f" | grep -nEiI -e "$ASSIGN_REGEX" 2>/dev/null)
       ;;
   esac
 done
@@ -119,7 +136,7 @@ if [ "$FAILED" -eq 0 ]; then
   echo "OK — nenhum segredo óbvio detectado em ${#FILES[@]} arquivo(s) (modo: $MODE)."
   exit 0
 else
-  echo "FALHA — possível segredo no repositório. Ver operations/secrets-policy.md."
+  echo "FALHA — possível segredo versionado. Ver as invariantes de segredos no CLAUDE.md (§4)."
   echo "Se for falso-positivo, ajuste a ALLOWLIST explícita em scripts/check-no-secrets.sh."
   exit 1
 fi
