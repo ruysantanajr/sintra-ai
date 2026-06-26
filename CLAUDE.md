@@ -95,6 +95,12 @@ Toda mudança vai por PR. O workflow `.github/workflows/gepeto-pending.yml` apli
 `gepeto:pending` automaticamente (abrir/atualizar PR). Gepeto (Codex local do Ruy) audita o diff e
 troca a label para `gepeto:approved` ou `gepeto:rejected`.
 
+**Portão de SHA — obrigatório antes de merge/deploy.** O veredito do Gepeto vem carimbado:
+`GEPETO-VERDICT: approved sha=<head-sha-completo>`. Antes de mergear **ou** deployar, comparar esse
+`sha=` com o HEAD atual (`gh pr view <n> --json headRefOid --jq '.headRefOid'`); só seguir se forem
+**idênticos** (40 caracteres). Se diferirem, o veredito está stale → tratar como `gepeto:pending` e
+aguardar a reauditoria. É o gate primário; o reset de label a cada push é guard secundário.
+
 > **PADRÃO: Gepeto aprovou → Claudinho segue até o fim, sem parar.** Com `gepeto:approved` a PR está
 > liberada: **dar merge, fazer o deploy/produção e partir para a próxima etapa fazem parte do fluxo
 > e NÃO precisam de autorização do Ruy.** Sem gate de handoff, sem label extra. Ruy intervém só se
