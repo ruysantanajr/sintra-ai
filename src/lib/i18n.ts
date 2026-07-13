@@ -1,4 +1,4 @@
-export type Locale = "en" | "pt";
+export type Locale = "en" | "pt-BR";
 
 export interface Translations {
   nav_explore:       string;
@@ -106,7 +106,7 @@ const translations: Record<Locale, Translations> = {
     footer_and:    "and",
     footer_claude: "Claude",
   },
-  pt: {
+  "pt-BR": {
     nav_explore:       "Explorar",
     nav_tools:         "Ferramentas IA",
     nav_news:          "Notícias",
