@@ -89,84 +89,24 @@ Do **not** commit `dist/` — deployment is handled separately.
 - Tailwind classes must be written as literal strings (no dynamic construction).
 - The `.btn` CSS class overrides Tailwind's `hidden` — never combine them on the same element.
 
-## Fluxo Gepeto — padrão (detalhes no `~/.claude/CLAUDE.md` global)
+## Auditoria — Camada 1
 
-Toda mudança vai por PR. O workflow `.github/workflows/gepeto-pending.yml` aplica
-`gepeto:pending` automaticamente (abrir/atualizar PR). Gepeto (Codex local do Ruy) audita o diff e
-troca a label para `gepeto:approved` ou `gepeto:rejected`.
+Auditoria automática por análise estática roda no workflow
+`.github/workflows/auditoria.yml` (gitleaks, semgrep, lint/typecheck) — sem LLM e sem
+serviço externo — a cada PR e no push para a branch default. Está em **modo aviso**
+(reporta, não reprova). Detalhes e como tornar bloqueante: ver `~/.claude/CLAUDE.md`,
+seção "Camada 1".
 
-**Portão de SHA — obrigatório antes de merge/deploy.** O veredito do Gepeto vem carimbado:
-`GEPETO-VERDICT: approved sha=<head-sha-completo>`. Antes de mergear **ou** deployar, comparar esse
-`sha=` com o HEAD atual (`gh pr view <n> --json headRefOid --jq '.headRefOid'`); só seguir se forem
-**idênticos** (40 caracteres). Se diferirem, o veredito está stale → tratar como `gepeto:pending` e
-aguardar a reauditoria. É o gate primário; o reset de label a cada push é guard secundário.
-
-> **PADRÃO: Gepeto aprovou → Claudinho segue até o fim, sem parar.** Com `gepeto:approved` a PR está
-> liberada: **dar merge, fazer o deploy/produção e partir para a próxima etapa fazem parte do fluxo
-> e NÃO precisam de autorização do Ruy.** Sem gate de handoff, sem label extra. Ruy intervém só se
-> quiser ajustar algo. Se Gepeto reprovar, corrigir na mesma branch e dar push.
-
----
-
-# Protocolo do loop de auditoria — kit de governança (padrão de todos os repos)
-
-> Acrescenta o protocolo canônico do loop ao que já existe acima. Não substitui nada:
-> formaliza o **Portão de SHA** (§3.2) e o **contrato esperado do Gepeto** (§5).
-
-## 1. Papéis
-
-- Ruy (humano): define as tarefas e a ordem. Autoridade final.
-- Claudinho (Claude Code): coda cada etapa, abre PR, corrige, faz merge e deploy.
-- Gepeto (Codex): audita o diff de cada PR e emite veredito por label.
-
-Canal único de handshake: a cor da label da PR.
-
-| gepeto:pending (fbca04) | gepeto:approved (0e8a16) | gepeto:rejected (d93f0b) |
-
-## 2. Loop de auditoria
-
-1. Codar a etapa.
-2. Abrir 1 PR. Entra com gepeto:pending (workflow de enfileiramento).
-3. Monitorar o veredito a cada 90s (ferramenta Monitor, nunca sleep).
-4. gepeto:approved -> portão de SHA -> merge (+deploy se a etapa exigir) -> próxima etapa.
-5. gepeto:rejected -> ler findings -> corrigir -> push -> volta a pending -> passo 3.
-6. Repetir até approved. Ruy não interfere no caminho feliz.
-
-## 3. Contrato de autonomia
-
-3.1 Ao receber gepeto:approved, merge E deploy sem pedir OK (deploy só se a etapa exigir).
-3.2 Portão de SHA (obrigatório): o veredito carimba o SHA auditado
-    (GEPETO-VERDICT: approved sha=<head>). Só mergear/deployar se
-    sha aprovado == HEAD atual. Reset de label é guard secundário.
-3.3 Nunca parar; corrigir e reenviar quantas vezes precisar. Escalar a Ruy
-    (AskUserQuestion) só se o finding for ambíguo ou arquiteturalmente significativo.
-
-## 4. Invariantes (valem sempre)
-
-- Nunca commitar segredo/token/chave/.env real (arquivo, PR, issue, log, comentário).
-- Após qualquer deploy, validar os healthchecks/endpoints públicos do projeto
-  conforme a doc de operações do repo; se falhar, rollback + escalar a Ruy.
-- Disciplina de produção: SSH por usuário não-root; não tocar DNS/TLS/infra
-  sem etapa explícita de Ruy.
-- Validar antes de commitar: git diff --check e bash scripts/check-no-secrets.sh.
-- **Repo público:** nada de segredo, dado privado ou rascunho interno no histórico.
-
-## 5. Contrato esperado do Gepeto
-
-Ao ver uma PR com gepeto:pending: auditar o HEAD, anotar o SHA exato, postar UM
-comentário cuja 1ª linha seja `GEPETO-VERDICT: approved sha=<head>` ou
-`GEPETO-VERDICT: rejected sha=<head>` (findings: arquivo:linha, problema, impacto,
-correção esperada), e trocar a label. Claudinho só age se o sha= for igual ao HEAD atual.
-
-## 6. Específico deste projeto
+## Específico deste projeto
 
 - O que é / stack: **Sintra Tesseract** — site **estático** Next.js (`output: 'export'`),
   diretório de notícias/ferramentas/recursos de IA. Conteúdo em data files TypeScript
   sob `src/lib/`. Build `npm run build` → `dist/`. `BASE_PATH = "/sintra-ai"`.
 - Estado: **produção** — repositório **público**.
-- Tem deploy? Sim — **GitHub Pages** via branch `gh-pages` (deploy tratado à parte;
-  não commitar `dist/`). Healthcheck pós-deploy: carregar a página pública do Pages
+- Deploy: **GitHub Pages** via branch `gh-pages` (deploy tratado à parte; não commitar
+  `dist/`). Healthcheck pós-deploy: carregar a página pública do Pages
   (URL provável `https://ruysantanajr.github.io/sintra-ai/` — **confirmar com Ruy**).
-- Limites e o que NÃO fazer nesta fase: esta tarefa é só governança. Não tocar
-  `src/`, os data files, o build nem o deploy. Restrições técnicas do produto
-  (static export, BASE_PATH, classes Tailwind literais, `.btn` vs `hidden`) acima.
+- Invariantes: nunca commitar segredo/token/chave/.env real. **Repo público** — nada de
+  segredo, dado privado ou rascunho interno no histórico. Validar antes de commitar
+  (`git diff --check`). Restrições técnicas do produto (static export, BASE_PATH, classes
+  Tailwind literais, `.btn` vs `hidden`) acima.
