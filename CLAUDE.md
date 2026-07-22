@@ -89,14 +89,6 @@ Do **not** commit `dist/` — deployment is handled separately.
 - Tailwind classes must be written as literal strings (no dynamic construction).
 - The `.btn` CSS class overrides Tailwind's `hidden` — never combine them on the same element.
 
-## Auditoria — Camada 1
-
-Auditoria automática por análise estática roda no workflow
-`.github/workflows/auditoria.yml` (gitleaks, semgrep, lint/typecheck) — sem LLM e sem
-serviço externo — a cada PR e no push para a branch default. Está em **modo aviso**
-(reporta, não reprova). Detalhes e como tornar bloqueante: ver `~/.claude/CLAUDE.md`,
-seção "Camada 1".
-
 ## Específico deste projeto
 
 - O que é / stack: **Sintra Tesseract** — site **estático** Next.js (`output: 'export'`),
