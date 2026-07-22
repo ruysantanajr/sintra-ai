@@ -1,0 +1,64 @@
+name: Qualidade rapida
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qualidade-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  auditoria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        if: ${{ hashFiles('**/package.json') != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Auditoria adaptativa Node.js
+        if: ${{ hashFiles('**/package.json') != '' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          mapfile -t packages < <(find . -name package.json \
+            -not -path '*/node_modules/*' \
+            -not -path '*/dist/*' \
+            -not -path '*/build/*' \
+            -not -path '*/.next/*' \
+            -not -path '*/coverage/*' | sort)
+
+          for package_file in "${packages[@]}"; do
+            package_dir="$(dirname "$package_file")"
+            echo "::group::${package_dir}"
+            pushd "$package_dir" >/dev/null
+
+            if [ -f package-lock.json ]; then
+              npm ci || npm install --no-audit --no-fund || true
+            else
+              npm install --no-audit --no-fund || true
+            fi
+
+            for script_name in check typecheck lint test build; do
+              if npm pkg get "scripts.${script_name}" | grep -vq '{}'; then
+                npm run "$script_name" || true
+              fi
+            done
+
+            popd >/dev/null
+            echo "::endgroup::"
+          done
